@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 16 déc. 2020 à 11:02
+-- Généré le : mer. 16 déc. 2020 à 12:36
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -38,8 +38,9 @@ CREATE TABLE IF NOT EXISTS `avis` (
   `score` int(11) DEFAULT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `servers_fk` (`servers_fk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `servers_fk` (`servers_fk`),
+  KEY `users_fk` (`users_fk`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -86,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `image_servers` (
   `servers_fk` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `servers_fk` (`servers_fk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -108,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   PRIMARY KEY (`id`),
   KEY `games_fk` (`games_fk`),
   KEY `users_fk` (`users_fk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -124,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `servers_tags` (
   PRIMARY KEY (`id`),
   KEY `servers_fk` (`servers_fk`),
   KEY `tags_fk` (`tags_fk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -137,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -154,7 +155,45 @@ CREATE TABLE IF NOT EXISTS `users` (
   `picture_profil` varchar(255) NOT NULL,
   `reset_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `avis`
+--
+ALTER TABLE `avis`
+  ADD CONSTRAINT `avis_ibfk_1` FOREIGN KEY (`servers_fk`) REFERENCES `servers` (`id`),
+  ADD CONSTRAINT `avis_ibfk_2` FOREIGN KEY (`users_fk`) REFERENCES `users` (`id`);
+
+--
+-- Contraintes pour la table `games_tags`
+--
+ALTER TABLE `games_tags`
+  ADD CONSTRAINT `games_tags_ibfk_1` FOREIGN KEY (`games_fk`) REFERENCES `games` (`id`),
+  ADD CONSTRAINT `games_tags_ibfk_2` FOREIGN KEY (`tags_fk`) REFERENCES `tags` (`id`);
+
+--
+-- Contraintes pour la table `image_servers`
+--
+ALTER TABLE `image_servers`
+  ADD CONSTRAINT `image_servers_ibfk_1` FOREIGN KEY (`servers_fk`) REFERENCES `servers` (`id`);
+
+--
+-- Contraintes pour la table `servers`
+--
+ALTER TABLE `servers`
+  ADD CONSTRAINT `servers_ibfk_1` FOREIGN KEY (`games_fk`) REFERENCES `games` (`id`),
+  ADD CONSTRAINT `servers_ibfk_2` FOREIGN KEY (`users_fk`) REFERENCES `users` (`id`);
+
+--
+-- Contraintes pour la table `servers_tags`
+--
+ALTER TABLE `servers_tags`
+  ADD CONSTRAINT `servers_tags_ibfk_1` FOREIGN KEY (`servers_fk`) REFERENCES `servers` (`id`),
+  ADD CONSTRAINT `servers_tags_ibfk_2` FOREIGN KEY (`tags_fk`) REFERENCES `tags` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
