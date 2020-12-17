@@ -34,6 +34,9 @@ $routes->get('/', 'Home::index');
 // $routes->get('users/email=(:any)', 'UserController::getUserByEmail/$1');
 // $routes->post('users', 'UserController::register');
 $routes->add('users', 'UserController::user');
+$routes->add('users/(:num)', 'UserController::user/$1');
+$routes->add('login_check', 'AuthController::login');
+$routes->add('api/auth', 'Auth::create');
 
 /**
  * --------------------------------------------------------------------
