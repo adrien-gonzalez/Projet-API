@@ -13,12 +13,22 @@ class UserModel extends Model
         $this->db = \Config\Database::connect();
     }
                                   
-    public function getUsers()
+    public function getUsers($id)
     {
         $builder = $this->db->table('users');
-        $query = $builder->get();
-        $user = $query->getResult();
+        $query = $builder->where('id',$id)->get()->getResult();
 
-        return $user;
+        return $query;
+    }
+
+    public function putUser($params)
+    {
+        var_dump($params);
+        die;
+
+        $builder = $this->db->table('users');
+        $query = $builder->update();
+
+        return $query;
     }
 }

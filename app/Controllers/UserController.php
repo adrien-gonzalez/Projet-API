@@ -12,7 +12,7 @@ class UserController extends BaseController
     public function user() {
         $method = $_SERVER["REQUEST_METHOD"];
         $actions = [
-            "GET" => "getUsers",
+            "GET" => "getUser",
             "POST" => "postUser",
             "PUT" => "putUser",
             "DELETE" => "deleteUser"
@@ -25,13 +25,28 @@ class UserController extends BaseController
 
     }
 
-    public function getUsers() {
+    /**
+     * Récupère les informations de l'utilisateur connecté
+     */
+    public function getUser() {
+
+        $id = $_GET['id'];
 
         $model = new UserModel();
-        $users = $model->getUsers();
+        $users = $model->getUsers($id);
 
         echo json_encode($users);
+    }
 
+    /**
+     * Modifie les informations de l'utilisateur 
+     */
+    public function putUser() {
+
+        $params = $this->request->getRawInput();
+
+        $model = new UserModel();
+        $users = $model->putUser($params);
     }
     
 }
