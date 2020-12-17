@@ -16,7 +16,21 @@ class UserModel extends Model
     public function getUsers()
     {
         $builder = $this->db->table('users');
-        $query = $builder->get();
+        if( isset($_GET["id"]) ) {
+            $query = $builder->getWhere(['id' => $_GET["id"]]);
+        }
+        else {
+            $query = $builder->get();
+        }
+        $user = $query->getResult();
+
+        return $user;
+    }
+
+    public function getUserById($id)
+    {
+        $builder = $this->db->table('users');
+        $query = $builder->getWhere(['id' => $id]);
         $user = $query->getResult();
 
         return $user;

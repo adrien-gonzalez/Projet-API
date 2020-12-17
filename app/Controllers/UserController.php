@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RequestInterface;
 
 class UserController extends BaseController
 {
@@ -26,21 +27,33 @@ class UserController extends BaseController
     }
 
     public function getUsers() {
-        try {
-
             $model = new UserModel();
             $users = $model->getUsers();
 
             echo json_encode($users);
+    }
 
-        } catch (Exception $e) {
-            return $this->getResponse(
-                [
-                    'message' => 'Could not find client for specified ID'
-                ],
-                ResponseInterface::HTTP_NOT_FOUND
-            );
-        }
+    public function getUserById($id) {
+        $model = new UserModel();
+        $users = $model->getUserById($id);
+
+        echo json_encode($users);
+    }
+
+    public function putUser() {
+        $requestBody = $this->request->getRawInput();
+
+        // En dessous c'est mes tests, tkt delete pas stp, merci bro
+        // var_dump($id);
+        //var_dump($this->request);
+        // var_dump($this->request->getBody());
+        // $test = '{"name": 1,"coucou": 1 }';
+        // var_dump($test);
+        // var_dump(json_decode($test));
+        // $json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+        // Fin de mes tests
+
+        var_dump($requestBody);
     }
     
 }
