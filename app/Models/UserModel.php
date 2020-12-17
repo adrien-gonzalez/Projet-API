@@ -7,11 +7,15 @@ use Exception;
 
 class UserModel extends Model
 {
-                                      
+    protected $db;
+
+    public function __construct() {
+        $this->db = \Config\Database::connect();
+    }
+                                  
     public function getUsers()
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('users');
+        $builder = $this->db->table('users');
         $query = $builder->get();
         $user = $query->getResult();
 
