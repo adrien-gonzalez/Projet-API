@@ -7,22 +7,13 @@ use Exception;
 
 class UserModel extends Model
 {
-    protected $table = 'users';
-    protected $allowedFields = [
-        'login',
-        'email',
-        'password',
-    ];
-    // protected $updatedField = 'updated_at';
                                       
     public function getUsers()
     {
-        $user = $this
-            ->asArray()
-            ->first();
-
-        if (!$user) 
-            throw new Exception('User does not exist for specified email address');
+        $db = \Config\Database::connect();
+        $builder = $db->table('users');
+        $query = $builder->get();
+        $user = $query->getResult();
 
         return $user;
     }

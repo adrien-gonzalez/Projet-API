@@ -31,11 +31,7 @@ class UserController extends BaseController
             $model = new UserModel();
             $users = $model->getUsers();
 
-            return $this->getResponse(
-                [
-                    'users' => $users
-                ]
-            );
+            echo json_encode($users);
 
         } catch (Exception $e) {
             return $this->getResponse(
