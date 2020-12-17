@@ -26,21 +26,12 @@ class UserController extends BaseController
     }
 
     public function getUsers() {
-        try {
 
-            $model = new UserModel();
-            $users = $model->getUsers();
+        $model = new UserModel();
+        $users = $model->getUsers();
 
-            echo json_encode($users);
+        echo json_encode($users);
 
-        } catch (Exception $e) {
-            return $this->getResponse(
-                [
-                    'message' => 'Could not find client for specified ID'
-                ],
-                ResponseInterface::HTTP_NOT_FOUND
-            );
-        }
     }
     
 }
