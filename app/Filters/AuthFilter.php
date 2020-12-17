@@ -1,22 +1,32 @@
-<?php namespace App\Filters;
+<?php 
 
+namespace App\Filters;
+
+use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
 use Config\Services;
 use Firebase\JWT\JWT;
 use CodeIgniter\API\ResponseTrait;
+use Exception;
 
 class AuthFilter implements FilterInterface
 {
 	use ResponseTrait;
 
-	public function before(RequestInterface $request)
+	public function before(RequestInterface $request, $arguments = NULL)
 	{
 		$key        = Services::getSecretKey();
 		$authHeader = $request->getServer('HTTP_AUTHORIZATION');
-		$arr        = explode(' ', $authHeader);
-		$token      = $arr[1];
+		if (is_null($authHeader)) { //JWT is absent
+			throw new Exception('Missing or invalid JWT in request');
+		}
+		else {
+			// GO DECODER LE TOKEN ET CHECK SI EMAIL EST DANS BDD
+			$arr        = explode(' ', $authHeader);
+			$token      = $arr[1];
+			// var_dump($arr);
+		}
 
 		try
 		{
@@ -31,7 +41,7 @@ class AuthFilter implements FilterInterface
 
 	//--------------------------------------------------------------------
 
-	public function after(RequestInterface $request, ResponseInterface $response)
+	public function after(RequestInterface $request, ResponseInterface $response, $arguments = NULL)
 	{
 		// Do something here
 	}

@@ -3,6 +3,7 @@
 use CodeIgniter\RESTful\ResourceController;
 use Config\Services;
 use Firebase\JWT\JWT;
+use App\Filters\AuthFilter;
 
 class Auth extends ResourceController
 {
