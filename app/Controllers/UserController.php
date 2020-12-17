@@ -3,12 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class UserController extends BaseController
 {
-
+    /**
+     * Fonction qui redirige vers la fonction qui correspond à la méthode utilisée
+     */
     public function user() {
         $method = $_SERVER["REQUEST_METHOD"];
         $actions = [
