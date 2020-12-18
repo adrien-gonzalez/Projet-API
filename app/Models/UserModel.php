@@ -35,4 +35,13 @@ class UserModel extends Model
 
         return $user;
     }
+
+    public function getUserByLogin($login)
+    {
+        $builder = $this->db->table('users');
+        $query = $builder->getWhere(['login' => $login]);
+        $user = $query->getResult();
+
+        return $user;
+    }
 }

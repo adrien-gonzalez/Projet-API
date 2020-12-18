@@ -19,23 +19,20 @@ class AuthFilter implements FilterInterface
 		$key        = Services::getSecretKey();
 		$authHeader = $request->getServer('HTTP_AUTHORIZATION');
 		if (is_null($authHeader)) { //JWT is absent
-			throw new Exception('Missing or invalid JWT in request');
+			throw new Exception('Missing JWT in request');
 		}
 		else {
-			// GO DECODER LE TOKEN ET CHECK SI EMAIL EST DANS BDD
 			$arr        = explode(' ', $authHeader);
 			$token      = $arr[1];
-			// var_dump($arr);
 		}
 
 		try
 		{
-			JWT::decode($token, $key, ['HS256']);
+			$decodedToken = JWT::decode($token, $key, ['HS256']);
 		}
-		catch (\Exception $e)
+		catch (\Firebase\JWT\ExpiredException $e)
 		{
-			return Services::response()
-				->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED);
+			throw new Exception("Invalid JWT");
 		}
 	}
 
