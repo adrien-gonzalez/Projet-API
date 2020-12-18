@@ -21,12 +21,11 @@ class UserModel extends Model
         return $query;
     }
 
-    public function putUser($params)
+    public function putUser($id,$champ,$params)
     {
-        var_dump($params);
-        die;
-
         $builder = $this->db->table('users');
+        $builder->set($champ,$params);
+        $builder->where('id',$id);
         $query = $builder->update();
 
         return $query;
