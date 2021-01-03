@@ -30,7 +30,7 @@ class AuthFilter implements FilterInterface
 		{
 			$decodedToken = JWT::decode($token, $key, ['HS256']);
 		}
-		catch (\Firebase\JWT\ExpiredException $e)
+		catch (\Exception $e)
 		{
 			throw new Exception("Invalid JWT");
 		}

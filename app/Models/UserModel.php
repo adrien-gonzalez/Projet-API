@@ -44,4 +44,19 @@ class UserModel extends Model
 
         return $user;
     }
+
+    public function postUser()
+    {
+
+        $builder = $this->db->table('users');
+        
+        $data = [
+            'title' => 'My title',
+            'name'  => 'My Name',
+            'date'  => 'My date'
+        ];
+        
+        $builder->insert($data);
+    
+    }
 }

@@ -55,5 +55,9 @@ class UserController extends BaseController
 
         var_dump($requestBody);
     }
+
+    public function postUser() {
+        
+    }
     
 }
