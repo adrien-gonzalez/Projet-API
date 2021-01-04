@@ -17,7 +17,7 @@ class UserController extends BaseController
         $method = $_SERVER["REQUEST_METHOD"];
         $actions = [
             "GET" => "getUser",
-            "POST" => "putUser",
+            "POST" => "postUser",
             "PUT" => "putUser",
             "DELETE" => "deleteUser"
         ];
@@ -33,7 +33,6 @@ class UserController extends BaseController
      */
     public function getUser()
     {
-
         $id = $_GET['id'];
 
         $model = new UserModel();
@@ -79,9 +78,9 @@ class UserController extends BaseController
                     $name = $file->getRandomName();
                     $pictures = scandir('../App/Sauvegarde/Profil_picture');
                     foreach ($pictures as $picture) {
-                        $test = strstr($picture, $id . '__');
-                        if (!empty($test)) {
-                            unlink('../App/Sauvegarde/Profil_picture/' . $test);
+                        $pic = strstr($picture, $id . '__');
+                        if (!empty($pic)) {
+                            unlink('../App/Sauvegarde/Profil_picture/' . $pic);
                         }
                     }
 
@@ -92,13 +91,14 @@ class UserController extends BaseController
                         $file->move('../App/Sauvegarde/Profil_picture', $id . '__' . $name);
                         $users = $model->putUser($id, 'picture_profil', $id . '__' . $name);
                     } else {
-                        throw new Exception('L\'extension du fichier n\'pas prise en compte.');
+                        throw new Exception('L\'extension du fichier n\'est pas prise en compte.');
                     }
                 }
                 break;
         }
     }
 
+    // Function utile pour mes test (à supprimer)
     public function profil_picture()
     {
         return view('profil_picture');
