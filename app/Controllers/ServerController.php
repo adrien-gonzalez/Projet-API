@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use Exception;
 use App\Models\ServerModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
 
 
 class ServerController extends BaseController
@@ -29,13 +30,12 @@ class ServerController extends BaseController
         try {
             $model = new ServerModel();
             $servers = $model->getServers();
-
             echo json_encode($servers);
     
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Could not find servers for specified gameID'
+                    'message' => 'Page not found'
                 ],
                 ResponseInterface::HTTP_NOT_FOUND
             );
@@ -44,11 +44,22 @@ class ServerController extends BaseController
 
     public function postServers()
     {
-        // récup id user
-        $users_fk = 3;
-        $param = $this->request->getRawInput();
-        $model = new  ServerModel();
-        $server = $model->postServers($users_fk, $param);
+        try {
+            // récup id user
+            $users_fk = 3;
+            $param = $this->request->getRawInput();
+            $model = new  ServerModel();
+            $model->postServers($users_fk, $param);
+            echo json_encode("Server created !");
+
+        } catch (Exception $e) {
+            return $this->getResponse(
+                [
+                    'message' => 'Server not created !'
+                ],
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function putServers()
@@ -57,15 +68,15 @@ class ServerController extends BaseController
             $server_id = $_GET['id'];
             $param = $this->request->getRawInput();
             $model = new  ServerModel();
-            $server = $model->putServers($server_id, $param);
+            $model->putServers($server_id, $param);
+            echo json_encode("Server updated !");
 
-            echo json_encode($server);
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Could not find servers for specified gameID'
+                    'message' => 'Server not updated !'
                 ],
-                ResponseInterface::HTTP_NOT_FOUND
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

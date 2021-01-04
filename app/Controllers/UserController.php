@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use Exception;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
 
 
 class UserController extends BaseController
@@ -24,7 +25,6 @@ class UserController extends BaseController
 
     public function getUsers() {
         try {
-          
             $model = new UserModel();
             $users = $model->getUsers();
             echo json_encode($users);
@@ -32,7 +32,7 @@ class UserController extends BaseController
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Could not find client for specified ID'
+                    'message' => 'Page not found'
                 ],
                 ResponseInterface::HTTP_NOT_FOUND
             );
@@ -45,14 +45,15 @@ class UserController extends BaseController
         try {
             $id = $_GET['id'];
             $model = new UserModel();
-            $deleteUser = $model->deleteUser($id);
+            $model->deleteUser($id);
+            echo json_decode("User deleted !");
 
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Could not find client for specified ID'
+                    'message' => 'User not deleted !'
                 ],
-                ResponseInterface::HTTP_NOT_FOUND
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

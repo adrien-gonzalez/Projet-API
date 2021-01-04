@@ -41,7 +41,7 @@ class ServerModel extends Model
             $query = $builder->get();
             $servers = $query->getResult(); 
 
-        // recup serveur via son id
+        // recup serveur et ses info (avis, description...) via son id
         } else if(isset($_GET['id'])) {
 
             $builder = $this->db->table('servers');
