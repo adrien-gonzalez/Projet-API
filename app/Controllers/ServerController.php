@@ -49,8 +49,8 @@ class ServerController extends BaseController
             $users_fk = 3;
             $param = $this->request->getRawInput();
             $model = new  ServerModel();
-            $model->postServers($users_fk, $param);
-            echo json_encode("Server created !");
+            $createServer = $model->postServers($users_fk, $param);
+            echo json_encode($createServer);
 
         } catch (Exception $e) {
             return $this->getResponse(
@@ -68,8 +68,8 @@ class ServerController extends BaseController
             $server_id = $_GET['id'];
             $param = $this->request->getRawInput();
             $model = new  ServerModel();
-            $model->putServers($server_id, $param);
-            echo json_encode("Server updated !");
+            $serverUpdate = $model->putServers($server_id, $param);
+            echo json_encode($serverUpdate);
 
         } catch (Exception $e) {
             return $this->getResponse(

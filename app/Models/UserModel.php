@@ -17,14 +17,13 @@ class UserModel extends Model
     {
         $builder = $this->db->table('users');
         $query = $builder->get();
-        $user = $query->getResult();
-        return $user;
+        return $query->getResult();
     }
 
     public function deleteUser($id)
     {
         $builder = $this->db->table('users');
         $builder->where('id', $id);
-        $builder->delete();
+        return $builder->delete();
     }
 }

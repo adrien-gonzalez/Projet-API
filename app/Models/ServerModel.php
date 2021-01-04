@@ -66,7 +66,7 @@ class ServerModel extends Model
           }
 
           $builder = $this->db->table('servers');
-          $builder->insert([
+          return $builder->insert([
               'name_server' => $param['name_server'],
               'website'   => $param['website'],
               'discord' => $param['discord'],
@@ -88,6 +88,6 @@ class ServerModel extends Model
         $builder->set('port', $param['port']);
         $builder->set('description', $param['description']);        
         $builder->where('servers.id', $server_id);
-        $builder->update();
+        return $builder->update();
     }
 }

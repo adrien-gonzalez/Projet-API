@@ -45,8 +45,8 @@ class UserController extends BaseController
         try {
             $id = $_GET['id'];
             $model = new UserModel();
-            $model->deleteUser($id);
-            echo json_decode("User deleted !");
+            $deleteUser = $model->deleteUser($id);
+            echo json_decode($deleteUser);
 
         } catch (Exception $e) {
             return $this->getResponse(
