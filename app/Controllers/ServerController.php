@@ -14,10 +14,9 @@ class ServerController extends BaseController
     public function server() {
         $method = $_SERVER["REQUEST_METHOD"];
         $actions = [
-            "GET" => "getServersByGame",
-            "POST" => "postServer",
-            "PUT" => "putServer",
-            "DELETE" => "deleteServer"
+            "GET" => "getServers",
+            "POST" => "postServers",
+            "PUT" => "putServers",
         ];
 
         $call = $actions[$method];
@@ -25,29 +24,14 @@ class ServerController extends BaseController
         return $response;
     }
 
-
-    public function getServersByGame()
+    public function getServers()
     {
         try {
-            $uri = $this->request->uri;
-            $game = $uri->getSegment(1);
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-                $limit = 1;
-            } else {
-              $page = 1;
-              $limit = 1;
-            }
-
             $model = new ServerModel();
-            $servers = $model->getServersByGame($game, $page, $limit);
-            
-            if ($servers == false) {
-                return redirect('home');
-            } else {
-                echo json_encode($servers);
-            }
+            $servers = $model->getServers();
 
+            echo json_encode($servers);
+    
         } catch (Exception $e) {
             return $this->getResponse(
                 [
@@ -57,9 +41,32 @@ class ServerController extends BaseController
             );
         }
     }
-    
 
+    public function postServers()
+    {
+        // récup id user
+        $users_fk = 3;
+        $param = $this->request->getRawInput();
+        $model = new  ServerModel();
+        $server = $model->postServers($users_fk, $param);
+    }
 
+    public function putServers()
+    {
+        try {
+            $server_id = $_GET['id'];
+            $param = $this->request->getRawInput();
+            $model = new  ServerModel();
+            $server = $model->putServers($server_id, $param);
 
-    
+            echo json_encode($server);
+        } catch (Exception $e) {
+            return $this->getResponse(
+                [
+                    'message' => 'Could not find servers for specified gameID'
+                ],
+                ResponseInterface::HTTP_NOT_FOUND
+            );
+        }
+    }
 }

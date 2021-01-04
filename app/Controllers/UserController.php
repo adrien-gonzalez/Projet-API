@@ -14,9 +14,6 @@ class UserController extends BaseController
     public function user() {
         $method = $_SERVER["REQUEST_METHOD"];
         $actions = [
-            "GET" => "getUsers",
-            "POST" => "postUser",
-            "PUT" => "putUser",
             "DELETE" => "deleteUser"
         ];
 
@@ -26,7 +23,6 @@ class UserController extends BaseController
     }
 
     public function getUsers() {
-    
         try {
           
             $model = new UserModel();
@@ -45,10 +41,9 @@ class UserController extends BaseController
 
     public function deleteUser() {
 
-        // Vérifier id (appartient bien à l'utilisateur)
-
+        // récup id user
         try {
-            $id = $this->request->getRawInput()['id'];
+            $id = $_GET['id'];
             $model = new UserModel();
             $deleteUser = $model->deleteUser($id);
 
@@ -61,5 +56,4 @@ class UserController extends BaseController
             );
         }
     }
-    
 }

@@ -33,10 +33,9 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index', ['as' => 'home']);
 // $routes->get('users/email=(:any)', 'UserController::getUserByEmail/$1');
 // $routes->post('users', 'UserController::register');
-$routes->add('users', 'UserController::user');
-$routes->add('/(:any)/editer', 'ServerEditController::edit');
-$routes->add('/(:any)/(:any)', 'GameServerController::gameServer');
-$routes->add('/(:any)', 'ServerController::server');
+$routes->add('/api/users', 'UserController::user');
+$routes->add('/api/servers', 'ServerController::server');
+	
 
 
 
