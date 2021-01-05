@@ -20,11 +20,11 @@ class ServerModel extends Model
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         } else {
-          $page = 1;
+            $page = 1;
         }
 
         // recup tous le serveurs en fonction d'un jeu
-        if(isset($_GET['game']))
+        if(isset($_GET['game']) && is_numeric($_GET['game']))
         {
             if ($page == 1) {
                 $offset = 0;
@@ -42,7 +42,7 @@ class ServerModel extends Model
             $servers = $query->getResult(); 
 
         // recup serveur et ses info (avis, description...) via son id
-        } else if(isset($_GET['id'])) {
+        } else if(isset($_GET['id']) && is_numeric($_GET['id'])) {
 
             $builder = $this->db->table('servers');
             $builder->select('*');
@@ -55,39 +55,67 @@ class ServerModel extends Model
 
     public function postServers($users_fk, $param)
     {
-          // Select games_fk
-          $builder = $this->db->table('games');
-          $builder->select('games.id');
-          $builder->where("games.name_game", $param['name_game']);
-          $query = $builder->get()->getResult();
+        // Select games_fk
+        $builder = $this->db->table('games');
+        $builder->select('games.id');
+        $builder->where("games.name_game", $param['name_game']);
+        $query = $builder->get()->getResult();
           
-          if (sizeof($query) != 0){
-              $id_game = $query[0]->id;
-          }
+        if (sizeof($query) != 0){
+          $id_game = $query[0]->id;
+        }
 
-          $builder = $this->db->table('servers');
-          return $builder->insert([
-              'name_server' => $param['name_server'],
-              'website'   => $param['website'],
-              'discord' => $param['discord'],
-              'ip' => $param['ip'],
-              'port' => $param['port'],
-              'description' => $param['description'],
-              'games_fk' => $id_game,
-              'users_fk' => $users_fk
-         ]);
+        if (!empty($param['name_server']) && !empty($param['description']) && !empty($param['miniature'])) {
+            $builder = $this->db->table('servers');
+            $builder->insert([
+                'name_server' => $param['name_server'],
+                'website'   => $param['website'],
+                'discord' => $param['discord'],
+                'ip' => $param['ip'],
+                'port' => $param['port'],
+                'description' => $param['description'],
+                'miniature' => $param['miniature'],
+                'games_fk' => $id_game,
+                'users_fk' => $users_fk
+            ]);
+
+            // Récup id dernier serveur créé et insert image_servers
+            if (!empty($param['image_servers'])) {
+                $builder = $this->db->table('servers');
+                $builder->select('servers.id');
+                $builder->orderBy("id", "desc");
+                $query = $builder->get()->getResult();
+                
+                if (sizeof($query) != 0){
+                    $id_server = $query[0]->id;
+                }
+
+                $builder = $this->db->table('image_servers');
+                $builder->insert([
+                    'name' => $param['image_servers'],
+                    'servers_fk' => $id_server,
+                ]);
+            }
+
+        } else {
+            throw new Exception('Des champs sont vides');
+        }
     }
 
     public function putServers($server_id, $param)
     {
-        $builder = $this->db->table('servers');
-        $builder->set('name_server', $param['name_server']);
-        $builder->set('website', $param['website']);
-        $builder->set('discord', $param['discord']);
-        $builder->set('ip', $param['ip']);
-        $builder->set('port', $param['port']);
-        $builder->set('description', $param['description']);        
-        $builder->where('servers.id', $server_id);
-        return $builder->update();
+        if (!empty($param['name_server']) && !empty($param['description']) && !empty($param['miniature'])) {
+            $builder = $this->db->table('servers');
+            $builder->set('name_server', $param['name_server']);
+            $builder->set('website', $param['website']);
+            $builder->set('discord', $param['discord']);
+            $builder->set('ip', $param['ip']);
+            $builder->set('port', $param['port']);
+            $builder->set('description', $param['description']);        
+            $builder->where('servers.id', $server_id);
+            $builder->update();
+        } else {
+            throw new Exception('Des champs sont vides');
+        }
     }
 }

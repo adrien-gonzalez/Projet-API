@@ -23,30 +23,14 @@ class UserController extends BaseController
         return $response;
     }
 
-    public function getUsers() {
-        try {
-            $model = new UserModel();
-            $users = $model->getUsers();
-            echo json_encode($users);
-
-        } catch (Exception $e) {
-            return $this->getResponse(
-                [
-                    'message' => 'Page not found'
-                ],
-                ResponseInterface::HTTP_NOT_FOUND
-            );
-        }
-    }
-
     public function deleteUser() {
 
         // récup id user
         try {
             $id = $_GET['id'];
             $model = new UserModel();
-            $deleteUser = $model->deleteUser($id);
-            echo json_decode($deleteUser);
+            $model->deleteUser($id);
+            return true;
 
         } catch (Exception $e) {
             return $this->getResponse(

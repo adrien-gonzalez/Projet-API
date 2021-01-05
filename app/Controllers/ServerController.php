@@ -48,14 +48,14 @@ class ServerController extends BaseController
             // récup id user
             $users_fk = 3;
             $param = $this->request->getRawInput();
-            $model = new  ServerModel();
-            $createServer = $model->postServers($users_fk, $param);
-            echo json_encode($createServer);
+            $model = new ServerModel();
+            $model->postServers($users_fk, $param);
+            return true;
 
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Server not created !'
+                    'message' => $e->getMessage()
                 ],
                 ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
             );
@@ -67,14 +67,14 @@ class ServerController extends BaseController
         try {
             $server_id = $_GET['id'];
             $param = $this->request->getRawInput();
-            $model = new  ServerModel();
-            $serverUpdate = $model->putServers($server_id, $param);
-            echo json_encode($serverUpdate);
+            $model = new ServerModel();
+            $model->putServers($server_id, $param);
+            return true;
 
         } catch (Exception $e) {
             return $this->getResponse(
                 [
-                    'message' => 'Server not updated !'
+                    'message' => $e->getMessage()
                 ],
                 ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
             );
