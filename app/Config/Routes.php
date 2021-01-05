@@ -30,13 +30,12 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-// $routes->get('users/email=(:any)', 'UserController::getUserByEmail/$1');
-// $routes->post('users', 'UserController::register');
-$routes->add('users', 'UserController::user');
-$routes->add('users/(:num)', 'UserController::user/$1');
-$routes->add('login_check', 'AuthController::login');
+$routes->add('api', 'Home::index');
+$routes->add('api/users', 'UserController::user');
+$routes->add('api/games', 'GameController::game');
+$routes->add('api/servers', 'ServerController::server');
 $routes->add('api/auth', 'Auth::create');
+$routes->add('api/resetpassword', 'Auth::resetpassword');
 
 /**
  * --------------------------------------------------------------------

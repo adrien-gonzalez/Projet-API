@@ -6,8 +6,9 @@ use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\RESTful\ResourceController;
 
-class UserController extends BaseController
+class UserController extends ResourceController
 {
 
     public function user() {
@@ -33,11 +34,100 @@ class UserController extends BaseController
             echo json_encode($users);
     }
 
-    public function getUserById($id) {
-        $model = new UserModel();
-        $users = $model->getUserById($id);
+    public function postUser() {
+        
+        $params = $this->request->getRawInput();
+        $errors = ["errors" => []];
+        $stop = false;
 
-        echo json_encode($users);
+        if ( !isset($params["login"]) || empty($params["login"]) ) {
+            array_push($errors["errors"], ['loginEmpty' => "Veuillez renseigner un nom d'utilisateur"]);
+            $stop = true;
+        }
+        else {
+            $login = $params["login"];
+        }
+        
+        if ( !isset($params["email"]) || empty($params["email"]) ) {
+            array_push($errors["errors"], ['emailEmpty' => "Veuillez renseigner une adresse email"]);
+            $stop = true;
+        }
+        else {
+            $email = $params["email"];
+        }
+        
+        if ( !isset($params["password"]) || empty($params["password"]) ) {
+            array_push($errors["errors"], ['passwordEmpty' => "Veuillez renseigner un mot de passe"]);
+            $stop = true;
+        }
+        else {
+            $password = $params["password"];
+        }
+        
+        if ( !isset($params["cpassword"]) || empty($params["cpassword"]) ) {
+            array_push($errors["errors"], ['cpasswordEmpty' => "Veuillez renseigner la confirmation de mot de passe"]);
+            $stop = true;
+        }
+        else {
+            $cpassword = $params["cpassword"];
+        }
+
+        if ( $stop === true ) {
+            return $this->respond($errors, 401);
+        }
+        
+        $login = $params["login"];
+        $email = $params["email"];
+        $password = $params["password"];
+        $cpassword = $params["cpassword"];
+
+        $model = new UserModel();
+        $getByEmail = $model->getUserByEmail($email);
+        $getByLogin = $model->getUserByLogin($login);
+
+        if ( !empty($getByEmail) ) {
+            array_push($errors["errors"], ['emailExist' => "Cet email est déjà utilisé"]);
+            $stop = true;
+        }
+
+        if ( !empty($getByLogin) ) {
+            array_push($errors["errors"], ['loginExist' => "Ce nom d'utilisateur est déjà utilisé"]);
+            $stop = true;
+        }
+
+        if (!preg_match("/^[a-zA-Z0-9]{3,16}$/", $login)) {
+            array_push($errors["errors"], ['invalidEmail' => "Le login faire minimum 3 caractères et maximum 16 caractères. Les caractères spéciaux ne sont pas autorisés"]);
+            $stop = true;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            array_push($errors["errors"], ['invalidEmail' => "L'email indiqué n'est pas valide"]);
+            $stop = true;
+        }
+
+        if ( $password != $cpassword ) {
+            array_push($errors["errors"], ['passwordAndConfirmNotMatch' => "Les mots de passe doivent correspondre"]);
+            $stop = true;
+        }
+
+        if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $password)) {
+            array_push($errors["errors"], ['invalidPassword' => "Le mot de passe doit faire minimum 4 caractères et doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
+            $stop = true;
+        }
+
+        if ( $stop === true ) {
+            return $this->respond($errors, 401);
+        }
+        else {
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]);
+            try {
+                $model->postUser($login, $email, $hashedPassword);
+                return true;
+            } catch(Exception $e) {
+                return $this->respond("Une erreur est survenue", 401);
+            }
+        }
+
     }
 
     public function putUser() {
