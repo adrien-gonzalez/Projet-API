@@ -37,6 +37,8 @@ $routes->add('api/servers', 'ServerController::server');
 $routes->add('api/auth', 'Auth::create');
 $routes->add('api/resetpassword', 'Auth::resetpassword');
 
+
+
 /**
  * --------------------------------------------------------------------
  * Additional Routing

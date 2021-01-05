@@ -33,6 +33,13 @@ class UserModel extends Model
 
         return $user;
     }
+                                  
+    public function deleteUser($id)
+    {
+        $builder = $this->db->table('users');
+        $builder->where('id', $id);
+        $builder->delete();
+    }
 
     /**
      * Récupération d'un utilisateur via son id

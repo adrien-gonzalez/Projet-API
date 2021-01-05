@@ -2,14 +2,14 @@
 
 namespace App\Controllers;
 
+use Exception;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
-class UserController extends ResourceController
-{
+class UserController extends ResourceController {
 
     public function user() {
         $method = $_SERVER["REQUEST_METHOD"];
@@ -21,10 +21,8 @@ class UserController extends ResourceController
         ];
 
         $call = $actions[$method];
-        
         $response = $this->$call();
         return $response;
-
     }
 
     public function getUsers() {
@@ -129,6 +127,25 @@ class UserController extends ResourceController
         }
 
     }
+    
+    public function deleteUser() {
+
+        // récup id user
+        try {
+            $id = $_GET['id'];
+            $model = new UserModel();
+            $model->deleteUser($id);
+            return true;
+
+        } catch (Exception $e) {
+            return $this->getResponse(
+                [
+                    'message' => 'User not deleted !'
+                ],
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 
     public function putUser() {
         $requestBody = $this->request->getRawInput();
@@ -145,5 +162,4 @@ class UserController extends ResourceController
 
         var_dump($requestBody);
     }
-    
 }
