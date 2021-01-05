@@ -12,25 +12,6 @@ class ServerModel extends Model
     public function __construct() {
         $this->db = \Config\Database::connect();
     }
-
-    public function isMyServer($id, $idUser) {
-        $builder = $this->db->table('servers');
-        $queryVerif = $builder->where('id', $id);
-        $queryVerif = $queryVerif->where('users_fk', $idUser);
-        $result = $queryVerif->get();
-        if ($result->resultID->num_rows != 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-                                  
-    public function deleteServer($decodedToken) {
-        $builder = $this->db->table('servers');
-        $queryDelete = $builder->where('id', $_GET["serverId"]);
-        $queryDelete->delete();
-    }
                                   
     public function getServers()
     {
@@ -136,6 +117,28 @@ class ServerModel extends Model
             $builder->update();
         } else {
             throw new Exception('Des champs sont vides');
+        }
+    }
+
+    public function deleteServer($decodedToken) {
+        $builder = $this->db->table('servers');
+        $queryDelete = $builder->where('id', $_GET["serverId"]);
+        $queryDelete->delete();
+    }
+
+    /**
+     * Vérifie si le serveur m'appartient (avant de delete par exemple)
+     */
+    public function isMyServer($id, $idUser) {
+        $builder = $this->db->table('servers');
+        $queryVerif = $builder->where('id', $id);
+        $queryVerif = $queryVerif->where('users_fk', $idUser);
+        $result = $queryVerif->get();
+        if ($result->resultID->num_rows != 0) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

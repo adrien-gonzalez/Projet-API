@@ -35,8 +35,10 @@ $routes->add('api/users', 'UserController::user');
 $routes->add('api/games', 'GameController::game');
 $routes->add('api/servers', 'ServerController::server');
 $routes->add('api/auth', 'Auth::create');
-$routes->add('api/resetpassword', 'Auth::resetpassword');
+$routes->add('api/resetpassword', 'PasswordController::resetPassword');
 
+// Route pour faire mes test (à supprimer)
+$routes->get('api/users/profil_picture', 'UserController::profil_picture');
 
 
 /**
