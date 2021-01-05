@@ -10,7 +10,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use RuntimeException;
 
-class UserController extends ResourceController {
+class UserController extends ResourceController
+{
 
     /**
      * Fonction qui redirige vers la fonction qui correspond à la méthode utilisée
@@ -30,55 +31,53 @@ class UserController extends ResourceController {
         return $response;
     }
 
-    public function getUsers() {
-            $model = new UserModel();
-            $users = $model->getUsers();
+    public function getUsers()
+    {
+        $model = new UserModel();
+        $users = $model->getUsers();
 
-            echo json_encode($users);
+        echo json_encode($users);
     }
 
-    public function postUser() {
-        
+    public function postUser()
+    {
+
         $params = $this->request->getRawInput();
         $errors = ["errors" => []];
         $stop = false;
 
-        if ( !isset($params["login"]) || empty($params["login"]) ) {
+        if (!isset($params["login"]) || empty($params["login"])) {
             array_push($errors["errors"], ['loginEmpty' => "Veuillez renseigner un nom d'utilisateur"]);
             $stop = true;
-        }
-        else {
+        } else {
             $login = $params["login"];
         }
-        
-        if ( !isset($params["email"]) || empty($params["email"]) ) {
+
+        if (!isset($params["email"]) || empty($params["email"])) {
             array_push($errors["errors"], ['emailEmpty' => "Veuillez renseigner une adresse email"]);
             $stop = true;
-        }
-        else {
+        } else {
             $email = $params["email"];
         }
-        
-        if ( !isset($params["password"]) || empty($params["password"]) ) {
+
+        if (!isset($params["password"]) || empty($params["password"])) {
             array_push($errors["errors"], ['passwordEmpty' => "Veuillez renseigner un mot de passe"]);
             $stop = true;
-        }
-        else {
+        } else {
             $password = $params["password"];
         }
-        
-        if ( !isset($params["cpassword"]) || empty($params["cpassword"]) ) {
+
+        if (!isset($params["cpassword"]) || empty($params["cpassword"])) {
             array_push($errors["errors"], ['cpasswordEmpty' => "Veuillez renseigner la confirmation de mot de passe"]);
             $stop = true;
-        }
-        else {
+        } else {
             $cpassword = $params["cpassword"];
         }
 
-        if ( $stop === true ) {
+        if ($stop === true) {
             return $this->respond($errors, 401);
         }
-        
+
         $login = $params["login"];
         $email = $params["email"];
         $password = $params["password"];
@@ -88,12 +87,12 @@ class UserController extends ResourceController {
         $getByEmail = $model->getUserByEmail($email);
         $getByLogin = $model->getUserByLogin($login);
 
-        if ( !empty($getByEmail) ) {
+        if (!empty($getByEmail)) {
             array_push($errors["errors"], ['emailExist' => "Cet email est déjà utilisé"]);
             $stop = true;
         }
 
-        if ( !empty($getByLogin) ) {
+        if (!empty($getByLogin)) {
             array_push($errors["errors"], ['loginExist' => "Ce nom d'utilisateur est déjà utilisé"]);
             $stop = true;
         }
@@ -108,7 +107,7 @@ class UserController extends ResourceController {
             $stop = true;
         }
 
-        if ( $password != $cpassword ) {
+        if ($password != $cpassword) {
             array_push($errors["errors"], ['passwordAndConfirmNotMatch' => "Les mots de passe doivent correspondre"]);
             $stop = true;
         }
@@ -118,19 +117,17 @@ class UserController extends ResourceController {
             $stop = true;
         }
 
-        if ( $stop === true ) {
+        if ($stop === true) {
             return $this->respond($errors, 401);
-        }
-        else {
+        } else {
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]);
             try {
                 $model->postUser($login, $email, $hashedPassword);
                 return true;
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 return $this->respond("Une erreur est survenue", 401);
             }
         }
-
     }
 
     /**
@@ -164,29 +161,36 @@ class UserController extends ResourceController {
         switch ($params || $file) {
             case isset($params['login']):
                 if ($this->validate($rules_login)) {
-                    $users = $model->putUser($params['id'], 'login', $params['login']);
-                    return true;
+                    $verif_login = $model->getUserByLogin($params['login']);
+                    if (empty($verif_login)) {
+                        $model->putUser($params['id'], 'login', $params['login']);
+                        return true;
+                    } else {
+                        return $this->respond(['message' => "Ce nom d'utilisateur est déjà utilisé"], 401);
+                    }
                 } else {
-                    // echo les erreurs
-                    echo $this->validator->listErrors();
+                    return $this->validator->listErrors();
                 }
                 break;
             case isset($params['email']):
                 if ($this->validate($rules_email)) {
-                    $users = $model->putUser($params['id'], 'email', $params['email']);
-                    return true;
+                    $verif_email = $model->getUserByEmail($params['email']);
+                    if (empty($verif_email)) {
+                        $model->putUser($params['id'], 'email', $params['email']);
+                        return true;
+                    } else {
+                        return $this->respond(['message' => "Cet email est déjà utilisé"], 401);
+                    }
                 } else {
-                    // echo les erreurs
-                    echo $this->validator->listErrors();
+                    return $this->validator->listErrors();
                 }
                 break;
             case isset($params['password']):
                 if ($this->validate($rules_pwd)) {
-                    $users = $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_DEFAULT));
+                    $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_DEFAULT));
                     return true;
                 } else {
-                    // echo les erreurs
-                    echo $this->validator->listErrors();
+                    return $this->validator->listErrors();
                 }
                 break;
             case (isset($file) && isset($id)):
@@ -208,7 +212,7 @@ class UserController extends ResourceController {
                     if (in_array($file->getExtension(), $extensions)) {
                         // Move the file to it's new home
                         $file->move('../App/Sauvegarde/Profil_picture', $id . '__' . $name);
-                        $users = $model->putUser($id, 'picture_profil', $id . '__' . $name);
+                        $model->putUser($id, 'picture_profil', $id . '__' . $name);
                     } else {
                         throw new Exception('L\'extension du fichier n\'est pas prise en compte.');
                     }
@@ -216,16 +220,15 @@ class UserController extends ResourceController {
                 break;
         }
     }
-    
-    public function deleteUser() {
 
+    public function deleteUser()
+    {
         // récup id user
         try {
             $id = $_GET['id'];
             $model = new UserModel();
             $model->deleteUser($id);
             return true;
-
         } catch (Exception $e) {
             return $this->getResponse(
                 [
