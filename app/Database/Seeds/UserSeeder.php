@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         return [
             'login' => $faker->username(),
 			'email' => $faker->email,
-			'password' => password_hash("password", PASSWORD_BCRYPT),
+			'password' => "password",
 			'picture_profil' => "test.png"
         ];
     }
