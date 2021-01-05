@@ -120,7 +120,12 @@ class UserController extends ResourceController
         }
         else {
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]);
-            $model->postUser($login, $email, $hashedPassword);
+            try {
+                $model->postUser($login, $email, $hashedPassword);
+                return true;
+            } catch(Exception $e) {
+                return $this->respond("Une erreur est survenue", 401);
+            }
         }
 
     }
