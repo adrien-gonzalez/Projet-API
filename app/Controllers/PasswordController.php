@@ -61,7 +61,7 @@ class PasswordController extends BaseController
                     echo 'ok mail envoyé';
                 } else {
                     $data = $email->printDebugger(['headers']);
-                    var_dump($data);
+                    var_dump($data); // Probablement à modifier
                 }
             } else {
                 // à modifier
@@ -69,7 +69,8 @@ class PasswordController extends BaseController
             }
         } else {
             // à modifier
-            echo 'Renseignez le champ avec un email valide';
+            // echo les erreurs;
+            echo $this->validator->listErrors();
         }
     }
 
@@ -83,9 +84,9 @@ class PasswordController extends BaseController
         $model = new UserModel();
 
         $users = $model->getUsers_token($token);
-        $test = $this->checkexpiredate($users[0]->date_token);
+        $date_token = $this->checkexpiredate($users[0]->date_token);
 
-        if($test)
+        if($date_token)
         {
             echo json_encode($users);
         }
@@ -114,10 +115,19 @@ class PasswordController extends BaseController
     
             $model = new UserModel();
     
-            $users = $model->putUser($id,'password',password_hash($password, PASSWORD_DEFAULT));
+            $users_pwd = $model->putUser($id,'password',password_hash($password, PASSWORD_DEFAULT));
+            $users_token = $model->resetToken($id);
+            if($users_pwd)
+            {
+                echo 'mot de passe modifié'; // à modifier
+            }
+            else{
+                echo 'erreur'; // à modifier
+            }
         }
         else{
-            echo 'mdp pas correct';
+            // echo les erreurs
+            echo $this->validator->listErrors();
         }
 
     }

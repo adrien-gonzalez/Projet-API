@@ -34,7 +34,7 @@ $routes->get('/', 'Home::index');
 $routes->add('API/users', 'UserController::user');
 $routes->add('API/resetpassword', 'PasswordController::resetPassword');
 // Route pour faire mes test (à supprimer)
-$routes->get('users/profil_picture', 'UserController::profil_picture');
+$routes->get('API/users/profil_picture', 'UserController::profil_picture');
 
 
 /**

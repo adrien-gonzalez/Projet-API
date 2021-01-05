@@ -46,6 +46,23 @@ class UserController extends BaseController
      */
     public function putUser()
     {
+        // gère les restrictions du formulaire
+        $rules_email = [
+            'email' => [
+                'rules' => 'required|valid_email',
+            ],
+        ];
+        $rules_login = [
+            'login' => [
+                'rules' => 'required',
+            ],
+        ];
+        $rules_pwd = [
+            'password' => [
+                'rules' => 'required|min_length[8]',
+            ],
+        ];
+
         $params = $this->request->getRawInput();
         $file = $this->request->getFile('profil_picture');
         $id = $_POST['id'];
@@ -54,22 +71,29 @@ class UserController extends BaseController
 
         switch ($params || $file) {
             case isset($params['login']):
-                $users = $model->putUser($params['id'], 'login', $params['login']);
-                break;
+                if ($this->validate($rules_login)) {
+                    $users = $model->putUser($params['id'], 'login', $params['login']);
+                    return true;
+                } else {
+                    // echo les erreurs
+                    echo $this->validator->listErrors();
+                }
             case isset($params['email']):
-                if (filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
+                if ($this->validate($rules_email)) {
                     $users = $model->putUser($params['id'], 'email', $params['email']);
+                    return true;
                 } else {
-                    throw new Exception('L\'email n\'est pas au bon format !');
+                    // echo les erreurs
+                    echo $this->validator->listErrors();
                 }
-                break;
             case isset($params['password']):
-                if (strlen($params['password']) >= 8) {
+                if ($this->validate($rules_pwd)) {
                     $users = $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_DEFAULT));
+                    return true;
                 } else {
-                    throw new Exception('Le mot de passe doit faire au moins 8 caractères');
+                    // echo les erreurs
+                    echo $this->validator->listErrors();
                 }
-                break;
             case (isset($file) && isset($id)):
                 if (!$file->isValid()) {
                     throw new Exception($file->getErrorString() . '(' . $file->getError() . ')');
@@ -98,9 +122,11 @@ class UserController extends BaseController
         }
     }
 
-    // Function utile pour mes test (à supprimer)
+    /**
+     * Fonction créé pour mes tests
+     */
     public function profil_picture()
     {
-        return view('profil_picture');
+        return view('profil_picture.php');
     }
 }
