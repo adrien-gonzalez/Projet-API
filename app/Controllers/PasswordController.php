@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use Config\Services;
 use App\Models\UserModel;
+use CodeIgniter\RESTful\ResourceController;
 
-class PasswordController extends BaseController
+
+class PasswordController extends ResourceController
 {
     /**
      * Fonction qui redirige vers la fonction qui correspond à la méthode utilisée
@@ -31,6 +33,7 @@ class PasswordController extends BaseController
     public function SendMail()
     {
         $model = new UserModel();
+        $errors = ["errors" => []];
 
         // gère les restrictions du formulaire
         $rules = [
@@ -42,10 +45,10 @@ class PasswordController extends BaseController
         if ($this->validate($rules)) {
             $params = $this->request->getRawInput();
             $mail = $params['email'];
-            $users_mail = $model->getUsers_mail($mail);
-            if (!empty($users_mail)) {
+            $verif_email = $model->getUserByEmail($mail);
+            if (!empty($verif_email)) {
                 $token = bin2hex(random_bytes(24));
-                $users = $model->putToken($token, $mail);
+                $model->putToken($token, $mail);
 
                 // Envoie du mail 
                 $email = Services::email();
@@ -57,20 +60,18 @@ class PasswordController extends BaseController
                                     Cliquez sur le lien suivant : <a href="' . base_url() . '/API/resetpassword?token=' . $token . '">Nouveau mot de passe</a>');
 
                 if ($email->send()) {
-                    // à modifier
-                    echo 'ok mail envoyé';
+                    return true;
                 } else {
                     $data = $email->printDebugger(['headers']);
-                    var_dump($data); // Probablement à modifier
+                    return $data; // Retourne l'erreur (Probablement à modifier)
                 }
             } else {
-                // à modifier
-                echo 'Cet email est incorrect. Veuillez réessayer.';
+                array_push($errors["errors"], ['email_error' => "Cet email est incorrect. Veuillez réessayer."]);
+                return $this->respond($errors, 401);
             }
         } else {
-            // à modifier
-            // echo les erreurs;
-            echo $this->validator->listErrors();
+            array_push($errors["errors"], ['email_error' => $this->validator->getError('email')]);
+            return $this->respond($errors, 401);
         }
     }
 
@@ -79,6 +80,7 @@ class PasswordController extends BaseController
      */
     public function getToken()
     {
+        $errors = ["errors" => []];
         $token = $_GET['token'];
 
         $model = new UserModel();
@@ -86,17 +88,18 @@ class PasswordController extends BaseController
         $users = $model->getUsers_token($token);
         $date_token = $this->checkexpiredate($users[0]->date_token);
 
-        if($date_token)
-        {
-            echo json_encode($users);
-        }
-        else {
-            echo 'token expiré';
+        if ($date_token) {
+            return json_encode($users);
+        } else {
+            array_push($errors["errors"], ['reset_token_error' => "Le token est expiré, veuillez faire une nouvelle demande."]);
+            return $this->respond($errors, 401);
         }
     }
 
     public function putPassword()
     {
+        $errors = ["errors" => []];
+
         // gère les restrictions du formulaire
         $rules = [
             'password' => [
@@ -107,29 +110,33 @@ class PasswordController extends BaseController
             ],
         ];
 
-        if($this->validate($rules))
-        {
-            $params = $this->request->getRawInput();
-            $password = $params['password'];
-            $id = $params['id'];
-    
-            $model = new UserModel();
-    
-            $users_pwd = $model->putUser($id,'password',password_hash($password, PASSWORD_DEFAULT));
-            $users_token = $model->resetToken($id);
-            if($users_pwd)
-            {
-                echo 'mot de passe modifié'; // à modifier
-            }
-            else{
-                echo 'erreur'; // à modifier
+        $params = $this->request->getRawInput();
+        $password = $params['password'];
+        $id = $params['id'];
+        $token = $params['token'];
+        $model = new UserModel();
+
+        $verif_id_token = $model->getUsers_token($token);
+        if ($verif_id_token[0]->id == $id) {
+            if ($this->validate($rules)) {
+                if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $password)) {
+                    array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
+                    return $this->respond($errors, 401);
+                } else {
+                    $model->putUser($id, 'password', password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]));
+                    $model->resetToken($id);
+                    return true;
+                }
+            } else {
+                array_push($errors["errors"], ['conf_password_error' => $this->validator->getError('conf_password')]);
+                array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
+                return $this->respond($errors, 401);
             }
         }
         else{
-            // echo les erreurs
-            echo $this->validator->listErrors();
+            array_push($errors["errors"], ['token_error' => "Le token ne vous appartient pas."]);
+                return $this->respond($errors, 401);
         }
-
     }
 
     /**
@@ -140,13 +147,10 @@ class PasswordController extends BaseController
         $uptime = strtotime($time);
         $current_time = time();
         $timediff = $current_time - $uptime;
-        if($timediff < 900)
-        {
+        if ($timediff < 900) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
-
     }
 }

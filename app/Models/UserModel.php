@@ -69,23 +69,21 @@ class UserModel extends Model
         return $query;
     }
                                   
-    public function deleteUser($id_user)
+    public function deleteUser($id)
     {
         $builder = $this->db->table('users');
-        $queryDelete = $builder->where('id', $id_user);
-        $queryDelete->delete();
+        $builder->where('id', $id);
+        $builder->delete();
     }
 
     /**
-     * Utilisé pour la demande de réinitialisation du mot de passe
-     * -- PasswordController
+     * Récupération d'un utilisateur via son id
      */
-    public function getUsers_mail($mail)
+    public function getUserById($id)
     {
         $builder = $this->db->table('users');
-        $query = $builder->where('email',$mail)->get()->getResult();
-
-        return $query;
+        $query = $builder->getWhere(['id' => $id]);
+        $user = $query->getResult();
     }
 
     /**
@@ -156,4 +154,5 @@ class UserModel extends Model
 
         return $user;
     }
+
 }
