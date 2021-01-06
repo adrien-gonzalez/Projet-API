@@ -87,18 +87,6 @@ class UserModel extends Model
     }
 
     /**
-     * Utilisé pour la demande de réinitialisation du mot de passe
-     * -- PasswordController
-     */
-    public function getUsers_mail($mail)
-    {
-        $builder = $this->db->table('users');
-        $query = $builder->where('email',$mail)->get()->getResult();
-
-        return $query;
-    }
-
-    /**
      * Utilisé lors de l'activation du lien du mail
      *  Vérification de la validité du token
      * -- PasswordController
