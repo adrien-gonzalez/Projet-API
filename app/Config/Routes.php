@@ -30,12 +30,31 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->add('api', 'Home::index');
-$routes->add('api/users', 'UserController::user');
-$routes->add('api/games', 'GameController::game');
-$routes->add('api/servers', 'ServerController::server');
-$routes->add('api/auth', 'Auth::create');
-$routes->add('api/resetpassword', 'PasswordController::resetPassword');
+// $routes->add('api/users', 'UserController::user');
+// $routes->add('api/servers', 'ServerController::server');
+// $routes->add('api/resetpassword', 'PasswordController::resetPassword');
+
+// ROUTES GET
+$routes->get('api', 'Home::index');
+$routes->get('api/games', 'GameController::getGames');
+$routes->get('api/servers', 'ServerController::getServers');
+$routes->get('api/resetpassword', 'PasswordController::getToken');
+// $routes->get('api/users', 'UserController::getUsers', ['filter' => 'authFilter']);
+
+// ROUTES POST
+$routes->post('api/servers', 'ServerController::postServer', ['filter' => 'authFilter']);
+$routes->post('api/users', 'UserController::postUser');
+$routes->post('api/auth', 'Auth::create');
+$routes->post('api/resetpassword', 'PasswordController::sendMail');
+
+// ROUTES PUT
+$routes->put('api/servers', 'ServerController::putServer', ['filter' => 'authFilter']);
+$routes->put('api/users', 'UserController::putUser', ['filter' => 'authFilter']);
+$routes->put('api/resetpassword', 'PasswordController::putPassword');
+
+// ROUTES DELETE
+$routes->delete('api/users', 'ServerController::deleteUser', ['filter' => 'authFilter']);
+$routes->delete('api/servers', 'ServerController::deleteServer', ['filter' => 'authFilter']);
 
 // Route pour faire mes test (à supprimer)
 $routes->get('api/users/profil_picture', 'UserController::profil_picture');

@@ -18,21 +18,22 @@ class UserModel extends Model
      * 
      * No get params -> Récupération de tous les users
      * get id -> Récupération d'un utilisateur via son id
+     * NON UTILISEE POUR L'INSTANT
      * 
      */
-    public function getUsers()
-    {
-        $builder = $this->db->table('users');
-        if( isset($_GET["id"]) ) {
-            $query = $builder->getWhere(['id' => $_GET["id"]]);
-        }
-        else {
-            $query = $builder->get();
-        }
-        $user = $query->getResult();
+    // public function getUsers()
+    // {
+    //     $builder = $this->db->table('users');
+    //     if( isset($_GET["id"]) ) {
+    //         $query = $builder->getWhere(['id' => $_GET["id"]]);
+    //     }
+    //     else {
+    //         $query = $builder->get();
+    //     }
+    //     $user = $query->getResult();
 
-        return $user;
-    }
+    //     return $user;
+    // }
 
     /**
      * Création d'un utilisateur
@@ -74,16 +75,6 @@ class UserModel extends Model
         $builder = $this->db->table('users');
         $builder->where('id', $id);
         $builder->delete();
-    }
-
-    /**
-     * Récupération d'un utilisateur via son id
-     */
-    public function getUserById($id)
-    {
-        $builder = $this->db->table('users');
-        $query = $builder->getWhere(['id' => $id]);
-        $user = $query->getResult();
     }
 
     /**
