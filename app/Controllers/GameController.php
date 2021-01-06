@@ -3,9 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\GameModel;
-use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\HTTP\RequestInterface;
 
 class GameController extends BaseController
 {

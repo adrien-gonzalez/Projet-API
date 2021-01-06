@@ -6,11 +6,7 @@ use Exception;
 use Config\Services;
 use Firebase\JWT\JWT;
 use App\Models\UserModel;
-use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
-use RuntimeException;
 
 class UserController extends ResourceController {
 
@@ -20,6 +16,28 @@ class UserController extends ResourceController {
     public function user()
     {
         $method = $_SERVER["REQUEST_METHOD"];
+
+        if ( $method == "PUT" || $method == "DELETE" ) {
+            $key        = Services::getSecretKey();
+            $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+            if (is_null($authHeader)) { //JWT is absent
+                throw new Exception('Missing JWT in request');
+            }
+            else {
+                $arr        = explode(' ', $authHeader);
+                $token      = $arr[1];
+            }
+    
+            try
+            {
+                $decodedToken = JWT::decode($token, $key, ['HS256']);
+            }
+            catch (\Exception $e)
+            {
+                throw new Exception("Invalid JWT");
+            }
+        }
+
         $actions = [
             "GET" => "getUsers",
             "POST" => "postUser",
@@ -32,12 +50,12 @@ class UserController extends ResourceController {
         return $response;
     }
 
-    public function getUsers() {
-            $model = new UserModel();
-            $users = $model->getUsers();
+    // public function getUsers() {
+    //         $model = new UserModel();
+    //         $users = $model->getUsers();
 
-            echo json_encode($users);
-    }
+    //         echo json_encode($users);
+    // }
 
     public function postUser() {
         

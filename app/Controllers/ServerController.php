@@ -6,16 +6,36 @@ use Exception;
 use Config\Services;
 use Firebase\JWT\JWT;
 use App\Models\ServerModel;
-use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
 class ServerController extends ResourceController
 {
 
     public function server() {
+        
         $method = $_SERVER["REQUEST_METHOD"];
+
+        if ( $method == "POST" || $method == "PUT" || $method == "DELETE" ) {
+            $key        = Services::getSecretKey();
+            $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+            if (is_null($authHeader)) { //JWT is absent
+                throw new Exception('Missing JWT in request');
+            }
+            else {
+                $arr        = explode(' ', $authHeader);
+                $token      = $arr[1];
+            }
+    
+            try
+            {
+                $decodedToken = JWT::decode($token, $key, ['HS256']);
+            }
+            catch (\Exception $e)
+            {
+                throw new Exception("Invalid JWT");
+            }
+        }
+
         $actions = [
             "GET" => "getServers",
             "POST" => "postServer",
@@ -25,12 +45,8 @@ class ServerController extends ResourceController
 
         $call = $actions[$method];
         
-        if ($call == "deleteServer") {
-            $response = $this->$call($request = "");
-        }
-        else {
-            $response = $this->$call();
-        }
+        $response = $this->$call();
+
         return $response;
 
     }
@@ -53,9 +69,9 @@ class ServerController extends ResourceController
         $stop = false;
 
         // Décodage du token pour récupérer les infos
-        $decodedToken = $this->decodeToken();
+        // $decodedToken = $this->decodeToken();
         // récup id user connecté
-        $user_fk = $decodedToken->id;
+        $user_fk = 1;
         $param = $this->request->getRawInput();
         $model = new ServerModel();
 
