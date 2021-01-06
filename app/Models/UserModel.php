@@ -69,11 +69,11 @@ class UserModel extends Model
         return $query;
     }
                                   
-    public function deleteUser($id)
+    public function deleteUser($id_user)
     {
         $builder = $this->db->table('users');
-        $builder->where('id', $id);
-        $builder->delete();
+        $queryDelete = $builder->where('id', $id_user);
+        $queryDelete->delete();
     }
 
     /**
@@ -166,5 +166,4 @@ class UserModel extends Model
 
         return $user;
     }
-
 }
