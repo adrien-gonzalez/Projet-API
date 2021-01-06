@@ -96,20 +96,49 @@ class ServerController extends ResourceController
     {
         if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
 
+            $errors = ["errors" => []];
+            $stop = false;
+            
             // Décodage du token pour récupérer les infos
             $decodedToken = $this->decodeToken();
+            $param = $this->request->getRawInput();
             $model = new ServerModel();
             $isMyServer = $model->isMyServer($_GET["id"], $decodedToken->id);
 
             if ($isMyServer) {
-                try {
-                    $param = $this->request->getRawInput();
-                    $model->putServers($param);
-                    return true;
 
-                } catch (Exception $e) {
-                    return $this->respond(['message' => $e->getMessage()], 500);
-                } 
+                if ( !isset($param["name_server"]) || empty($param["name_server"]) ) {
+                    array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
+                    $stop = true;
+                }
+                
+                if ( !isset($param["miniature"]) || empty($param["miniature"]) ) {
+                    array_push($errors["errors"], ['miniatureEmpty' => "Veuillez renseigner une miniature pour votre serveur"]);
+                    $stop = true;
+                }
+                
+                if ( !isset($param["description"]) || empty($param["description"]) ) {
+                    array_push($errors["errors"], ['descriptionEmpty' => "Veuillez renseigner une description"]);
+                    $stop = true;
+                }
+        
+                if ( !isset($param["name_game"]) || empty($param["name_game"]) ) {
+                    array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
+                    $stop = true;
+                }
+        
+                if ( $stop === true ) {
+                    return $this->respond($errors, 401);
+                } else {
+
+                    try {
+                        $model->putServers($param);
+                        return true;
+
+                    } catch (Exception $e) {
+                        return $this->respond(['message' => $e->getMessage()], 500);
+                    } 
+                }
             } else {
                 return $this->respond(['message' => "Le serveur ne vous appartient pas"], 401);
             }

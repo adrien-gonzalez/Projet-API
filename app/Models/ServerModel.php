@@ -109,20 +109,16 @@ class ServerModel extends Model
 
     public function putServers($param)
     {
-        if (!empty($param['name']) && !empty($param['description']) && !empty($param['miniature'])) {
-            $builder = $this->db->table('servers');
-            $builder->set('name', $param['name']);
-            $builder->set('website', $param['website']);
-            $builder->set('discord', $param['discord']);
-            $builder->set('ip', $param['ip']);
-            $builder->set('port', $param['port']);
-            $builder->set('description', $param['description']);
-            $builder->set('miniature', $param['miniature']);
-            $builder->where('servers.id', $_GET['id']);
-            $builder->update();
-        } else {
-            throw new Exception('Des champs sont vides');
-        }
+        $builder = $this->db->table('servers');
+        $builder->set('name', $param['name_server']);
+        $builder->set('website', $param['website']);
+        $builder->set('discord', $param['discord']);
+        $builder->set('ip', $param['ip']);
+        $builder->set('port', $param['port']);
+        $builder->set('description', $param['description']);
+        $builder->set('miniature', $param['miniature']);
+        $builder->where('servers.id', $_GET['id']);
+        $builder->update();
     }
 
     public function deleteServer() {
