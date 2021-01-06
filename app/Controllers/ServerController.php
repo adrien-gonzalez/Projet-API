@@ -2,14 +2,14 @@
 
 namespace App\Controllers;
 
-use App\Models\ServerModel;
-use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\RESTful\ResourceController;
+use Exception;
 use Config\Services;
 use Firebase\JWT\JWT;
-use Exception;
+use App\Models\ServerModel;
+use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
 class ServerController extends ResourceController
 {
@@ -49,30 +49,99 @@ class ServerController extends ResourceController
 
     public function postServer()
     {
-        try {
-            // récup id user
-            $users_fk = 3;
-            $param = $this->request->getRawInput();
-            $model = new ServerModel();
-            $model->postServers($users_fk, $param);
-            return true;
+        $errors = ["errors" => []];
+        $stop = false;
 
-        } catch (Exception $e) {
-            return $this->respond(['message' => $e->getMessage()], 500);
+        // Décodage du token pour récupérer les infos
+        $decodedToken = $this->decodeToken();
+        // récup id user connecté
+        $user_fk = $decodedToken->id;
+        $param = $this->request->getRawInput();
+        $model = new ServerModel();
+
+        if ( !isset($param["name_server"]) || empty($param["name_server"]) ) {
+            array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
+            $stop = true;
+        }
+        
+        if ( !isset($param["miniature"]) || empty($param["miniature"]) ) {
+            array_push($errors["errors"], ['miniatureEmpty' => "Veuillez renseigner une miniature pour votre serveur"]);
+            $stop = true;
+        }
+        
+        if ( !isset($param["description"]) || empty($param["description"]) ) {
+            array_push($errors["errors"], ['descriptionEmpty' => "Veuillez renseigner une description"]);
+            $stop = true;
+        }
+
+        if ( !isset($param["name_game"]) || empty($param["name_game"]) ) {
+            array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
+            $stop = true;
+        }
+
+        if ( $stop === true ) {
+            return $this->respond($errors, 401);
+        } else {
+            try {
+                $model->postServers($user_fk, $param);
+                return true;
+
+            } catch (Exception $e) {
+                return $this->respond(['message' => $e->getMessage()], 500);
+            }
         }
     }
 
     public function putServer()
     {
-        try {
-            $server_id = $_GET['id'];
+        if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
+
+            $errors = ["errors" => []];
+            $stop = false;
+            
+            // Décodage du token pour récupérer les infos
+            $decodedToken = $this->decodeToken();
             $param = $this->request->getRawInput();
             $model = new ServerModel();
-            $model->putServers($server_id, $param);
-            return true;
+            $isMyServer = $model->isMyServer($_GET["id"], $decodedToken->id);
 
-        } catch (Exception $e) {
-            return $this->respond(['message' => $e->getMessage()], 500);
+            if ($isMyServer) {
+
+                if ( !isset($param["name_server"]) || empty($param["name_server"]) ) {
+                    array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
+                    $stop = true;
+                }
+                
+                if ( !isset($param["miniature"]) || empty($param["miniature"]) ) {
+                    array_push($errors["errors"], ['miniatureEmpty' => "Veuillez renseigner une miniature pour votre serveur"]);
+                    $stop = true;
+                }
+                
+                if ( !isset($param["description"]) || empty($param["description"]) ) {
+                    array_push($errors["errors"], ['descriptionEmpty' => "Veuillez renseigner une description"]);
+                    $stop = true;
+                }
+        
+                if ( !isset($param["name_game"]) || empty($param["name_game"]) ) {
+                    array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
+                    $stop = true;
+                }
+        
+                if ( $stop === true ) {
+                    return $this->respond($errors, 401);
+                } else {
+
+                    try {
+                        $model->putServers($param);
+                        return true;
+
+                    } catch (Exception $e) {
+                        return $this->respond(['message' => $e->getMessage()], 500);
+                    } 
+                }
+            } else {
+                return $this->respond(['message' => "Le serveur ne vous appartient pas"], 401);
+            }
         }
     }
 
@@ -81,13 +150,12 @@ class ServerController extends ResourceController
 
             // Décodage du token pour récupérer les infos
             $decodedToken = $this->decodeToken();
-
             $model = new ServerModel();
 
             $isMyServer = $model->isMyServer($_GET["serverId"], $decodedToken->id);
             if ($isMyServer) {
                 try {
-                    $server = $model->deleteServer($decodedToken);
+                    $server = $model->deleteServer();
                     return true;
                 }
                 catch(Exception $e) {
@@ -97,7 +165,6 @@ class ServerController extends ResourceController
             else {
                 return $this->respond(['message' => "Le serveur ne vous appartient pas"], 401);
             }
-
         }
     }
 

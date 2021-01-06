@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use Exception;
+use Config\Services;
+use Firebase\JWT\JWT;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\RequestInterface;
@@ -219,13 +221,14 @@ class UserController extends ResourceController {
     
     public function deleteUser() {
 
-        // récup id user
-        try {
-            $id = $_GET['id'];
-            $model = new UserModel();
-            $model->deleteUser($id);
-            return true;
+        // Décodage du token pour récupérer les infos
+        $decodedToken = $this->decodeToken();
+        $model = new UserModel();
+        $id_user = $decodedToken->id;
 
+        try {
+            $model->deleteUser($id_user);
+            return true;
         } catch (Exception $e) {
             return $this->getResponse(
                 [
@@ -242,5 +245,14 @@ class UserController extends ResourceController {
     public function profil_picture()
     {
         return view('profil_picture.php');
+    }
+
+    public function decodeToken() {
+        $key = Services::getSecretKey();
+        $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+        $arr        = explode(' ', $authHeader);
+        $token      = $arr[1];
+        $decodedToken = JWT::decode($token, $key, ['HS256']);
+        return $decodedToken;
     }
 }

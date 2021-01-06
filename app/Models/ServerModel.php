@@ -53,7 +53,7 @@ class ServerModel extends Model
         return $servers;
     }
 
-    public function postServers($users_fk, $param)
+    public function postServers($user_fk, $param)
     {
         // Select games_fk
         $builder = $this->db->table('games');
@@ -65,10 +65,16 @@ class ServerModel extends Model
           $id_game = $query[0]->id;
         }
 
-        if (!empty($param['name']) && !empty($param['description']) && !empty($param['miniature'])) {
+        $builder = $this->db->table('servers');
+        $builder->select('servers.name');
+        $builder->where("servers.name", $param['name_server']);
+        $query = $builder->get()->getResult();
+
+        if (sizeof($query) == 0){
+
             $builder = $this->db->table('servers');
             $builder->insert([
-                'name' => $param['name'],
+                'name' => $param['name_server'],
                 'website'   => $param['website'],
                 'discord' => $param['discord'],
                 'ip' => $param['ip'],
@@ -76,10 +82,10 @@ class ServerModel extends Model
                 'description' => $param['description'],
                 'miniature' => $param['miniature'],
                 'games_fk' => $id_game,
-                'users_fk' => $users_fk
+                'users_fk' => $user_fk
             ]);
 
-            // Récup id dernier serveur créé et insert image_servers
+            // Récup l'id du serveur créé précédemment et insert image_servers (si image(s) upload)
             if (!empty($param['image_servers'])) {
                 $builder = $this->db->table('servers');
                 $builder->select('servers.id');
@@ -96,31 +102,26 @@ class ServerModel extends Model
                     'servers_fk' => $id_server,
                 ]);
             }
-
         } else {
-            throw new Exception('Des champs sont vides');
+            throw new Exception('Serveur déjà existant');
         }
     }
 
-    public function putServers($server_id, $param)
+    public function putServers($param)
     {
-        if (!empty($param['name']) && !empty($param['description']) && !empty($param['miniature'])) {
-            $builder = $this->db->table('servers');
-            $builder->set('name', $param['name']);
-            $builder->set('website', $param['website']);
-            $builder->set('discord', $param['discord']);
-            $builder->set('ip', $param['ip']);
-            $builder->set('port', $param['port']);
-            $builder->set('description', $param['description']);
-            $builder->set('miniature', $param['miniature']);
-            $builder->where('servers.id', $server_id);
-            $builder->update();
-        } else {
-            throw new Exception('Des champs sont vides');
-        }
+        $builder = $this->db->table('servers');
+        $builder->set('name', $param['name_server']);
+        $builder->set('website', $param['website']);
+        $builder->set('discord', $param['discord']);
+        $builder->set('ip', $param['ip']);
+        $builder->set('port', $param['port']);
+        $builder->set('description', $param['description']);
+        $builder->set('miniature', $param['miniature']);
+        $builder->where('servers.id', $_GET['id']);
+        $builder->update();
     }
 
-    public function deleteServer($decodedToken) {
+    public function deleteServer() {
         $builder = $this->db->table('servers');
         $queryDelete = $builder->where('id', $_GET["serverId"]);
         $queryDelete->delete();
