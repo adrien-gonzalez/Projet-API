@@ -42,13 +42,13 @@ $routes->get('api/resetpassword', 'PasswordController::getToken');
 // $routes->get('api/users', 'UserController::getUsers', ['filter' => 'authFilter']);
 
 // ROUTES POST
-$routes->post('api/servers', 'ServerController::postServer', ['filter' => 'authFilter']);
+// $routes->post('api/servers', 'ServerController::postServer', ['filter' => 'authFilter']);
 $routes->post('api/users', 'UserController::postUser');
 $routes->post('api/auth', 'Auth::create');
 $routes->post('api/resetpassword', 'PasswordController::sendMail');
 
 // ROUTES PUT
-$routes->put('api/servers', 'ServerController::putServer', ['filter' => 'authFilter']);
+// $routes->put('api/servers', 'ServerController::putServer', ['filter' => 'authFilter']);
 $routes->put('api/users', 'UserController::putUser', ['filter' => 'authFilter']);
 $routes->put('api/resetpassword', 'PasswordController::putPassword');
 
