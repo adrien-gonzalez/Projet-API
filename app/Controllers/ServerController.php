@@ -35,11 +35,16 @@ class ServerController extends ResourceController
 
     }
 
-    public function getServers()
+    public function getServers($id = null)
     {
         try {
             $model = new ServerModel();
-            $servers = $model->getServers();
+            if ($id == null) {
+                $servers = $model->getServers();
+            }
+            else {
+                $servers = $model->getServers($id);
+            }
             echo json_encode($servers);
     
         } catch (Exception $e) {

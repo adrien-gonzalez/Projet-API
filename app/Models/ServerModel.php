@@ -13,7 +13,7 @@ class ServerModel extends Model
         $this->db = \Config\Database::connect();
     }
                                   
-    public function getServers()
+    public function getServers($id = null)
     {
         $limit = 10;
 
@@ -42,11 +42,11 @@ class ServerModel extends Model
             $servers = $query->getResult(); 
 
         // recup serveur et ses info (avis, description...) via son id
-        } else if(isset($_GET['id']) && is_numeric($_GET['id'])) {
+        } else if(isset($id) && is_numeric($id)) {
 
             $builder = $this->db->table('servers');
             $builder->select('*');
-            $builder->where('servers.id', $_GET['id']);
+            $builder->where('servers.id', $id);
             $query = $builder->get();
             $servers = $query->getResult(); 
         } 

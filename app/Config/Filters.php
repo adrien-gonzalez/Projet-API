@@ -36,8 +36,8 @@ class Filters extends BaseConfig
 	public $filters = [
 		'authFilter' => [
 			'before' => [
-				'users/*',
-				'users'
+				'api/users/*',
+				'api/servers?id=(:num)'
 			],
 		]
 	];
