@@ -143,7 +143,7 @@ class UserController extends ResourceController
         ];
         $rules_login = [
             'login' => [
-                'rules' => 'required',
+                'rules' => 'required|min_length[3]|max_length[16]',
             ],
         ];
         $rules_pwd = [
@@ -161,12 +161,16 @@ class UserController extends ResourceController
         switch ($params || $file) {
             case isset($params['login']):
                 if ($this->validate($rules_login)) {
-                    $verif_login = $model->getUserByLogin($params['login']);
-                    if (empty($verif_login)) {
-                        $model->putUser($params['id'], 'login', $params['login']);
-                        return true;
+                    if (!preg_match("/^[a-zA-Z0-9]{3,16}$/", $params['login'])) {
+                        return $this->respond(['message' => "Les caractères spéciaux ne sont pas autorisés"], 401);
                     } else {
-                        return $this->respond(['message' => "Ce nom d'utilisateur est déjà utilisé"], 401);
+                        $verif_login = $model->getUserByLogin($params['login']);
+                        if (empty($verif_login)) {
+                            $model->putUser($params['id'], 'login', $params['login']);
+                            return true;
+                        } else {
+                            return $this->respond(['message' => "Ce nom d'utilisateur est déjà utilisé"], 401);
+                        }
                     }
                 } else {
                     return $this->validator->listErrors();
@@ -187,8 +191,12 @@ class UserController extends ResourceController
                 break;
             case isset($params['password']):
                 if ($this->validate($rules_pwd)) {
-                    $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_DEFAULT));
-                    return true;
+                    if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $params['password'])) {
+                        return $this->respond(['message' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"], 401);
+                    } else {
+                        $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_BCRYPT, $options = ["cost" => 12]));
+                        return true;
+                    }
                 } else {
                     return $this->validator->listErrors();
                 }
