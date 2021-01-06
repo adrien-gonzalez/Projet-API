@@ -3,12 +3,14 @@
 namespace App\Controllers;
 
 use Exception;
+use Firebase\JWT\JWT;
+use RuntimeException;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\Config\Services;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
-use RuntimeException;
 
 class UserController extends ResourceController
 {
@@ -154,7 +156,10 @@ class UserController extends ResourceController
 
         $params = $this->request->getRawInput();
         $file = $this->request->getFile('profil_picture');
-        // $id = $_POST['id'];
+        $errors = ["errors" => []];
+
+        // Décodage du token pour récupérer les infos
+        $decodedToken = $this->decodeToken();
 
         $model = new UserModel();
 
@@ -162,46 +167,54 @@ class UserController extends ResourceController
             case isset($params['login']):
                 if ($this->validate($rules_login)) {
                     if (!preg_match("/^[a-zA-Z0-9]{3,16}$/", $params['login'])) {
-                        return $this->respond(['message' => "Les caractères spéciaux ne sont pas autorisés"], 401);
+                        array_push($errors["errors"], ['login_error' => "Les caractères spéciaux ne sont pas autorisés"]);
+                        return $this->respond($errors, 401);
                     } else {
                         $verif_login = $model->getUserByLogin($params['login']);
                         if (empty($verif_login)) {
-                            $model->putUser($params['id'], 'login', $params['login']);
+                            $model->putUser($decodedToken->id, 'login', $params['login']);
                             return true;
                         } else {
-                            return $this->respond(['message' => "Ce nom d'utilisateur est déjà utilisé"], 401);
+                            array_push($errors["errors"], ['login_error' => "Ce nom d'utilisateur est déjà utilisé"]);
+                            return $this->respond($errors, 401);
                         }
                     }
                 } else {
-                    return $this->validator->listErrors();
+                    array_push($errors["errors"], ['login_error' => $this->validator->getError('login')]);
+                    return $this->respond($errors, 401);
                 }
                 break;
             case isset($params['email']):
                 if ($this->validate($rules_email)) {
                     $verif_email = $model->getUserByEmail($params['email']);
                     if (empty($verif_email)) {
-                        $model->putUser($params['id'], 'email', $params['email']);
+                        $model->putUser($decodedToken->id, 'email', $params['email']);
                         return true;
                     } else {
-                        return $this->respond(['message' => "Cet email est déjà utilisé"], 401);
+                        array_push($errors["errors"], ['email_error' => "Cet email est déjà utilisé"]);
+                        return $this->respond($errors, 401);
                     }
                 } else {
-                    return $this->validator->listErrors();
+                    array_push($errors["errors"], ['email_error' => $this->validator->getError('email')]);
+                    return $this->respond($errors, 401);
                 }
                 break;
             case isset($params['password']):
                 if ($this->validate($rules_pwd)) {
                     if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $params['password'])) {
-                        return $this->respond(['message' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"], 401);
+                        array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
+                        return $this->respond($errors, 401);
                     } else {
-                        $model->putUser($params['id'], 'password', password_hash($params['password'], PASSWORD_BCRYPT, $options = ["cost" => 12]));
+                        $model->putUser($decodedToken->id, 'password', password_hash($params['password'], PASSWORD_BCRYPT, $options = ["cost" => 12]));
                         return true;
                     }
                 } else {
-                    return $this->validator->listErrors();
+                    array_push($errors["errors"], ['conf_password_error' => $this->validator->getError('conf_password')]);
+                    array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
+                    return $this->respond($errors, 401);
                 }
                 break;
-            case (isset($file) && isset($id)):
+            case (isset($file) && isset($decodedToken->id)):
                 if (!$file->isValid()) {
                     throw new Exception($file->getErrorString() . '(' . $file->getError() . ')');
                 } else {
@@ -209,7 +222,7 @@ class UserController extends ResourceController
                     $name = $file->getRandomName();
                     $pictures = scandir('../App/Sauvegarde/Profil_picture');
                     foreach ($pictures as $picture) {
-                        $pic = strstr($picture, $id . '__');
+                        $pic = strstr($picture, $decodedToken->id . '__');
                         if (!empty($pic)) {
                             unlink('../App/Sauvegarde/Profil_picture/' . $pic);
                         }
@@ -219,8 +232,8 @@ class UserController extends ResourceController
                     $extensions = ['jpg', 'png', 'jpeg'];
                     if (in_array($file->getExtension(), $extensions)) {
                         // Move the file to it's new home
-                        $file->move('../App/Sauvegarde/Profil_picture', $id . '__' . $name);
-                        $model->putUser($id, 'picture_profil', $id . '__' . $name);
+                        $file->move('../App/Sauvegarde/Profil_picture', $decodedToken->id . '__' . $name);
+                        $model->putUser($decodedToken->id, 'picture_profil', $decodedToken->id . '__' . $name);
                     } else {
                         throw new Exception('L\'extension du fichier n\'est pas prise en compte.');
                     }
@@ -245,6 +258,16 @@ class UserController extends ResourceController
                 ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    public function decodeToken()
+    {
+        $key = Services::getSecretKey();
+        $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+        $arr        = explode(' ', $authHeader);
+        $token      = $arr[1];
+        $decodedToken = JWT::decode($token, $key, ['HS256']);
+        return $decodedToken;
     }
 
     /**
