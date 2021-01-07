@@ -51,6 +51,49 @@ class ServerController extends ResourceController
 
     }
 
+     /**
+     * @OA\GET(
+     *      path="/servers?id={id}",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Détail du serveur",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="Page not found (serveur non trouvé)",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
+
+     /**
+     * @OA\GET(
+     *      path="/servers?game={id}",
+     *      @OA\Parameter(
+     *          name="game",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Liste des serveurs en fonction du jeu",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="404",
+     *          description="Page not found (jeu non trouvé)",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function getServers()
     {
         try {
@@ -63,6 +106,37 @@ class ServerController extends ResourceController
         }
     }
 
+     /**
+     * @OA\POST(
+     *      path="/servers",
+     *      @OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="name_server", type="string"),
+	 *               	@OA\Property(property="description", type="string"),
+	 *               	@OA\Property(property="miniature", type="string"),
+	 *               	@OA\Property(property="port", type="string"),
+	 *               	@OA\Property(property="website", type="string"),
+	 *               	@OA\Property(property="ip", type="string"),
+	 *               	@OA\Property(property="discord", type="string"),
+	 *               	@OA\Property(property="image_servers", type="string")
+	 *            	)
+	 *			)
+     *      ),
+     *       @OA\Response(
+     *          response="200",
+     *          description="Serveur créé !",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     *      @OA\Response(
+     *          response="401",
+     *          description="Des champs sont vides",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function postServer()
     {
         $errors = ["errors" => []];
@@ -108,6 +182,43 @@ class ServerController extends ResourceController
         }
     }
 
+     /**
+     * @OA\PUT(
+     *      path="/servers?id={id}",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="name_server", type="string"),
+	 *               	@OA\Property(property="description", type="string"),
+	 *               	@OA\Property(property="miniature", type="string"),
+	 *               	@OA\Property(property="port", type="string"),
+	 *               	@OA\Property(property="website", type="string"),
+	 *               	@OA\Property(property="ip", type="string"),
+	 *               	@OA\Property(property="discord", type="string"),
+     *                  @OA\Property(property="image_servers", type="string")
+	 *            	)
+	 *			)
+ 	 *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Serveur moifié !",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="401",
+     *          description="Des champs sont vides",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function putServer()
     {
         if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
@@ -161,6 +272,22 @@ class ServerController extends ResourceController
         }
     }
 
+     /**
+     * @OA\DELETE(
+     *      path="/servers?id={id}",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Supprimer un serveur",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function deleteServer() {
         if ( isset($_GET["serverId"]) && is_numeric($_GET["serverId"]) ) {
 
@@ -194,3 +321,5 @@ class ServerController extends ResourceController
     }
 
 }
+
+

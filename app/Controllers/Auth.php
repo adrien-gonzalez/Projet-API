@@ -11,6 +11,31 @@ class Auth extends ResourceController
 
 	protected $format = 'json';
 
+	/**
+     * @OA\POST(
+     *      path="/auth",
+	 * 		@OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="login", type="string"),
+	 *               	@OA\Property(property="password", type="string")
+	 *            	)
+	 *			)
+ 	 *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Connecté !",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+	 * 		@OA\Response(
+     *          response="401",
+     *          description="Erreur login / password",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
 	public function create()
 	{
 
