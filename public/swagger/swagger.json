@@ -223,7 +223,7 @@
                 }
             }
         },
-        "/api/users": {
+        "/users": {
             "put": {
                 "operationId": "App\\Controllers\\UserController::putUser",
                 "requestBody": {
