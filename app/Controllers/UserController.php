@@ -7,6 +7,7 @@ use Config\Services;
 use Firebase\JWT\JWT;
 use App\Models\UserModel;
 use CodeIgniter\RESTful\ResourceController;
+use OpenApi\Annotations as OA;
 
 class UserController extends ResourceController {
 
@@ -153,7 +154,14 @@ class UserController extends ResourceController {
     }
 
     /**
-     * Modifie les informations de l'utilisateur 
+     * @OA\PUT(
+     *      path="/api/users",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Modification du profil",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
      */
     public function putUser()
     {

@@ -1,0 +1,32 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Serve",
+        "version": "0.1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080/api",
+            "description": "Mon API"
+        }
+    ],
+    "paths": {
+        "/api/users": {
+            "put": {
+                "operationId": "App\\Controllers\\UserController::putUser",
+                "responses": {
+                    "200": {
+                        "description": "Modification du profil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
