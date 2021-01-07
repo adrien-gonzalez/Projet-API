@@ -6,6 +6,7 @@ use Exception;
 use Config\Services;
 use Firebase\JWT\JWT;
 use App\Models\ServerModel;
+use OpenApi\Annotations as OA;
 use CodeIgniter\RESTful\ResourceController;
 
 class ServerController extends ResourceController

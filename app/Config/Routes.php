@@ -32,7 +32,8 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 
 // ROUTES GET
-$routes->add('api', 'Home::index');
+
+$routes->add('/', 'Home::index');
 $routes->add('api/servers', 'ServerController::server');
 $routes->add('api/users', 'UserController::user');
 $routes->add('api/games', 'GameController::game');

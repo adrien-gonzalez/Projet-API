@@ -139,7 +139,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Modifier un serveur",
+                        "description": "Serveur moifié !",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -223,59 +223,7 @@
                 }
             }
         },
-        "/servers": {
-            "post": {
-                "operationId": "App\\Controllers\\ServerController::postServer",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "properties": {
-                                    "name_server": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "miniature": {
-                                        "type": "string"
-                                    },
-                                    "port": {
-                                        "type": "string"
-                                    },
-                                    "website": {
-                                        "type": "string"
-                                    },
-                                    "ip": {
-                                        "type": "string"
-                                    },
-                                    "discord": {
-                                        "type": "string"
-                                    },
-                                    "image_servers": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "401": {
-                        "description": "Des champs sont vides",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
+        "/api/users": {
             "put": {
                 "operationId": "App\\Controllers\\UserController::putUser",
                 "requestBody": {
@@ -283,13 +231,16 @@
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
-                                    "login": {
+                                    "password": {
+                                        "required": false,
                                         "type": "string"
                                     },
-                                    "password": {
+                                    "login": {
+                                        "required": false,
                                         "type": "string"
                                     },
                                     "email": {
+                                        "required": false,
                                         "type": "string"
                                     }
                                 },
@@ -300,7 +251,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Modifié !",
+                        "description": "Connecté !",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -310,7 +261,7 @@
                         }
                     },
                     "401": {
-                        "description": "Erreur login / password / email",
+                        "description": "Erreur login / password",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -319,7 +270,23 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     }
