@@ -155,6 +155,33 @@ class UserController extends ResourceController {
     /**
      * Modifie les informations de l'utilisateur 
      */
+
+    /**
+     * @OA\PUT(
+     *      path="/users",
+	 * 		@OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="login", type="string"),
+	 *               	@OA\Property(property="password", type="string"),
+	 *               	@OA\Property(property="email", type="string")
+	 *            	)
+	 *			)
+ 	 *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Modifié !",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+	 * 		@OA\Response(
+     *          response="401",
+     *          description="Erreur login / password / email",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function putUser()
     {
         // gère les restrictions du formulaire
