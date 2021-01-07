@@ -153,16 +153,46 @@ class UserController extends ResourceController {
         }
     }
 
-    /**
+     /**
      * @OA\PUT(
      *      path="/api/users",
+     *      security={{"bearerAuth":{}}}, 
+	 * 		@OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(
+     *                      property="password", 
+     *                      type="string",
+     *                      required=false,
+     *                  ),
+	 *               	@OA\Property(
+     *                      property="login", 
+     *                      type="string",
+     *                      required=false,
+     *                  ),
+	 *               	@OA\Property(
+     *                      property="email", 
+     *                      type="string",
+     *                      required=false,
+     *                  ),
+	 *            	),
+     *			),
+     *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Modification du profil",
+     *          description="Connecté !",
      *          @OA\JsonContent(type="object"),
-     *      )
+     *      ),
+	 * 		@OA\Response(
+     *          response="401",
+     *          description="Erreur login / password",
+     *          @OA\JsonContent(type="object"),
+     *      ),
      * )
      */
+    
     public function putUser()
     {
         // gère les restrictions du formulaire
@@ -193,7 +223,7 @@ class UserController extends ResourceController {
         $model = new UserModel();
 
         switch ($params || $file) {
-            case isset($params['login']):
+            case (isset($params['login']) && !empty($params['login'])):
                 if ($this->validate($rules_login)) {
                     if (!preg_match("/^[a-zA-Z0-9]{3,16}$/", $params['login'])) {
                         array_push($errors["errors"], ['login_error' => "Les caractères spéciaux ne sont pas autorisés"]);
@@ -213,7 +243,7 @@ class UserController extends ResourceController {
                     return $this->respond($errors, 401);
                 }
                 break;
-            case isset($params['email']):
+            case (isset($params['email']) && !empty($param['email'])):
                 if ($this->validate($rules_email)) {
                     $verif_email = $model->getUserByEmail($params['email']);
                     if (empty($verif_email)) {
@@ -228,7 +258,7 @@ class UserController extends ResourceController {
                     return $this->respond($errors, 401);
                 }
                 break;
-            case isset($params['password']):
+            case (isset($params['password']) && !empty($params['password'])):
                 if ($this->validate($rules_pwd)) {
                     if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $params['password'])) {
                         array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);

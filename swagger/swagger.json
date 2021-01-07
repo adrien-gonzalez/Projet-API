@@ -6,17 +6,47 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8080/api",
+            "url": "http://localhost:8080",
             "description": "Mon API"
         }
     ],
     "paths": {
-        "/api/users": {
+        "/api/users?login={login}": {
             "put": {
                 "operationId": "App\\Controllers\\UserController::putUser",
+                "parameters": [
+                    {
+                        "name": "login",
+                        "in": "path",
+                        "description": "login à modifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "login",
+                        "in": "path",
+                        "description": "login à modifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Modification du profil",
+                        "description": "Modification du login ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur ds la modification du login",
                         "content": {
                             "application/json": {
                                 "schema": {

@@ -8,7 +8,7 @@ class Home extends BaseController
 {
 	public function index()
 	{
-		return view('welcome_message');
+		return redirect()->to('swagger/index.html');
 	}
 
 }
