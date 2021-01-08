@@ -25,4 +25,12 @@ use OpenApi\Annotations as OA;
  *      name="ResetPassword",
  *      description="Requête concernant la réinitialisation du mot de passe",
  * ),
+ * @OA\Tag(
+ *      name="Game",
+ *      description="Requête concernant les jeux",
+ * ),
+ * @OA\Tag(
+ *      name="User",
+ *      description="Requête concernant les utilisateurs",
+ * )
  */
