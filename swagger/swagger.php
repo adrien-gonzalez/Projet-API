@@ -17,4 +17,20 @@ use OpenApi\Annotations as OA;
  *      scheme="bearer",
  *      bearerFormat="JWT",
  * ),
+ * @OA\Tag(
+ *      name="Serveur",
+ *      description="Requête concernant les serveurs",
+ * ),
+ * @OA\Tag(
+ *      name="ResetPassword",
+ *      description="Requête concernant la réinitialisation du mot de passe",
+ * ),
+ * @OA\Tag(
+ *      name="Game",
+ *      description="Requête concernant les jeux",
+ * ),
+ * @OA\Tag(
+ *      name="User",
+ *      description="Requête concernant les utilisateurs",
+ * )
  */

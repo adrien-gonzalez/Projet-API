@@ -14,6 +14,8 @@ class Auth extends ResourceController
 	/**
      * @OA\POST(
      *      path="/auth",
+	 * 		description="Permet de se connecter et créer un token",
+	 * 		tags={"User"},
 	 * 		@OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
@@ -26,7 +28,7 @@ class Auth extends ResourceController
  	 *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Connecté !",
+     *          description="True",
      *          @OA\JsonContent(type="object"),
      *      ),
 	 * 		@OA\Response(

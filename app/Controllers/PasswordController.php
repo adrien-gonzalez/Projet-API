@@ -28,7 +28,30 @@ class PasswordController extends ResourceController
     }
 
     /**
-     * Vérifie l'email renseigné et envoie le lien de modification du mdp
+     * @OA\POST(
+     *      path="/resetpassword",
+     *      tags={"ResetPassword"},
+     *      description=" Vérifie l'email renseigné et envoie le lien de modification du mdp",
+     *      @OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="email", type="string"),
+	 *            	)
+	 *			)
+     *      ),
+     *       @OA\Response(
+     *          response="200",
+     *          description="Serveur créé !",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="401",
+     *          description="Des champs sont vides",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
      */
     public function SendMail()
     {
@@ -76,7 +99,27 @@ class PasswordController extends ResourceController
     }
 
     /**
-     * Vérifie si le token utilisé est toujours valide 
+     * @OA\GET(
+     *      path="/resetpassword?token={token}",
+     *      description="Vérifie si le token utilisé est toujours valide",
+     *      tags={"ResetPassword"},
+     *      @OA\Parameter(
+     *          name="token",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="string")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Informations de l'utilisateur possedant ce token",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="401",
+     *          description="Erreur Token",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
      */
     public function getToken()
     {
@@ -96,6 +139,33 @@ class PasswordController extends ResourceController
         }
     }
 
+    /**
+     * @OA\PUT(
+     *      path="/resetpassword",
+     *      description="modifie le mot de passe de l'utilisateur qui a fait la demande",
+     *      tags={"ResetPassword"},
+     *      @OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="password", type="string",required=true),
+	 *               	@OA\Property(property="conf_password", type="string",required=true),
+	 *            	)
+	 *			)
+ 	 *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="Mot de passe réinitialisé",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="401",
+     *          description="Erreur champs",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function putPassword()
     {
         $errors = ["errors" => []];

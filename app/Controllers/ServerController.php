@@ -55,6 +55,8 @@ class ServerController extends ResourceController
      /**
      * @OA\GET(
      *      path="/servers?id={id}",
+     *      description="Détail d'un serveur",
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
@@ -77,6 +79,8 @@ class ServerController extends ResourceController
      /**
      * @OA\GET(
      *      path="/servers?game={id}",
+     *      description="Liste les serveurs en fonction du jeu",
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="game",
      *          in="query",
@@ -85,7 +89,7 @@ class ServerController extends ResourceController
      *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Liste des serveurs en fonction du jeu",
+     *          description="Liste des serveurs",
      *          @OA\JsonContent(type="object"),
      *      ),
      *      @OA\Response(
@@ -110,6 +114,9 @@ class ServerController extends ResourceController
      /**
      * @OA\POST(
      *      path="/servers",
+     *      description="Créer un serveur",
+     *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},
      *      @OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
@@ -122,15 +129,15 @@ class ServerController extends ResourceController
 	 *               	@OA\Property(property="website", type="string"),
 	 *               	@OA\Property(property="ip", type="string"),
 	 *               	@OA\Property(property="discord", type="string"),
-	 *               	@OA\Property(property="image_servers", type="string")
+	 *               	@OA\Property(property="image_servers", type="string"),
 	 *            	)
 	 *			)
      *      ),
      *       @OA\Response(
      *          response="200",
-     *          description="Serveur créé !",
+     *          description="True",
      *          @OA\JsonContent(type="object"),
-     *      )
+     *      ),
      *      @OA\Response(
      *          response="401",
      *          description="Des champs sont vides",
@@ -186,6 +193,9 @@ class ServerController extends ResourceController
      /**
      * @OA\PUT(
      *      path="/servers?id={id}",
+     *      description="Modifier les détails d'un serveur",
+     *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},     
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
@@ -210,7 +220,7 @@ class ServerController extends ResourceController
  	 *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Serveur moifié !",
+     *          description="True",
      *          @OA\JsonContent(type="object"),
      *      ),
      *      @OA\Response(
@@ -276,6 +286,9 @@ class ServerController extends ResourceController
      /**
      * @OA\DELETE(
      *      path="/servers?id={id}",
+     *      description="Supprimer un serveur",
+     *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
@@ -284,7 +297,7 @@ class ServerController extends ResourceController
      *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Supprimer un serveur",
+     *          description="True",
      *          @OA\JsonContent(type="object"),
      *      )
      * )

@@ -59,6 +59,35 @@ class UserController extends ResourceController {
     //         echo json_encode($users);
     // }
 
+    /**
+     * @OA\POST(
+     *      path="/users",
+     *      description="Créer un utilisateur (Inscription)",
+     *      tags={"User"},
+     *      @OA\RequestBody(
+ 	 *         	@OA\MediaType(
+	 *           mediaType="application/x-www-form-urlencoded",
+	 *           	@OA\Schema(
+	 *               	type="object",
+	 *               	@OA\Property(property="login", type="string"),
+	 *               	@OA\Property(property="email", type="string"),
+	 *               	@OA\Property(property="password", type="password"),
+	 *               	@OA\Property(property="cpassword", type="password"),
+	 *            	)
+	 *			)
+ 	 *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="True",
+     *          @OA\JsonContent(type="object"),
+     *      ),
+     *      @OA\Response(
+     *          response="401",
+     *          description="Erreurs champs",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function postUser() {
         
         $params = $this->request->getRawInput();
@@ -157,38 +186,28 @@ class UserController extends ResourceController {
      /**
      * @OA\PUT(
      *      path="/users",
+     *      description="Modifie les détails d'un utilisateur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"User"},
 	 * 		@OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
 	 *           	@OA\Schema(
 	 *               	type="object",
-	 *               	@OA\Property(
-     *                      property="password", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="login", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="email", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
+	 *               	@OA\Property(property="password",type="string",required=false),
+	 *               	@OA\Property(property="login",type="string",required=false),
+	 *               	@OA\Property(property="email",type="string",required=false),
 	 *            	),
      *			),
      *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Connecté !",
+     *          description="True",
      *          @OA\JsonContent(type="object"),
      *      ),
 	 * 		@OA\Response(
      *          response="401",
-     *          description="Erreur login / password",
+     *          description="Erreur",
      *          @OA\JsonContent(type="object"),
      *      ),
      * )
@@ -302,6 +321,25 @@ class UserController extends ResourceController {
         }
     }
     
+     /**
+     * @OA\DELETE(
+     *      path="/users?id={id}",
+     *      description="Supprime un utilisateur",
+     *      security={{"bearerAuth":{}}}, 
+     *      tags={"User"},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="query",
+     *          required=true,
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response="200",
+     *          description="True",
+     *          @OA\JsonContent(type="object"),
+     *      )
+     * )
+     */
     public function deleteUser() {
 
         // Décodage du token pour récupérer les infos
