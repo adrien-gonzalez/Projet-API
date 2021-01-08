@@ -84,6 +84,8 @@ class UserModel extends Model
         $builder = $this->db->table('users');
         $query = $builder->getWhere(['id' => $id]);
         $user = $query->getResult();
+
+        return $user;
     }
 
     /**

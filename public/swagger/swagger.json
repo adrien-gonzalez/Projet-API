@@ -534,22 +534,27 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Modifie les détails d'un utilisateur",
+                "description": "Modifie les détails d'un utilisateur un champ à la fois.",
                 "operationId": "App\\Controllers\\UserController::putUser",
                 "requestBody": {
+                    "description": "Modifiez un champ à la fois. Password et old_password vont de paire.",
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
-                                    "password": {
-                                        "required": false,
-                                        "type": "string"
-                                    },
                                     "login": {
                                         "required": false,
                                         "type": "string"
                                     },
                                     "email": {
+                                        "required": false,
+                                        "type": "string"
+                                    },
+                                    "old_password": {
+                                        "required": false,
+                                        "type": "string"
+                                    },
+                                    "password": {
                                         "required": false,
                                         "type": "string"
                                     }

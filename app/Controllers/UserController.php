@@ -186,17 +186,19 @@ class UserController extends ResourceController {
      /**
      * @OA\PUT(
      *      path="/users",
-     *      description="Modifie les détails d'un utilisateur",
+     *      description="Modifie les détails d'un utilisateur un champ à la fois.",
      *      security={{"bearerAuth":{}}}, 
      *      tags={"User"},
 	 * 		@OA\RequestBody(
+     *          description="Modifiez un champ à la fois. Password et old_password vont de paire.",
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
 	 *           	@OA\Schema(
 	 *               	type="object",
+     *               	@OA\Property(property="login",type="string",required=false),
+     *               	@OA\Property(property="email",type="string",required=false),
+     *               	@OA\Property(property="old_password",type="string",required=false),
 	 *               	@OA\Property(property="password",type="string",required=false),
-	 *               	@OA\Property(property="login",type="string",required=false),
-	 *               	@OA\Property(property="email",type="string",required=false),
 	 *            	),
      *			),
      *      ),
@@ -230,6 +232,9 @@ class UserController extends ResourceController {
             'password' => [
                 'rules' => 'required|min_length[8]',
             ],
+            'old_password' => [
+                'rules' => 'required',
+            ]
         ];
 
         $params = $this->request->getRawInput();
@@ -278,18 +283,25 @@ class UserController extends ResourceController {
                     return $this->respond($errors, 401);
                 }
                 break;
-            case (isset($params['password']) && !empty($params['password'])):
-                if ($this->validate($rules_pwd)) {
-                    if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $params['password'])) {
-                        array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
-                        return $this->respond($errors, 401);
+            case (isset($params['password']) && !empty($params['password']) && isset($params['old_password']) && !empty($params['old_password'])):
+                if (password_verify($params['old_password'],($model->getUserById($decodedToken->id))[0]->password))
+                {
+                    if ($this->validate($rules_pwd)) {
+                        if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $params['password'])) {
+                            array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
+                            return $this->respond($errors, 401);
+                        } else {
+                            $model->putUser($decodedToken->id, 'password', password_hash($params['password'], PASSWORD_BCRYPT, $options = ["cost" => 12]));
+                            return true;
+                        }
                     } else {
-                        $model->putUser($decodedToken->id, 'password', password_hash($params['password'], PASSWORD_BCRYPT, $options = ["cost" => 12]));
-                        return true;
+                        array_push($errors["errors"], ['old_password_error' => $this->validator->getError('old_password')]);
+                        array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
+                        return $this->respond($errors, 401);
                     }
-                } else {
-                    array_push($errors["errors"], ['conf_password_error' => $this->validator->getError('conf_password')]);
-                    array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
+                }
+                else {
+                    array_push($errors["errors"], ['password_error' => "Le mot de passe actuel est incorrect."]);
                     return $this->respond($errors, 401);
                 }
                 break;
