@@ -27,6 +27,7 @@ class GameController extends BaseController
      * @OA\GET(
      *      path="/games?popular={num}",
      *      description="Liste des jeux les plus populaires",
+     *      tags={"Game"},
      *      @OA\Parameter(
      *          name="num",
      *          in="query",
@@ -50,6 +51,7 @@ class GameController extends BaseController
      * @OA\GET(
      *      path="/games",
      *      description="Liste des jeux",
+     *      tags={"Game"},
      *      @OA\Response(
      *          response="200",
      *          description="Liste des jeux",

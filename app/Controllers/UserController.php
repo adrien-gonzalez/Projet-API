@@ -63,6 +63,7 @@ class UserController extends ResourceController {
      * @OA\POST(
      *      path="/users",
      *      description="Créer un utilisateur (Inscription)",
+     *      tags={"User"},
      *      @OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
@@ -187,26 +188,15 @@ class UserController extends ResourceController {
      *      path="/users",
      *      description="Modifie les détails d'un utilisateur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"User"},
 	 * 		@OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
 	 *           	@OA\Schema(
 	 *               	type="object",
-	 *               	@OA\Property(
-     *                      property="password", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="login", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="email", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
+	 *               	@OA\Property(property="password",type="string",required=false),
+	 *               	@OA\Property(property="login",type="string",required=false),
+	 *               	@OA\Property(property="email",type="string",required=false),
 	 *            	),
      *			),
      *      ),
@@ -217,7 +207,7 @@ class UserController extends ResourceController {
      *      ),
 	 * 		@OA\Response(
      *          response="401",
-     *          description="Erreur login / password",
+     *          description="Erreur",
      *          @OA\JsonContent(type="object"),
      *      ),
      * )
@@ -336,6 +326,7 @@ class UserController extends ResourceController {
      *      path="/users?id={id}",
      *      description="Supprime un utilisateur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"User"},
      *      @OA\Parameter(
      *          name="id",
      *          in="query",

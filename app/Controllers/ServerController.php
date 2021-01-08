@@ -56,6 +56,7 @@ class ServerController extends ResourceController
      * @OA\GET(
      *      path="/servers?id={id}",
      *      description="Détail d'un serveur",
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
@@ -79,6 +80,7 @@ class ServerController extends ResourceController
      * @OA\GET(
      *      path="/servers?game={id}",
      *      description="Liste les serveurs en fonction du jeu",
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="game",
      *          in="query",
@@ -114,6 +116,7 @@ class ServerController extends ResourceController
      *      path="/servers",
      *      description="Créer un serveur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},
      *      @OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
@@ -192,6 +195,7 @@ class ServerController extends ResourceController
      *      path="/servers?id={id}",
      *      description="Modifier les détails d'un serveur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},     
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
@@ -284,6 +288,7 @@ class ServerController extends ResourceController
      *      path="/servers?id={id}",
      *      description="Supprimer un serveur",
      *      security={{"bearerAuth":{}}}, 
+     *      tags={"Serveur"},
      *      @OA\Parameter(
      *          name="id",
      *          in="query",
