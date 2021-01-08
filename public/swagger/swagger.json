@@ -55,6 +55,140 @@
                 }
             }
         },
+        "/resetpassword": {
+            "put": {
+                "tags": [
+                    "ResetPassword"
+                ],
+                "description": "modifie le mot de passe de l'utilisateur qui a fait la demande",
+                "operationId": "App\\Controllers\\PasswordController::putPassword",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "password": {
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    "conf_password": {
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe réinitialisé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur champs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ResetPassword"
+                ],
+                "description": " Vérifie l'email renseigné et envoie le lien de modification du mdp",
+                "operationId": "App\\Controllers\\PasswordController::SendMail",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Serveur créé !",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Des champs sont vides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/resetpassword?token={token}": {
+            "get": {
+                "tags": [
+                    "ResetPassword"
+                ],
+                "description": "Vérifie si le token utilisé est toujours valide",
+                "operationId": "App\\Controllers\\PasswordController::getToken",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informations de l'utilisateur possedant ce token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur Token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/servers?id={id}": {
             "get": {
                 "parameters": [
@@ -225,6 +359,9 @@
         },
         "/users": {
             "put": {
+                "tags": [
+                    "Serveur"
+                ],
                 "operationId": "App\\Controllers\\UserController::putUser",
                 "requestBody": {
                     "content": {
@@ -251,7 +388,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Connecté !",
+                        "description": "Modification bien prise en compte",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -261,7 +398,7 @@
                         }
                     },
                     "401": {
-                        "description": "Erreur login / password",
+                        "description": "Erreur",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -289,5 +426,15 @@
                 "scheme": "bearer"
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Serveur",
+            "description": "Requête concernant les serveurs"
+        },
+        {
+            "name": "ResetPassword",
+            "description": "Requête concernant la réinitialisation du mot de passe"
+        }
+    ]
 }

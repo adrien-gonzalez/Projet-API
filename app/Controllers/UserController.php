@@ -157,38 +157,27 @@ class UserController extends ResourceController {
      /**
      * @OA\PUT(
      *      path="/users",
-     *      security={{"bearerAuth":{}}}, 
+     *      security={{"bearerAuth":{}}},
+     *      tags={"Serveur"},
 	 * 		@OA\RequestBody(
  	 *         	@OA\MediaType(
 	 *           mediaType="application/x-www-form-urlencoded",
 	 *           	@OA\Schema(
 	 *               	type="object",
-	 *               	@OA\Property(
-     *                      property="password", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="login", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
-	 *               	@OA\Property(
-     *                      property="email", 
-     *                      type="string",
-     *                      required=false,
-     *                  ),
+	 *               	@OA\Property(property="password",type="string",required=false),
+	 *               	@OA\Property(property="login",type="string",required=false),
+	 *               	@OA\Property(property="email",type="string",required=false),
 	 *            	),
      *			),
      *      ),
      *      @OA\Response(
      *          response="200",
-     *          description="Connecté !",
+     *          description="Modification bien prise en compte",
      *          @OA\JsonContent(type="object"),
      *      ),
 	 * 		@OA\Response(
      *          response="401",
-     *          description="Erreur login / password",
+     *          description="Erreur",
      *          @OA\JsonContent(type="object"),
      *      ),
      * )
