@@ -1,13 +1,12 @@
 import React from "react";
 import { Dimensions } from 'react-native';
 import Input from "../components/input.jsx";
-import { StyleSheet, Image, Text, View } from "react-native";
 import Bouton from "../components/bouton.jsx";
+import { StyleSheet, Image, Text, View } from "react-native";
 
 const windowHeight = Dimensions.get('window').height;
 
-const ResetMail = () => {
-
+const ResetPassword = () => {
   return (
     <View style={styles.container}>
       <View style={styles.container_top}>
@@ -15,11 +14,12 @@ const ResetMail = () => {
           style={styles.image}
           source={require("../assets/updates-catspandas_latest.jpg")}
         />
-        <Text style={styles.title}> Mot de passe oublié </Text>
+        <Text style={styles.title}> Réinitialisation du mot de passe</Text>
       </View>
       <View style={styles.container_form}>
-        <Input placeholder="Adresse E-mail" name="name" />
-        <Bouton title="Réinitialiser le mot de passe" />
+        <Input placeholder="Nouveau mot de passe" name="password" />
+        <Input placeholder="Confirmation du mot de passe" name="conf_password" />
+        <Bouton title="Modifier" />
       </View>
     </View>
   );
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
     color: "#FEFEFE",
     position: "absolute",
     top: 180,
-    left: 80,
+    left: 110,
+    width:180,
   },
   image: {
     width: 400,
@@ -60,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetMail;
+export default ResetPassword;
