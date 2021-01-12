@@ -149,6 +149,14 @@
                                     "conf_password": {
                                         "required": true,
                                         "type": "string"
+                                    },
+                                    "token": {
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "required": true,
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
