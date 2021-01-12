@@ -3,6 +3,7 @@ import { Dimensions } from 'react-native';
 import Input from "../components/input.jsx";
 import Bouton from "../components/bouton.jsx";
 import { StyleSheet, Image, Text, View } from "react-native";
+import { Formik, formik } from 'formik' ;
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -16,10 +17,21 @@ const ResetPassword = () => {
         />
         <Text style={styles.title}> Réinitialisation du mot de passe</Text>
       </View>
-      <View style={styles.container_form}>
-        <Input placeholder="Nouveau mot de passe" name="password" />
-        <Input placeholder="Confirmation du mot de passe" name="conf_password" />
-        <Bouton title="Modifier" />
+      <View>
+        <Formik
+          initialValues={{password: '', conf_password:''}}
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+        >
+          {(formikprops) => (
+            <View style={styles.container_form}>
+              <Input onChangeText={formikprops.handleChange('password')} placeholder="Nouveau mot de passe" />
+              <Input onChangeText={formikprops.handleChange('conf_password')} placeholder="Confirmation du mot de passe" />
+              <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
+            </View>
+          )}
+        </Formik>
       </View>
     </View>
   );

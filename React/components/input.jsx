@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TextInput, View,Text } from "react-native";
+import { StyleSheet, TextInput, View,Text, ImagePropTypes } from "react-native";
 
 const Input = (props) => {
 
@@ -9,6 +9,7 @@ const Input = (props) => {
         name={props.name}
         placeholder={props.placeholder}
         style={styles.input}
+        onChangeText={props.onChangeText}
       />
     </View>
   );

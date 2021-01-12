@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import { Dimensions } from 'react-native';
 import Input from "../components/input.jsx";
 import { StyleSheet, Image, Text, View } from "react-native";
 import Bouton from "../components/bouton.jsx";
+import { Formik } from 'formik';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -17,9 +18,20 @@ const ResetMail = () => {
         />
         <Text style={styles.title}> Mot de passe oublié </Text>
       </View>
-      <View style={styles.container_form}>
-        <Input placeholder="Adresse E-mail" name="name" />
-        <Bouton title="Réinitialiser le mot de passe" />
+      <View>
+        <Formik
+          initialValues={{email: ''}}
+          onSubmit={(values) => {
+            console.log(values);
+          }}
+          >
+            {(formikprops) => (
+              <View style={styles.container_form}>
+                <Input onChangeText={formikprops.handleChange('email')} placeholder="Adresse E-mail" />
+                <Bouton onPress={formikprops.handleSubmit} title="Réinitialiser le mot de passe" />
+              </View>
+            )}
+        </Formik>
       </View>
     </View>
   );

@@ -5,6 +5,7 @@ import {
   Text,
   Alert,
   StyleSheet,
+  ImagePropTypes,
 } from "react-native";
 
 const Bouton = (props) => {
@@ -13,7 +14,7 @@ const Bouton = (props) => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => Alert.alert("test")}
+        onPress={props.onPress}
         underlayColor="white"
         activeOpacity={0.80}
       >
