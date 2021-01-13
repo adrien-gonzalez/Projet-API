@@ -1,13 +1,37 @@
 import React, {useState} from "react";
 import { Dimensions } from 'react-native';
-import Input from "../components/input.jsx";
 import { StyleSheet, Image, Text, View } from "react-native";
-import Bouton from "../components/bouton.jsx";
 import { Formik } from 'formik';
+import axios  from "axios";
+import Input from "../components/input.jsx";
+import Bouton from "../components/bouton.jsx";
 
 const windowHeight = Dimensions.get('window').height;
 
 const ResetMail = () => {
+
+  // DEBUT AXIOS 
+
+const handleOnSubmit = (values, actions) => {
+  const donnees = new URLSearchParams();
+  donnees.append("email",values.email);
+
+  axios({
+    method: "POST",
+    url: "http://localhost:8080/api/resetpassword",
+    data: donnees,
+  })
+  .then(response => {
+    actions.resetForm();
+    console.log(response);
+  })
+  .catch(error => {
+    actions.resetForm();
+    console.log(error.response.data.errors[0]);
+  });
+};
+
+// FIN AXIOS
 
   return (
     <View style={styles.container}>
@@ -21,13 +45,11 @@ const ResetMail = () => {
       <View>
         <Formik
           initialValues={{email: ''}}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={handleOnSubmit}
           >
             {(formikprops) => (
               <View style={styles.container_form}>
-                <Input onChangeText={formikprops.handleChange('email')} placeholder="Adresse E-mail" />
+                <Input onChangeText={formikprops.handleChange('email')} placeholder="Adresse E-mail" value={formikprops.values.email} />
                 <Bouton onPress={formikprops.handleSubmit} title="Réinitialiser le mot de passe" />
               </View>
             )}

@@ -6,10 +6,10 @@ const Input = (props) => {
   return (
     <View>
       <TextInput
-        name={props.name}
         placeholder={props.placeholder}
         style={styles.input}
         onChangeText={props.onChangeText}
+        value={props.value}
       />
     </View>
   );
