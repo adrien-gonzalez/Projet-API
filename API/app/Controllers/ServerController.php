@@ -8,6 +8,7 @@ use Firebase\JWT\JWT;
 use App\Models\ServerModel;
 use OpenApi\Annotations as OA;
 use CodeIgniter\RESTful\ResourceController;
+// header('Access-Control-Allow-Origin: *');
 
 class ServerController extends ResourceController
 {
@@ -47,6 +48,8 @@ class ServerController extends ResourceController
         $call = $actions[$method];
         
         $response = $this->$call();
+
+       
 
         return $response;
 
