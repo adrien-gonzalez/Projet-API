@@ -311,11 +311,11 @@ class UserController extends ResourceController {
                 } else {
                     // Generate a new secure name
                     $name = $file->getRandomName();
-                    $pictures = scandir('../App/Sauvegarde/Profil_picture');
+                    $pictures = scandir('../public/assets/usersPictures');
                     foreach ($pictures as $picture) {
                         $pic = strstr($picture, $decodedToken->id . '__');
                         if (!empty($pic)) {
-                            unlink('../App/Sauvegarde/Profil_picture/' . $pic);
+                            unlink('../public/assets/usersPictures' . $pic);
                         }
                     }
 
@@ -323,7 +323,7 @@ class UserController extends ResourceController {
                     $extensions = ['jpg', 'png', 'jpeg'];
                     if (in_array($file->getExtension(), $extensions)) {
                         // Move the file to it's new home
-                        $file->move('../App/Sauvegarde/Profil_picture', $decodedToken->id . '__' . $name);
+                        $file->move('../public/assets/usersPictures', $decodedToken->id . '__' . $name);
                         $model->putUser($decodedToken->id, 'picture_profil', $decodedToken->id . '__' . $name);
                     } else {
                         throw new Exception('L\'extension du fichier n\'est pas prise en compte.');
