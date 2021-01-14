@@ -33,7 +33,9 @@ class ServerModel extends Model
             }
 
             $builder = $this->db->table('servers');
-            $builder->select('*');
+            $builder->select('servers.name, website, discord, port, ip,
+            servers.description as descriptionServer, games.description as descriptiponGame,
+            miniature, vote, games.image, games.logo');
             $builder->join('games', 'games.id = servers.games_fk');
             $builder->where('servers.games_fk', $_GET['game']);
             $builder->orderBy("servers.vote", "DESC");
