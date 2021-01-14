@@ -151,6 +151,8 @@ class PasswordController extends ResourceController
 	 *               	type="object",
 	 *               	@OA\Property(property="password", type="string",required=true),
 	 *               	@OA\Property(property="conf_password", type="string",required=true),
+	 *               	@OA\Property(property="token", type="string",required=true),
+	 *               	@OA\Property(property="id", type="string",required=true),
 	 *            	)
 	 *			)
  	 *      ),
