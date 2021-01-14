@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     minHeight: windowHeight,
+    backgroundColor:"#F1F1F1",
   },
   container_top: {
     flex: 0.1,
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 0.6,
     alignItems: "center",
     justifyContent: "space-evenly",
+    // backgroundColor:"blue",
   },
   title: {
     textAlign: "center",
