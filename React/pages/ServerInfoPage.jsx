@@ -5,7 +5,7 @@ import Svg, { Path, Rect, Image} from 'react-native-svg';
 import serverAPI from '../services/server.js'
 
 
-const ServerInfo = (props) => {
+const ServerInfoPage = (props) => {
 
     return(
         <View style={styles.contain}>
@@ -24,7 +24,7 @@ const ServerInfo = (props) => {
         </View>
     )
 }
-export default ServerInfo
+export default ServerInfoPage
 
 const styles = StyleSheet.create({
     contain: {

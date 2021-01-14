@@ -9,7 +9,7 @@ import TabComponent from './components/Tab';
 import TabGame from './components/TabGame';
 import ServersListPage from './pages/ServersListPage.jsx';
 import AddServerPage from './pages/AddServerPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
+import ParamsPage from './pages/ParamsPage';
 
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
@@ -31,7 +31,7 @@ export default function App() {
         <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
         <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
         <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
-        <Tab.Screen name="ProfilePage" component={ProfilePage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
+        <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -2,7 +2,7 @@ import axios from "axios";
 
 function findServerByGame() {
     return axios
-    .get("http://localhost:8080/api/servers?game=2")
+    .get("https://gameservapi.000webhostapp.com/api/servers?game=2")
     .then((response) => response.data)
 }
 

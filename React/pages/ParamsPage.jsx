@@ -6,7 +6,7 @@ import CatParams from "../components/cat_params";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const Params = () => {
+const ParamsPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.container_top}>
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Params;
+export default ParamsPage;
