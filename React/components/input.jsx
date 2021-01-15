@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TextInput, View,Text, ImagePropTypes } from "react-native";
+import { StyleSheet, TextInput, View, Text, ImagePropTypes } from "react-native";
 
 const Input = (props) => {
 
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     borderColor: "#C1C1C1",
     borderRadius: 15,
     textAlign: "center",
-    width:250,
+    height: 50,
+    width:300,
     backgroundColor:"white",
   },
 });
