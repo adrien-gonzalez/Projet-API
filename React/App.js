@@ -13,6 +13,9 @@ import ParamsPage from './pages/ParamsPage';
 
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
+import ResetPassword from './pages/ResetPassword.jsx';
+import ResetMail from './pages/ResetMail.jsx';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +30,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
+        <Tab.Screen name="HomePage" component={ResetPassword} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
         <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
         <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
         <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />

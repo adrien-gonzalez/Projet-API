@@ -24,7 +24,6 @@ const SelectGamePage = () => {
     useEffect(() => {
     fetchGames();
     }, []);
-    console.log(games);
 
     return (
         <View style={styles.globalPage}>

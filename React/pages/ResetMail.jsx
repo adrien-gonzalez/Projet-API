@@ -1,80 +1,91 @@
-import React, {useState} from "react";
-import { Dimensions } from 'react-native';
-import { StyleSheet, Image, Text, View } from "react-native";
-import { Formik } from 'formik';
-import axios  from "axios";
+import React, { useState } from "react";
+import { Dimensions } from "react-native";
+import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
+import { Formik } from "formik";
 import Input from "../components/input.jsx";
 import Bouton from "../components/bouton.jsx";
+import ResetPasswordAPI from "../services/resetPasswordAPI";
 
-const windowHeight = Dimensions.get('window').height;
+const windowHeight = Dimensions.get("window").height;
 
 const ResetMail = () => {
+  const [response, setResponse] = useState();
 
-  // DEBUT AXIOS 
+  // DEBUT AXIOS
+  const handleOnSubmit = async (values, actions) => {
+    const donnees = new URLSearchParams();
+    donnees.append("email", values.email);
 
-const handleOnSubmit = (values, actions) => {
-  const donnees = new URLSearchParams();
-  donnees.append("email",values.email);
-
-  axios({
-    method: "POST",
-    url: "http://localhost:8080/api/resetpassword",
-    data: donnees,
-  })
-  .then(response => {
-    actions.resetForm();
-    console.log(response);
-  })
-  .catch(error => {
-    actions.resetForm();
-    console.log(error.response.data.errors[0]);
-  });
-};
-
-// FIN AXIOS
+    try {
+      const data = await ResetPasswordAPI.sendMail(donnees);
+      data.map((d) => {
+        setResponse(d.email_error);
+      });
+      actions.resetForm();
+    } catch (error) {
+      setResponse(error);
+    }
+  };
+  // FIN AXIOS
 
   return (
-    <View style={styles.container}>
-      <View style={styles.container_top}>
-        <Image
-          style={styles.image}
-          source={require("../assets/updates-catspandas_latest.jpg")}
-        />
-        <Text style={styles.title}> Mot de passe oublié </Text>
-      </View>
-      <View>
-        <Formik
-          initialValues={{email: ''}}
-          onSubmit={handleOnSubmit}
-          >
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.container_top}>
+          <Image
+            style={styles.image}
+            source={require("../assets/updates-catspandas_latest.jpg")}
+          />
+          <Text style={styles.title}> Mot de passe oublié </Text>
+        </View>
+        <View>
+          <Formik initialValues={{ email: "" }} onSubmit={handleOnSubmit}>
             {(formikprops) => (
               <View style={styles.container_form}>
-                <Input onChangeText={formikprops.handleChange('email')} placeholder="Adresse E-mail" value={formikprops.values.email} />
-                <Bouton onPress={formikprops.handleSubmit} title="Réinitialiser le mot de passe" />
+                <View style={styles.container_input}>
+                  <Input
+                    onChangeText={formikprops.handleChange("email")}
+                    placeholder="Adresse E-mail"
+                    value={formikprops.values.email}
+                  />
+                  <Text style={styles.errors}>{response}</Text>
+                </View>
+                <Bouton
+                  onPress={formikprops.handleSubmit}
+                  title="Réinitialiser le mot de passe"
+                />
               </View>
             )}
-        </Formik>
+          </Formik>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    minHeight: windowHeight,
-    backgroundColor:"#F1F1F1",
+    height: "100%",
+    backgroundColor: "#F1F1F1",
   },
   container_top: {
-    flex: 0.1,
+    minHeight: windowHeight / 4,
     alignItems: "center",
   },
   container_form: {
-    flex: 0.6,
+    minHeight: windowHeight / 2,
     alignItems: "center",
     justifyContent: "space-evenly",
-    // backgroundColor:"blue",
+  },
+  container_input: {
+    alignItems: "center",
+    justifyContent: "center",
+    width:250,
+  },
+  errors: {
+    color:"red",
+    textAlign:"center",
+    fontSize:12,
   },
   title: {
     textAlign: "center",
