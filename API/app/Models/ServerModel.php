@@ -33,7 +33,7 @@ class ServerModel extends Model
             }
 
             $builder = $this->db->table('servers');
-            $builder->select('servers.name, website, discord, port, ip,
+            $builder->select('servers.id, servers.name, website, discord, port, ip,
             servers.description as descriptionServer, games.description as descriptiponGame,
             miniature, vote, games.image, games.logo');
             $builder->join('games', 'games.id = servers.games_fk');
@@ -47,8 +47,14 @@ class ServerModel extends Model
         } else if(isset($_GET['id']) && is_numeric($_GET['id'])) {
 
             $builder = $this->db->table('servers');
-            $builder->select('*');
+            $builder->select('servers.id, servers.name, website, discord, port, ip,
+            servers.description as descriptionServer, miniature, vote, avis.comment, avis.score,
+            avis.date, users.login, users.picture_profil, games.color');
+            $builder->join('games', 'games.id = servers.games_fk');
+            $builder->join('avis', 'avis.servers_fk = servers.id');
+            $builder->join('users', 'avis.users_fk = users.id');
             $builder->where('servers.id', $_GET['id']);
+            $builder->orderBy("avis.date", "DESC");
             $query = $builder->get();
             $servers = $query->getResult(); 
         } 

@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
-import Header from '../components/header.js'
-import serverAPI from '../services/server.js'
+import { StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import Header from '../components/header.jsx'
+import serverAPI from '../services/serverAPI.js'
 
 
 const ServersListPage = (props) => {
@@ -14,17 +14,16 @@ const ServersListPage = (props) => {
       setServer(data);
     } catch (error) {
       console.log(error);
-      console.log("nope");
     }
   };
 
   useEffect(() => {
     fetchServers();
   }, []);
-  console.log(servers);
+  // console.log(servers);
 
   return (
-    <View style={styles.contain}>
+    <ScrollView style={styles.contain}>
       <View style={styles.server}>
         <Header/>
       </View>
@@ -33,7 +32,7 @@ const ServersListPage = (props) => {
       </View>
         <View style={styles.listServer}>
           {servers.map((servers) => (
-          <View style={styles.infoServer}>
+          <View style={styles.infoServer} key={servers.id}>
             {/* Requete API bannière serveur */}
             <Image source={require('../assets/banniere_server.jpg')} style={styles.banniere}/>
             {/* Requête API Titre serveur */}
@@ -71,7 +70,7 @@ const ServersListPage = (props) => {
         ))}
         {/* <StatusBar style="auto" /> */}
       </View>  
-    </View>    
+    </ScrollView>    
   );
 }
 
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
   contain: {
     flex: 1,
     backgroundColor: '#F1F1F1',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     width: '100%',
   },
   colorWhite: {

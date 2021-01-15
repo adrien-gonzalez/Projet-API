@@ -8,6 +8,8 @@ import SelectGamePage from './pages/SelectGamePage.jsx';
 import TabComponent from './components/Tab';
 import TabGame from './components/TabGame';
 import ServersListPage from './pages/ServersListPage.jsx';
+import ServerInfoPage from './pages/ServerInfoPage.jsx';
+
 import AddServerPage from './pages/AddServerPage.jsx';
 import ParamsPage from './pages/ParamsPage';
 
@@ -34,6 +36,7 @@ export default function App() {
         <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
       </Tab.Navigator>
     </NavigationContainer>
+    // <ServerInfoPage />
   );
   }
 }
