@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ImageBackground } from 'react-native';
+import { Text, Platform, StyleSheet, ImageBackground } from 'react-native';
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get("window").width;
@@ -17,21 +17,17 @@ export default class Header extends React.Component {
 
 const styles = StyleSheet.create({
     hero: {
-        width: 120*windowWidth/100,
-        height: 120*windowWidth/100,
-        position: 'absolute',
-        top: '-60%',
-        left: '-5%',
+        width: '100%',
+        height: '100%',
     },
     text: {
         width: '100%',
         textAlign: 'center',
-        left: '-5%',
         color: "white",
-        fontSize: 42,
+        fontSize: Platform.OS === 'ios' ? 11*windowWidth/100 : 10*windowWidth/100,
         fontFamily: 'HomepageBaukasten',
         position: 'absolute',
-        bottom: -12,
+        bottom: Platform.OS === 'ios' ? '9%' : '7%',
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: {width: -1, height: 1},
         textShadowRadius: 4,

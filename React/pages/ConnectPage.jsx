@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import FormsHero from '../components/FormsHero';
-import Input from '../components/input';
+import InputText from '../components/TextInput';
 import { Dimensions } from 'react-native';
+import Bouton from '../components/bouton';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -13,19 +14,19 @@ const ConnectPage = () => {
             <View style={styles.headerContainer}>
                 <FormsHero />
             </View>
-            <ScrollView style={styles.formContainer}>
-                <View style={styles.centerInput}>
-                    <Input />
-                </View>
-            </ScrollView>
+            <View style={styles.formContainer}>
+                <InputText placeholder="Identifiant" />
+                <InputText placeholder="Mot de passe" />
+                <Bouton title="Se connecter" />
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     headerContainer: {
-        height: '30%',
-        // backgroundColor: 'blue',
+        height: '40%',
+        // backgroundColor: 'red',
     },
     connectPageContainer: {
         minHeight: '100%',
@@ -33,13 +34,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#F1F1F1',
     },
     formContainer: {
+        paddingTop: '15%',
         width: windowWidth,
-        height: 100*windowHeight/100,
-        // alignItems: 'center',
-    },
-    centerInput: {
+        height: '60%',
         alignItems: 'center',
-    }
+        // marginTop: 20*windowWidth/100,
+        backgroundColor: 'blue',
+    },
 });
 
 export default ConnectPage;
