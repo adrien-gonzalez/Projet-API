@@ -76,7 +76,7 @@ class Auth extends ResourceController
 			}
 		}
 		else {
-			throw new Exception("Ce login n'existe pas");
+			return $this->respond(['message' => 'Login inexistant'], 401);
 		}
 		
 
