@@ -218,6 +218,8 @@ class PasswordController extends ResourceController
     {
         $uptime = strtotime($time);
         $current_time = time();
+        var_dump($current_time);
+
         $timediff = $current_time - $uptime;
         if ($timediff < 900) {
             return true;

@@ -1,11 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity } from 'react-native';
 import Svg, { Path, Rect} from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
-
+import { Formik } from "formik";
 
 const ServerInfoPage = (props) => {
+
+    const handleOnSubmit = (values, actions) => {
+        const donnees = new URLSearchParams();
+        donnees.append("comment",values.comment);
+
+        console.log(donnees)
+      
+      
+    };
 
     const [server, setServer] = useState([]);
     const fetchServers = async () => {
@@ -28,6 +37,7 @@ const ServerInfoPage = (props) => {
     var descriptionServer;
     var vote;
     var color;
+    var numberOfMaxStar = 5;
 
 
   {server.map((server) => (
@@ -51,50 +61,29 @@ const ServerInfoPage = (props) => {
     const stars = [];
     var id = 0;
 
-    // Average score of server
-    for (var i = 0; i < note; i++) {
-        stars.push(
-        <Svg  key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
-            <Path fill={color} d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
-        </Svg>)
-
-        if (i == note - 1) {
-            for (var j = 0; j < 5-note; j++) {
-                id++;
-                stars.push(
-                <Svg  key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
-                    <Path fill="#757F80" d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
-                </Svg>)
-            }
-        }
-        id++;
-    }
-    
-    // Score of each comments
-    const scoreByUser = (values) => {
+    // Number of star
+    const numberStar = (values) => {
 
         const scoreByUser = [];
-        for (var i = 0; i < values; i++) {
-            scoreByUser.push(
-                <Svg  key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
-                    <Path fill={color} d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
-                </Svg>)
-
-            if (i == values - 1) {
-                for (var j = 0; j < 5-values; j++) {
-                    id++;
-                    scoreByUser.push(
+            for (var i = 0; i < values; i++) {
+                scoreByUser.push(
                     <Svg  key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
+                        <Path fill={color} d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
+                    </Svg>)
+                id++;
+            }
+            if (values < numberOfMaxStar) {
+                for (var j = 0; j < numberOfMaxStar - values; j++) {
+                    scoreByUser.push(
+                    <Svg key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
                         <Path fill="#757F80" d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
                     </Svg>)
+                    id++;
                 }
             }
-            id++;
-        }
         return scoreByUser
     }
 
-    
     return(
         <ScrollView style={styles.contain}>
             <View style={styles.server}>
@@ -107,7 +96,7 @@ const ServerInfoPage = (props) => {
                             <Image source={require('../assets/banniere_server.jpg')} style={styles.miniature}/>
                             <Text style={styles.titleServer}>One Piece Minecraft</Text>
                             <View style={styles.note}>
-                                {stars}
+                                {numberStar(note)}
                             </View> 
                         </View>
                     </ImageBackground>
@@ -123,7 +112,7 @@ const ServerInfoPage = (props) => {
                     </Text>
                 </View>
                 <View style={styles.descriptionServer}>
-                    <Text>{descriptionServer}</Text>
+                    <Text style={styles.textSize}>{descriptionServer}</Text>
                 </View>
             </View>
             <View style={styles.statsServer}>
@@ -169,14 +158,59 @@ const ServerInfoPage = (props) => {
                     </View>
                     <View>
                         {server.map((server) => (
-                            <View style={styles.infoUser}>
+                            <View key={id} style={styles.infoUser}>
                                 <Text style={styles.login}>{server.login}</Text>
                                 <Text style={styles.date}>{server.date}</Text>
-                                <Text style={styles.score}>{scoreByUser(server.score)}</Text>
+                                <Text style={styles.score}>{numberStar(server.score)}</Text>
                                 <Text style={styles.commentUser}>{server.comment}</Text>
                             </View>
                         ))}
                     </View>
+                    {/* Si user connecté */}
+                    <View style={styles.feedback}>
+                        <Text style={{color: color, fontWeight: 'bold', fontSize: 18, marginTop: 30}}>Je laisse mon commentaire</Text>
+                        <View style={styles.feedbackStar}>
+                            <Text style={{color: 'white', fontSize: 16}}>Noter ce serveur : </Text>
+                            <Text>
+                                <TouchableOpacity
+                                    style={{flexDirection: 'row'}}
+                                    onPress={() => console.log()}>
+                                    {numberStar(0)}
+                                </TouchableOpacity>
+                            </Text>
+                          
+                        </View>
+                        <Formik
+                        initialValues={{ comment: "" }}
+                        onSubmit={handleOnSubmit}
+                        >
+                            {(formikprops) => (
+                            <View style={styles.form}>
+                                <TextInput 
+                                    style={styles.feddbackComent}
+                                    onChangeText={formikprops.handleChange("comment")}
+                                    value={formikprops.values.comment}
+                                    placeholder="Commentaire..."
+                                    placeholderTextColor="grey"
+                                    numberOfLines={15}
+                                    multiline={true}
+                                    color= 'white'
+                                    textAlignVertical='top'
+                                    // onChangeText={text => onChangeText(text)}
+                                    // value={value}
+                                />
+                                <Button 
+                                    style={styles.button} 
+                                    onPress="" 
+                                    title="Commenter"
+                                    color= {color}
+                                    onPress={formikprops.handleSubmit}
+                                />
+                            </View>
+                        )}
+                        </Formik>
+                    </View>
+                    {/* Si user connecté */}
                 </View>
             </View>
         </ScrollView>
@@ -262,7 +296,7 @@ const styles = StyleSheet.create({
     },
     cards: {
         marginBottom: 30,
-        width: '70%',
+        width: '80%',
         maxWidth: 600,
         backgroundColor: 'white',
         height: 215,
@@ -300,7 +334,7 @@ const styles = StyleSheet.create({
     },
     date: {
         marginTop: 10,
-        color: 'white',
+        color: '#757575',
     },
     score: {
         marginTop: 10,
@@ -310,11 +344,40 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20,
         color: 'white',
+        fontSize: 16,
     },
     infoUser: {
         width: '100%',
         alignItems: 'center',
         borderBottomColor: '#353535',
         borderBottomWidth: 1,
+    },
+    feedbackStar: {
+        marginTop: 15,
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    feedback: {
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 30,
+    },
+    feddbackComent: {
+        marginTop: 20,
+        width: '80%',
+        maxWidth: 600,
+        height: 150,
+        backgroundColor: '#3A3737',
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 20,
+    },
+    textSize: {
+        fontSize: 16,
+    },
+    form: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
