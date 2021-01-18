@@ -74,6 +74,7 @@ const ResetPassword = ({navigation}) => {
               <View style={styles.container_form}>
                 <View style={styles.container_input}>
                   <Input
+                    secureTextEntry={true}
                     onChangeText={formikprops.handleChange("password")}
                     placeholder="Nouveau mot de passe"
                     value={formikprops.values.password}
@@ -82,6 +83,7 @@ const ResetPassword = ({navigation}) => {
                 </View>
                 <View style={styles.container_input}>
                   <Input
+                    secureTextEntry={true}
                     onChangeText={formikprops.handleChange("conf_password")}
                     placeholder="Confirmation du mot de passe"
                     value={formikprops.values.conf_password}

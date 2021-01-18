@@ -10,6 +10,7 @@ const Input = (props) => {
         style={styles.input}
         onChangeText={props.onChangeText}
         value={props.value}
+        secureTextEntry={props.secureTextEntry}
       />
     </View>
   );
