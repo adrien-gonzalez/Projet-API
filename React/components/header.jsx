@@ -7,7 +7,7 @@ export default class Header extends React.Component {
     render() {
         return (
             <View style={styles.svgHeader}>
-                <ImageBackground source={require("../assets/Minecraft.png")} imageStyle={imageStyle.radius}  style={styles.image}>
+                <ImageBackground source={require("../assets/Minecraft.png")} style={styles.image}>
                     <Svg xmlns="http://www.w3.org/2000/svg" width="146" height="146" viewBox="0 0 146 146" style={styles.logo}>
                         <G fill="none">
                             <Path d="M73,0A73,73,0,1,1,0,73,73,73,0,0,1,73,0Z" stroke="none"/>
@@ -22,15 +22,6 @@ export default class Header extends React.Component {
         );
     }
 }
-
-const imageStyle = StyleSheet.create({
-    radius: {
-        borderBottomLeftRadius: 100,
-        borderBottomRightRadius: 100,
-        transform: [{ scaleX: 1.2 }],
-        resizeMode: "cover",
-    }
-})
 
 const styles = StyleSheet.create({
     svgHeader: {
