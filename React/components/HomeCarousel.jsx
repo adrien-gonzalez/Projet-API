@@ -13,33 +13,30 @@ export class HomeCarousel extends React.Component {
         
         super(props);
         this.state = {
-          carouselItems: [
-          {
-              title:"Item 1",
-              text: "Text 1",
-          },
-          {
-              title:"Minecraft",
-              text: "Minecraft",
-          },
-          {
-              title:"Item 3",
-              text: "Text 3",
-          },
-          {
-              title:"Item 4",
-              text: "Text 4",
-          },
-        ]
-      }
+            activeIndex: 0,
+            carouselItems: []
+        }
+        // console.log(this.state.carouselItems);
     }
 
     componentDidMount(){
         const fetchGames = async () => {
             try {
                 const data = await GamesAPI.findPopular();
-                this.state.carouselItems = data;
-                console.log(data);
+                // this.state.carouselItems.push(data);
+                var datatest = JSON.stringify(data)
+                var dataObject = [];
+                data.map((data) => {
+                    dataObject.push(
+                        {
+                            title: data.name,
+                            image: data.image,
+                            color: data.color
+                        }
+                    )
+                })
+                this.setState({carouselItems: dataObject})
+                console.log(this.state.carouselItems);
             } catch (error) {
                 console.log(error);
                 console.log("nope");
@@ -51,8 +48,8 @@ export class HomeCarousel extends React.Component {
     _renderItem = ({item, index}) => {
         return (
             <View style={styles.carouselItemContainer}>
-                <Image style={styles.imageCarouselItem} source={{uri: 'https://gameservapi.000webhostapp.com/assets/game-minecraft-card.png'}} />
-                <Text style={styles.textCarouselItem}>{ item.title }</Text>
+                <Image style={styles.imageCarouselItem} source={{uri: `https://nicolas-camilloni.students-laplateforme.io/assets/${item.image}`}} />
+                <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'TwCent', textTransform: 'uppercase', letterSpacing: 4, color: item.color}}>{ item.title }</Text>
             </View>
         );
     }
@@ -60,12 +57,20 @@ export class HomeCarousel extends React.Component {
     render () {
         return (
             <Carousel
-              ref={(c) => { this._carousel = c; }}
-              data={this.state.carouselItems}
-              renderItem={this._renderItem}
-              sliderWidth={100*windowWidth/100}
-              itemWidth={50*windowWidth/100}
-              firstItem={1}
+                ref={(c) => { this._carousel = c; }}
+                data={this.state.carouselItems}
+                renderItem={this._renderItem}
+                sliderWidth={100*windowWidth/100}
+                itemWidth={50*windowWidth/100}
+                onSnapToItem = { index => this.setState({activeIndex:index}) }
+                loop = {true}
+                lockScrollWhileSnapping = {true}
+                loopClonesPerSide = {3}
+                enableMomentum = {false}
+                autoplay = {true}
+                layout = {'default'}
+                firstItem = {-1}
+                initialScrollIndex = {0}
             />
         );
     }
@@ -73,7 +78,7 @@ export class HomeCarousel extends React.Component {
 }
 const styles = StyleSheet.create({
     carouselItemContainer: {
-        backgroundColor: 'blue',
+        // backgroundColor: 'blue',
         height: '50%',
         marginTop: 10*windowHeight/100,
         justifyContent: 'center',

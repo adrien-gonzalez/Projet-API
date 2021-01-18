@@ -33,7 +33,7 @@ const HomePage = (props) => {
                   source={require('../assets/bg-minecraft.jpg')}
                   style={styles.containerHero}
                 >
-                  <HomeCarousel layout={'default'} style={{backgroundColor: 'red'}} />
+                  <HomeCarousel layout={'default'} style={{backgroundColor: 'red'}} firstItem = {0} />
                 </ImageBackground>
                 <Text>
                   {games.map((games) => (
