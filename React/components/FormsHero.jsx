@@ -6,10 +6,17 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default class Header extends React.Component {
+    
     render() {
+        if (this.props.title == "Connexion") {
+            var image = require('../assets/login-hero.png');
+        }
+        else if (this.props.title == "Inscription") {
+            var image = require('../assets/register-hero.png');
+        }
         return (
-            <ImageBackground style={styles.hero} source={require("../assets/login-hero.png")}>
-                <Text style={styles.text}>Connexion</Text>
+            <ImageBackground style={styles.hero} source={image}>
+                <Text style={styles.text}>{this.props.title}</Text>
             </ImageBackground>
         );
     }

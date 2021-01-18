@@ -1,12 +1,17 @@
 import React from "react";
 import {
   View,
+  Platform,
   TouchableOpacity,
   Text,
   Alert,
   StyleSheet,
   ImagePropTypes,
 } from "react-native";
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const Bouton = (props) => {
 
@@ -29,16 +34,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    width: 150,
+    width: 60*windowWidth/100,
+    height: 7*windowHeight/100,
+    justifyContent: 'center',
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 50,
     backgroundColor: "#66A5F9",
   },
   buttonText: {
     textAlign: "center",
-    padding: 10,
     color: "white",
-    fontSize: 16,
+    fontSize: Platform.OS === 'ios' ? 20 : 16,
   },
 });
 

@@ -8,16 +8,16 @@ import Bouton from '../components/bouton';
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const ConnectPage = () => {
+const RegisterPage = () => {
     return (
         <View style={styles.connectPageContainer}>
             <View style={styles.headerContainer}>
-                <FormsHero title="Connexion" />
+                <FormsHero title="Inscription" />
             </View>
             <View style={styles.formContainer}>
                 <InputText placeholder="Nom d'utilisateur" icon="user" color="#66A5F9" />
                 <InputText placeholder="Mot de passe" type="password" icon="lock" color="#66A5F9" />
-                <Bouton title="Se connecter" />
+                <Bouton title="Je m'inscris" />
             </View>
         </View>
     );
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ConnectPage;
+export default RegisterPage;
