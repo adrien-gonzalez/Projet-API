@@ -3,21 +3,21 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomePage from './pages/HomePage.jsx';
-import SelectGamePage from './pages/SelectGamePage.jsx';
 import TabComponent from './components/Tab';
 import TabGame from './components/TabGame';
+import AppLoading from 'expo-app-loading';
+import { useFonts } from 'expo-font';
+
+import HomePage from './pages/HomePage.jsx';
+import SelectGamePage from './pages/SelectGamePage.jsx';
 import ServersListPage from './pages/ServersListPage.jsx';
 import AddServerPage from './pages/AddServerPage.jsx';
 import ServerInfoPage from './pages/ServerInfoPage.jsx';
-import ResetPassword from './pages/ResetPassword.jsx';
-import ResetMail from './pages/ResetMail.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import ResetMailPage from './pages/ResetMailPage.jsx';
 import ParamsPage from './pages/ParamsPage';
 import ConnectPage from './pages/ConnectPage';
 import RegisterPage from './pages/RegisterPage';
-
-import AppLoading from 'expo-app-loading';
-import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
 
