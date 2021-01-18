@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
 import { Formik } from "formik";
+import InputText from "../components/TextInput.jsx";
 import Input from "../components/input.jsx";
+import FormsHero from '../components/FormsHero';
 import Bouton from "../components/bouton.jsx";
 import ResetPasswordAPI from "../services/resetPasswordAPI";
 
 const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const ResetMail = () => {
   const [response, setResponse] = useState();
@@ -33,81 +36,49 @@ const ResetMail = () => {
   // FIN AXIOS
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.container_top}>
-          <Image
-            style={styles.image}
-            source={require("../assets/updates-catspandas_latest.jpg")}
-          />
-          <Text style={styles.title}> Mot de passe oublié </Text>
+      <View style={styles.resetPageContainer}>
+        <View style={styles.headerContainer}>
+          <FormsHero title="Mot de passe oublié"/>
         </View>
-        <View>
+        <ScrollView style={{ height: "60%" }}>
           <Formik initialValues={{ email: "" }} onSubmit={handleOnSubmit}>
             {(formikprops) => (
-              <View style={styles.container_form}>
+              <View style={styles.formContainer}>
                 <View style={styles.container_input}>
-                  <Input
-                    onChangeText={formikprops.handleChange("email")}
-                    placeholder="Adresse E-mail"
-                    value={formikprops.values.email}
-                  />
-                  <Text style={styles.errors}>{response}</Text>
+                  <InputText onChangeText={formikprops.handleChange("email")} value={formikprops.values.email} placeholder="Adresse E-mail" icon="envelope" color="#66A5F9" error={response} />
                 </View>
                 <Bouton
                   onPress={formikprops.handleSubmit}
-                  title="Réinitialiser le mot de passe"
+                  title="Envoyer l'email de réinitialisation"
                 />
               </View>
             )}
           </Formik>
-        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    backgroundColor: "#F1F1F1",
-  },
-  container_top: {
-    minHeight: windowHeight / 4,
-    alignItems: "center",
-  },
-  container_form: {
-    minHeight: windowHeight / 2,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-  },
+  resetPageContainer: {
+    minHeight: '100%',
+    width: '100%',
+    backgroundColor: '#F1F1F1',
+},
+  headerContainer: {
+    height: '40%',
+},
+formContainer: {
+  paddingTop: "2%",
+  width: windowWidth,
+  height: "100%",
+  alignItems: "center",
+  paddingBottom: "14%",
+},
   container_input: {
     alignItems: "center",
     justifyContent: "center",
-    width: 250,
-  },
-  errors: {
-    color: "red",
-    textAlign: "center",
-    fontSize: 12,
-  },
-  title: {
-    textAlign: "center",
-    fontSize: 24,
-    textShadowColor: "#000000",
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 5,
-    color: "#FEFEFE",
-    position: "absolute",
-    top: 180,
-    left: 80,
-  },
-  image: {
-    width: 400,
-    height: 200,
-    alignContent: "flex-start",
-    borderBottomLeftRadius: 100,
-    borderBottomRightRadius: 100,
+    width: "100%",
   },
 });
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Platform, TextInput, View } from "react-native";
+import { StyleSheet, Platform, Text, View } from "react-native";
 import { Dimensions } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
@@ -22,23 +22,29 @@ const InputText = (props) => {
           inputPadding={16}
           secureTextEntry={true}
           style={{borderRadius: 20}}
+          onChangeText={props.onChangeText}
+          value={props.value}
           />
+        <Text style={styles.errors}>{props.error}</Text>
       </View>
     );
   }
   else {
     return (
       <View style={{width: '80%', paddingBottom: 34}}>
-      <Fumi
-        label={props.placeholder}
-        iconClass={FontAwesomeIcon}
-        iconName={props.icon}
-        iconColor={props.color}
-        iconSize={20}
-        iconWidth={40}
-        inputPadding={16}
-        style={{borderRadius: 20}}
-        />
+        <Fumi
+          label={props.placeholder}
+          iconClass={FontAwesomeIcon}
+          iconName={props.icon}
+          iconColor={props.color}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+          style={{borderRadius: 20}}
+          onChangeText={props.onChangeText}
+          value={props.value}
+          />
+        <Text style={styles.errors}>{props.error}</Text>
     </View>
     );
   }
@@ -55,6 +61,11 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     marginBottom: 28,
     fontSize: Platform.OS === 'ios' ? 18 : 14,
+  },
+  errors: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 12,
   },
 });
 
