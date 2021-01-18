@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, ImageBackground, StyleSheet } from 'react-native';
 import GamesAPI from "../services/gamesAPI";
+import { Dimensions } from 'react-native';
+import { HomeCarousel } from '../components/HomeCarousel';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const HomePage = (props) => {
 
@@ -19,76 +24,23 @@ const HomePage = (props) => {
   useEffect(() => {
     fetchGames();
   }, []);
-  console.log(games);
+  // console.log(games);
   
     return (
         <View style={styles.globalPage}>
             <ScrollView style={styles.pageContainer}>
+                <ImageBackground
+                  source={require('../assets/bg-minecraft.jpg')}
+                  style={styles.containerHero}
+                >
+                  <HomeCarousel layout={'default'} style={{backgroundColor: 'red'}} />
+                </ImageBackground>
                 <Text>
                   {games.map((games) => (
                     games.name
                   ))}
                 </Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
-                <Text>Test</Text>
+                <Text>TestStart</Text>
                 <Text>Test</Text>
                 <Text>Test</Text>
                 <Text>Test</Text>
@@ -128,19 +80,19 @@ const styles = StyleSheet.create({
       height: '100%',
       width: '100%',
       backgroundColor: 'white',
-      // flex: 1,
-      // paddingTop: '12%',
-      // alignItems: 'center',
-      // justifyContent: 'center',
     },
-    navBarBot: {
-      position: 'absolute',
-      bottom: 0,
+    containerHero: {
       width: '100%',
-      height: '15%',
+      height: 70*windowHeight/100,
+      backgroundColor: 'blue',
+      // paddingTop: 200,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     pageContainer: {
       backgroundColor: 'grey',
+      minHeight: 100*windowHeight/100,
     },
     globalPage: {
         height: '100%',

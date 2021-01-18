@@ -14,11 +14,15 @@ const RegisterPage = () => {
             <View style={styles.headerContainer}>
                 <FormsHero title="Inscription" />
             </View>
-            <View style={styles.formContainer}>
-                <InputText placeholder="Nom d'utilisateur" icon="user" color="#66A5F9" />
-                <InputText placeholder="Mot de passe" type="password" icon="lock" color="#66A5F9" />
-                <Bouton title="Je m'inscris" />
-            </View>
+            <ScrollView style={{height: '60%',}}>
+                <View style={styles.formContainer}>
+                    <InputText placeholder="Nom d'utilisateur" icon="user" color="#66A5F9" />
+                    <InputText placeholder="Adresse email" type="password" icon="envelope" color="#66A5F9" />
+                    <InputText placeholder="Mot de passe" type="password" icon="lock" color="#66A5F9" />
+                    <InputText placeholder="Confirmation du mot de passe" type="password" icon="lock" color="#66A5F9" />
+                    <Bouton title="Je m'inscris" />
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -34,10 +38,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#F1F1F1',
     },
     formContainer: {
-        paddingTop: '8%',
+        paddingTop: '2%',
         width: windowWidth,
-        height: '60%',
+        height: '100%',
         alignItems: 'center',
+        paddingBottom: '14%',
     },
 });
 
