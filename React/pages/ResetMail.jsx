@@ -18,10 +18,14 @@ const ResetMail = () => {
 
     try {
       const data = await ResetPasswordAPI.sendMail(donnees);
-      data.map((d) => {
-        setResponse(d.email_error);
-      });
-      actions.resetForm();
+      if (typeof data == "object") {
+        data.map((d) => {
+          setResponse(d.email_error);
+        });
+      } else {
+        setResponse(data);
+        actions.resetForm();
+      }
     } catch (error) {
       setResponse(error);
     }
@@ -80,12 +84,12 @@ const styles = StyleSheet.create({
   container_input: {
     alignItems: "center",
     justifyContent: "center",
-    width:250,
+    width: 250,
   },
   errors: {
-    color:"red",
-    textAlign:"center",
-    fontSize:12,
+    color: "red",
+    textAlign: "center",
+    fontSize: 12,
   },
   title: {
     textAlign: "center",

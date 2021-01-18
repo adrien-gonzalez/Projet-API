@@ -8,28 +8,52 @@ import ResetPasswordAPI from "../services/resetPasswordAPI";
 
 const windowHeight = Dimensions.get("window").height;
 
-const ResetPassword = () => {
+const ResetPassword = ({navigation}) => {
   const [response, setResponse] = useState([]);
+  const [errorToken, setErrorToken] = useState([]);
+  const [errorPassword, setErrorPassword] = useState([]);
+  const [errorConfPassword, setErrorConfPassword] = useState([]);
+  const [errorResetToken, setErrorResetToken] = useState([]);
 
-  // DEBUT AXIOS
+  // DEBUT AXIOS PUT
   const handleOnSubmit = async (values, actions) => {
+    // Variable pour l'AXIOS PUT
     const donnees = new URLSearchParams();
     donnees.append("password", values.password);
     donnees.append("conf_password", values.conf_password);
-    donnees.append("token", "858e62e8b01adeaa84a22aaed7e4bf23fe1f3b8a5d993155");
-    donnees.append("id", "13");
+    donnees.append("token", values.token);
+    donnees.append("id","11"); // A supprimer lorsque l'API sera modifiée
+    // Variable pour l'AXIOS GET
+    const token = values.token;
 
+    // AXIOS GET puis si GET OK PUT
     try {
-      const data = await ResetPasswordAPI.resetPassword(donnees);
-      setResponse(data);
-      actions.resetForm();
+      const data = await ResetPasswordAPI.checkToken(token, donnees);
+      if (typeof data == "object") {
+        data.map((d) => {
+          if (d.reset_token_error ||d.token_error ||d.password_error ||d.conf_password_error) 
+          {
+            setErrorResetToken(d.reset_token_error);
+            setErrorToken(d.token_error);
+            setErrorPassword(d.password_error);
+            setErrorConfPassword(d.conf_password_error);
+          }
+        })
+      } else {
+        setResponse(data);
+        if (response == "") {
+          setErrorToken("");
+          setErrorPassword("");
+          setErrorConfPassword("");
+          actions.resetForm();
+          navigation.navigate('ProfilePage')
+        }
+      }
     } catch (error) {
       setResponse(error);
     }
-  };
-  // FIN AXIOS
 
-  console.log(response);
+  };
 
   return (
     <ScrollView>
@@ -43,22 +67,37 @@ const ResetPassword = () => {
         </View>
         <View>
           <Formik
-            initialValues={{ password: "", conf_password: "" }}
+            initialValues={{ password: "", conf_password: "", token: "" }}
             onSubmit={handleOnSubmit}
           >
             {(formikprops) => (
               <View style={styles.container_form}>
-                <Input
-                  onChangeText={formikprops.handleChange("password")}
-                  placeholder="Nouveau mot de passe"
-                  value={formikprops.values.password}
-                />
-                <Input
-                  onChangeText={formikprops.handleChange("conf_password")}
-                  placeholder="Confirmation du mot de passe"
-                  value={formikprops.values.conf_password}
-                />
+                <View style={styles.container_input}>
+                  <Input
+                    onChangeText={formikprops.handleChange("password")}
+                    placeholder="Nouveau mot de passe"
+                    value={formikprops.values.password}
+                  />
+                  <Text style={styles.errors}>{errorPassword}</Text>
+                </View>
+                <View style={styles.container_input}>
+                  <Input
+                    onChangeText={formikprops.handleChange("conf_password")}
+                    placeholder="Confirmation du mot de passe"
+                    value={formikprops.values.conf_password}
+                  />
+                  <Text style={styles.errors}>{errorConfPassword}</Text>
+                </View>
+                <View style={styles.container_input}>
+                  <Input
+                    onChangeText={formikprops.handleChange("token")}
+                    placeholder="Token"
+                    value={formikprops.values.token}
+                  />
+                  <Text style={styles.errors}>{errorResetToken}</Text>
+                </View>
                 <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
+                <Text style={styles.errors}>{errorToken}</Text>
               </View>
             )}
           </Formik>
@@ -82,6 +121,16 @@ const styles = StyleSheet.create({
     minHeight: windowHeight / 2,
     justifyContent: "space-evenly",
     marginTop: windowHeight / 20,
+  },
+  container_input: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 250,
+  },
+  errors: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 12,
   },
   title: {
     textAlign: "center",

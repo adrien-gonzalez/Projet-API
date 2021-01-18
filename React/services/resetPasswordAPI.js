@@ -1,5 +1,15 @@
 import axios from "axios";
 
+function checkToken(token, donnees) {
+  return axios({
+    method: "GET",
+    url:
+      "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword?token="+token,
+  })
+    .then(() => resetPassword(donnees))
+    .catch((error) => error.response.data.errors);
+}
+
 function sendMail(donnees) {
   return axios({
     method: "POST",
@@ -7,20 +17,21 @@ function sendMail(donnees) {
     data: donnees,
   })
     .then((response) => response.data)
-    .catch(error => error.response.data.errors);
+    .catch((error) => error.response.data.errors);
 }
 
 function resetPassword(donnees) {
-    return axios({
-        method: "PUT",
-        url: "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword",
-        data: donnees,
-    })
-      .then(response => response.data)
-      .catch(error => error.response.data.errors);
+  return axios({
+    method: "PUT",
+    url: "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword",
+    data: donnees,
+  })
+    .then((response) => response.data)
+    .catch((error) => error.response.data.errors);
 }
 
 export default {
   sendMail,
-  resetPassword
+  resetPassword,
+  checkToken,
 };
