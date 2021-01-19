@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import { Dimensions } from 'react-native';
 import GamesAPI from '../services/gamesAPI';
 
@@ -31,10 +31,12 @@ export class HomeCarousel extends React.Component {
                         {
                             title: data.name,
                             image: data.image,
-                            color: data.color
+                            color: data.color,
+                            servers: data.serv_count
                         }
                     )
                 })
+                console.log(data);
                 this.setState({carouselItems: dataObject})
                 console.log(this.state.carouselItems);
             } catch (error) {
@@ -48,8 +50,12 @@ export class HomeCarousel extends React.Component {
     _renderItem = ({item, index}) => {
         return (
             <View style={styles.carouselItemContainer}>
+                <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'TwCent', textTransform: 'uppercase', letterSpacing: 4, color: item.color}}>{item.title}</Text>
                 <Image style={styles.imageCarouselItem} source={{uri: `https://nicolas-camilloni.students-laplateforme.io/assets/${item.image}`}} />
-                <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'TwCent', textTransform: 'uppercase', letterSpacing: 4, color: item.color}}>{ item.title }</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'HomepageBaukasten', color: item.color}}>{item.servers}</Text>
+                    <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'HomepageBaukasten', color: 'white'}}> serveur{item.servers > 1 ? "s" : ""}</Text>
+                </View>
             </View>
         );
     }
@@ -62,15 +68,15 @@ export class HomeCarousel extends React.Component {
                 renderItem={this._renderItem}
                 sliderWidth={100*windowWidth/100}
                 itemWidth={50*windowWidth/100}
-                onSnapToItem = { index => this.setState({activeIndex:index}) }
-                loop = {true}
+                onBeforeSnapToItem = { index => this.setState({activeIndex:index}) }
+                loop = {Platform.OS === 'ios' ? true : false}
                 lockScrollWhileSnapping = {true}
                 loopClonesPerSide = {3}
                 enableMomentum = {false}
                 autoplay = {true}
                 layout = {'default'}
                 firstItem = {-1}
-                initialScrollIndex = {0}
+                containerCustomStyle={{ flexGrow: 0, height: '50%'}}
             />
         );
     }
@@ -78,17 +84,17 @@ export class HomeCarousel extends React.Component {
 }
 const styles = StyleSheet.create({
     carouselItemContainer: {
-        // backgroundColor: 'blue',
-        height: '50%',
-        marginTop: 10*windowHeight/100,
+        height: '100%',
+        // marginTop: 10*windowHeight/100,
         justifyContent: 'center',
         alignItems: 'center',
     },
     imageCarouselItem: {
-        height: '85%',
+        height: '80%',
         width: '90%',
         borderRadius: 10,
-        marginBottom: 4
+        marginBottom: 6,
+        marginTop: 10,
     },
     textCarouselItem: {
         fontSize: 2.2*windowHeight/100,
