@@ -3,7 +3,7 @@ import { View, ScrollView, Text, ImageBackground, Image, StyleSheet, Platform } 
 import GamesAPI from "../services/gamesAPI";
 import { Dimensions } from 'react-native';
 import { HomeCarousel } from '../components/HomeCarousel';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -57,7 +57,7 @@ const HomePage = (props) => {
                 {/* FOR CREATORS */}
                 <View style={styles.containerForCreators}>
                   {/* <Image source={require('../assets/forgamer.png')} */}
-                  <Ionicons name="md-game-controller-outline" size={80} color="#3CE659" />
+                  <Feather name="hard-drive" size={80} color="#3CE659" />
                   <Text style={styles.underIconTextCreators}>Pour les créateurs</Text>
                   <Text style={styles.underIconDescTextCreators}>Ajoutez <Text style={styles.gameColor}>simplement</Text> votre serveur{"\n"}et faites le monter en <Text style={styles.gameColor}>popularité</Text></Text>
                   <View style={{postion: 'absolute', width: windowWidth, alignItems: 'center'}}>
