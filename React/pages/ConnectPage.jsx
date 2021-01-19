@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet} from 'react-native';
 import FormsHero from '../components/FormsHero';
 import InputText from '../components/TextInput';
 import { Dimensions } from 'react-native';
@@ -9,6 +9,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ConnectPage = () => {
+
     return (
         <View style={styles.connectPageContainer}>
             <View style={styles.headerContainer}>

@@ -3,7 +3,6 @@ import { Dimensions } from "react-native";
 import { StyleSheet, Image, Text, View, ScrollView } from "react-native";
 import { Formik } from "formik";
 import InputText from "../components/TextInput.jsx";
-import Input from "../components/input.jsx";
 import FormsHero from '../components/FormsHero';
 import Bouton from "../components/bouton.jsx";
 import ResetPasswordAPI from "../services/resetPasswordAPI";
@@ -11,7 +10,7 @@ import ResetPasswordAPI from "../services/resetPasswordAPI";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ResetMail = () => {
+const ResetMail = ({navigation}) => {
   const [response, setResponse] = useState();
 
   // DEBUT AXIOS
@@ -28,6 +27,7 @@ const ResetMail = () => {
       } else {
         setResponse(data);
         actions.resetForm();
+        navigation.navigate('ResetPasswordPage');
       }
     } catch (error) {
       setResponse(error);
@@ -47,7 +47,7 @@ const ResetMail = () => {
                 <View style={styles.container_input}>
                   <InputText onChangeText={formikprops.handleChange("email")} value={formikprops.values.email} placeholder="Adresse E-mail" icon="envelope" color="#66A5F9" error={response} />
                 </View>
-                <Bouton
+                <Bouton type="submit"
                   onPress={formikprops.handleSubmit}
                   title="Envoyer l'email de réinitialisation"
                 />

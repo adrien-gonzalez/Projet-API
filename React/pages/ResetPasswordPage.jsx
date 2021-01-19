@@ -52,7 +52,7 @@ const ResetPassword = ({ navigation }) => {
           setErrorPassword("");
           setErrorConfPassword("");
           actions.resetForm();
-          navigation.navigate("ParamsPage");
+          navigation.navigate("ConnectPage");
         }
       }
     } catch (error) {
@@ -104,7 +104,7 @@ const ResetPassword = ({ navigation }) => {
                   error={errorResetToken}
                 />
               </View>
-              <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
+              <Bouton type="submit" onPress={formikprops.handleSubmit} title="Modifier" />
               <Text style={styles.errors}>{errorToken}</Text>
             </View>
           )}

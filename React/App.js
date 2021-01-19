@@ -18,6 +18,7 @@ import ResetMailPage from './pages/ResetMailPage.jsx';
 import ParamsPage from './pages/ParamsPage';
 import ConnectPage from './pages/ConnectPage';
 import RegisterPage from './pages/RegisterPage';
+import UserInfosPage from './pages/UserInfosPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,15 +32,15 @@ export default function App() {
     return <AppLoading />;
   } else {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
-        <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
-        <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
-        <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
-        <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
-      </Tab.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
+          <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
+          <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
+          <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
+          <Tab.Screen name="ProfilePage" component={UserInfosPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
+        </Tab.Navigator>
+      </NavigationContainer>
   );
   }
 }
