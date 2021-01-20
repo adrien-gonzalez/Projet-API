@@ -61,7 +61,10 @@ const ResetPassword = ({ navigation }) => {
               setErrorConfPassword("");
 
               actions.resetForm();
-              navigation.navigate("ConnectPage");
+              navigation.navigate("ProfilePage", {
+                screen: "ConnectPage",
+              });
+              // navigation.navigate("ConnectPage");
             }
           }
         } catch (error) {

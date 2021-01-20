@@ -27,7 +27,10 @@ const ResetMail = ({navigation}) => {
       } else {
         setResponse(data);
         actions.resetForm();
-        navigation.navigate('ResetPasswordPage');
+        navigation.navigate("ProfilePage", {
+          screen: "ResetPasswordPage",
+        });
+        // navigation.navigate('ResetPasswordPage');
       }
     } catch (error) {
       setResponse(error);

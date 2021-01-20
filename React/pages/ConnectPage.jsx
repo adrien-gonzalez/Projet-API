@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet} from 'react-native';
+import { View, ScrollView, StyleSheet,Text} from 'react-native';
 import FormsHero from '../components/FormsHero';
 import InputText from '../components/TextInput';
 import { Dimensions } from 'react-native';
@@ -8,7 +8,7 @@ import Bouton from '../components/bouton';
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const ConnectPage = () => {
+const ConnectPage = ({navigation}) => {
 
     return (
         <View style={styles.connectPageContainer}>
@@ -19,6 +19,7 @@ const ConnectPage = () => {
                 <InputText placeholder="Nom d'utilisateur" icon="user" color="#66A5F9" />
                 <InputText placeholder="Mot de passe" type="password" icon="lock" color="#66A5F9" />
                 <Bouton title="Se connecter" />
+                <Bouton title="Mot de passe oublié ?" onPress={() => navigation.navigate("ProfilePage", {screen: "ResetMailPage"})}/>
             </View>
         </View>
     );
