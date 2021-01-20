@@ -10,6 +10,7 @@ import FormsHero from "../components/FormsHero";
 const windowWidth = Dimensions.get("window").width;
 
 const ResetPassword = ({ navigation }) => {
+
   const [response, setResponse] = useState([]);
   const [errorToken, setErrorToken] = useState([]);
   const [errorPassword, setErrorPassword] = useState([]);
@@ -19,40 +20,52 @@ const ResetPassword = ({ navigation }) => {
   // DEBUT AXIOS PUT
   const handleOnSubmit = async (values, actions) => {
 
+    // Variable pour l'AXIOS GET
+    const token = values.token;
+
     // Variable pour l'AXIOS PUT
     const donnees = new URLSearchParams();
     donnees.append("password", values.password);
     donnees.append("conf_password", values.conf_password);
-    donnees.append("token", values.token);
-    donnees.append("id", "11"); // A supprimer lorsque l'API sera modifiée
-    // Variable pour l'AXIOS GET
-    const token = values.token;
 
-    // AXIOS GET puis si GET OK PUT
+    // AXIOS GET
     try {
-      const data = await ResetPasswordAPI.checkToken(token, donnees);
-      if (typeof data == "object") {
-        data.map((d) => {
-          if (
-            d.reset_token_error ||
-            d.token_error ||
-            d.password_error ||
-            d.conf_password_error
-          ) {
-            setErrorResetToken(d.reset_token_error);
-            setErrorToken(d.token_error);
-            setErrorPassword(d.password_error);
-            setErrorConfPassword(d.conf_password_error);
+      const data = await ResetPasswordAPI.checkToken(token);
+      data.map((d) => {
+        donnees.append("id", d.id);
+      });
+      if (data) {
+        // AXIOS PUT
+        try {
+          const data = await ResetPasswordAPI.resetPassword(donnees);
+          console.log(donnees);
+          if (typeof data == "object") {
+            data.map((d) => {
+              if (
+                d.reset_token_error ||
+                d.token_error ||
+                d.password_error ||
+                d.conf_password_error
+              ) {
+                setErrorResetToken(d.reset_token_error);
+                setErrorToken(d.token_error);
+                setErrorPassword(d.password_error);
+                setErrorConfPassword(d.conf_password_error);
+              }
+            });
+          } else {
+            setResponse(data);
+            if (response == "") {
+              setErrorToken("");
+              setErrorPassword("");
+              setErrorConfPassword("");
+
+              actions.resetForm();
+              navigation.navigate("ConnectPage");
+            }
           }
-        });
-      } else {
-        setResponse(data);
-        if (response == "") {
-          setErrorToken("");
-          setErrorPassword("");
-          setErrorConfPassword("");
-          actions.resetForm();
-          navigation.navigate("ConnectPage");
+        } catch (error) {
+          setResponse(error);
         }
       }
     } catch (error) {
@@ -104,7 +117,11 @@ const ResetPassword = ({ navigation }) => {
                   error={errorResetToken}
                 />
               </View>
-              <Bouton type="submit" onPress={formikprops.handleSubmit} title="Modifier" />
+              <Bouton
+                type="submit"
+                onPress={formikprops.handleSubmit}
+                title="Modifier"
+              />
               <Text style={styles.errors}>{errorToken}</Text>
             </View>
           )}
@@ -132,7 +149,7 @@ const styles = StyleSheet.create({
   },
   container_input: {
     alignItems: "center",
-    width:"100%",
+    width: "100%",
   },
 });
 
