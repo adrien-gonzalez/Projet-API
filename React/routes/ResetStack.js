@@ -10,8 +10,8 @@ export default function ResetStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen headerMode="none" name="ConnectPage" component={ConnectPage} options={{ headerShown: false }}/>
-      <Stack.Screen headerMode="none" name="ResetMailPage" component={ResetMailPage} options={{ headerShown: true }}/>
       <Stack.Screen headerMode="none" name="ResetPasswordPage" component={ResetPasswordPage} options={{ headerShown: true }}/>
+      <Stack.Screen headerMode="none" name="ResetMailPage" component={ResetMailPage} options={{ headerShown: true }}/>
     </Stack.Navigator>
   );
 }
