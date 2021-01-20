@@ -37,7 +37,7 @@ export default function App() {
         <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
         <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
         <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
-        <Tab.Screen name="ProfilePage" component={RegisterPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
+        <Tab.Screen name="ProfilePage" component={ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
       </Tab.Navigator>
     </NavigationContainer>
   );

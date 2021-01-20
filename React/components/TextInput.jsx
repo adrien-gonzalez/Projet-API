@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, Platform, TextInput, View } from "react-native";
-import { Dimensions } from 'react-native';
+import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 
