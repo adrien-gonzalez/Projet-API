@@ -16,10 +16,11 @@ function findServerByID() {
 }
 
 // Ecrire un commentaire 
-function postComment() {
+function postComment(donnees) {
     return axios
-    .post("http://nicolas-camilloni.students-laplateforme.io/api/comment")
+    .post("http://nicolas-camilloni.students-laplateforme.io/api/comment", donnees)
     .then((response) => response.data)
+    .catch((error) => error.response.data.errors);
 }
 
 export default {

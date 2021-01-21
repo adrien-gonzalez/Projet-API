@@ -1,19 +1,40 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity} from 'react-native';
 import Svg, { Path, Rect} from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
 
-const ServerInfoPage = (props) => {
 
-    const handleOnSubmit = (values, actions) => {
+const ServerInfoPage = (props) => {
+    
+    const [feedBackUser, setFeedBackUser] = useState(0);
+    const [response, setResponse] = useState([]);
+
+    var getElement = (numberStarId) => e => { 
+        setFeedBackUser(numberStarId+1)
+    }
+
+    const handleOnSubmit = async (values, actions) => {
         const donnees = new URLSearchParams();
         donnees.append("comment",values.comment);
-
-        console.log(donnees)
-      
-      
+        donnees.append("servers_fk", id);
+        donnees.append("score", feedBackUser);
+        // donnees.append("date", '2021-01-15 10:00:00');
+        
+        try {
+            const data = await ResetPasswordAPI.postComment(donnees);
+            if (typeof data == "object") {
+              data.map((d) => {
+                setResponse(d.email_error);
+              });
+            } else {
+              setResponse(data);
+              actions.resetForm();
+            }
+          } catch (error) {
+            setResponse(error);
+          }
     };
 
     const [server, setServer] = useState([]);
@@ -39,7 +60,6 @@ const ServerInfoPage = (props) => {
     var color;
     var numberOfMaxStar = 5;
 
-
   {server.map((server) => (
     notes.push(
         server.score
@@ -47,10 +67,12 @@ const ServerInfoPage = (props) => {
     comment.push(
         server.comment
     ),
+    id = server.id,
     descriptionServer = server.descriptionServer,
     vote = server.vote,
     color = server.color
   ))}
+
  
   for (const [index, value] of notes.entries()) {
     addition = addition + parseInt(value)
@@ -58,32 +80,31 @@ const ServerInfoPage = (props) => {
     // Moyenne des notes + arrondi
     const moyenne = addition / notes.length;
     const note = Math.round(moyenne);
-    const stars = [];
-    var id = 0;
+
 
     // Number of star
     const numberStar = (values) => {
 
-        const scoreByUser = [];
+        var scoreByUser = [];
             for (var i = 0; i < values; i++) {
                 scoreByUser.push(
-                    <Svg  key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
+                    {'svg' :
+                    <Svg xmlns="http://www.w3.org/2000/svg" width="30" height="35">
                         <Path fill={color} d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
-                    </Svg>)
-                id++;
+                    </Svg>})
             }
             if (values < numberOfMaxStar) {
                 for (var j = 0; j < numberOfMaxStar - values; j++) {
                     scoreByUser.push(
-                    <Svg key={id} xmlns="http://www.w3.org/2000/svg" width="30" height="35">
+                    {'svg' :
+                    <Svg xmlns="http://www.w3.org/2000/svg" width="30" height="35">
                         <Path fill="#757F80" d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
-                    </Svg>)
-                    id++;
+                    </Svg>})
                 }
             }
         return scoreByUser
     }
-
+    
     return(
         <ScrollView style={styles.contain}>
             <View style={styles.server}>
@@ -96,7 +117,10 @@ const ServerInfoPage = (props) => {
                             <Image source={require('../assets/banniere_server.jpg')} style={styles.miniature}/>
                             <Text style={styles.titleServer}>One Piece Minecraft</Text>
                             <View style={styles.note}>
-                                {numberStar(note)}
+                                {numberStar(note).map((numberStar, key) => (
+                                    <Text key={key}>{numberStar.svg}</Text> 
+                                    
+                                ))} 
                             </View> 
                         </View>
                     </ImageBackground>
@@ -157,11 +181,15 @@ const ServerInfoPage = (props) => {
                         </Text>
                     </View>
                     <View>
-                        {server.map((server) => (
-                            <View key={id} style={styles.infoUser}>
+                        {server.map((server, key) => (
+                            <View key={key} style={styles.infoUser}>
                                 <Text style={styles.login}>{server.login}</Text>
                                 <Text style={styles.date}>{server.date}</Text>
-                                <Text style={styles.score}>{numberStar(server.score)}</Text>
+                                <Text style={styles.score}>
+                                {numberStar(server.score).map((numberStar, key) => (
+                                    <Text key={key}>{numberStar.svg}</Text> 
+                                ))}   
+                                </Text> 
                                 <Text style={styles.commentUser}>{server.comment}</Text>
                             </View>
                         ))}
@@ -172,19 +200,22 @@ const ServerInfoPage = (props) => {
                         <View style={styles.feedbackStar}>
                             <Text style={{color: 'white', fontSize: 16}}>Noter ce serveur : </Text>
                             <Text>
-                                <TouchableOpacity
-                                    style={{flexDirection: 'row'}}
-                                    onPress={() => console.log()}>
-                                    {numberStar(0)}
-                                </TouchableOpacity>
+                                {numberStar(feedBackUser).map((numberStar, key) => (
+                                    <TouchableOpacity 
+                                    key={key}
+                                    onPress={getElement(key)}
+                                    >
+                                    {numberStar.svg}
+                                    </TouchableOpacity>
+                                ))}
                             </Text>
-                          
                         </View>
                         <Formik
                         initialValues={{ comment: "" }}
                         onSubmit={handleOnSubmit}
                         >
                             {(formikprops) => (
+                               
                             <View style={styles.form}>
                                 <TextInput 
                                     style={styles.feddbackComent}
@@ -196,8 +227,6 @@ const ServerInfoPage = (props) => {
                                     multiline={true}
                                     color= 'white'
                                     textAlignVertical='top'
-                                    // onChangeText={text => onChangeText(text)}
-                                    // value={value}
                                 />
                                 <Button 
                                     style={styles.button} 
@@ -214,7 +243,6 @@ const ServerInfoPage = (props) => {
                 </View>
             </View>
         </ScrollView>
-
     )
 }
 
@@ -378,6 +406,7 @@ const styles = StyleSheet.create({
     form: {
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 50,
     }
 })

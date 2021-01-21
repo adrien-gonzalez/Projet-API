@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Platform, TextInput, View } from "react-native";
 import { Dimensions } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Fumi } from 'react-native-textinput-effects';
 
 const windowWidth = Dimensions.get("window").width;
@@ -14,14 +15,14 @@ const InputText = (props) => {
       <View style={{width: '80%', paddingBottom: 34}}>
         <Fumi
           label={props.placeholder}
-          iconClass={FontAwesomeIcon}
+          iconClass={FontAwesome5}
           iconName={props.icon}
           iconColor={props.color}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
           secureTextEntry={true}
-          style={{borderRadius: 20}}
+          style={{borderRadius: 20}} 
           />
       </View>
     );
@@ -31,13 +32,17 @@ const InputText = (props) => {
       <View style={{width: '80%', paddingBottom: 34}}>
       <Fumi
         label={props.placeholder}
-        iconClass={FontAwesomeIcon}
+        iconClass={FontAwesome5}
         iconName={props.icon}
         iconColor={props.color}
         iconSize={20}
         iconWidth={40}
         inputPadding={16}
         style={{borderRadius: 20}}
+        height= {props.height}
+        textAlignVertical={props.textAlignVertical}
+        numberOfLines={props.numberOfLines}
+        multiline={props.multiline}
         />
     </View>
     );
