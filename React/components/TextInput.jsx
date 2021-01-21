@@ -21,6 +21,8 @@ const InputText = (props) => {
           inputPadding={16}
           secureTextEntry={true}
           style={{borderRadius: 20}}
+          onChangeText={props.onChangeText}
+          value={props.value}
           />
       </View>
     );
@@ -37,6 +39,8 @@ const InputText = (props) => {
         iconWidth={40}
         inputPadding={16}
         style={{borderRadius: 20}}
+        onChangeText={props.onChangeText}
+        value={props.value}
         />
     </View>
     );
