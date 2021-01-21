@@ -19,12 +19,12 @@ import userAPI from "../services/userAPI.js";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserInfosPage = () => {
+const UserInfosPage = ({navigation}) => {
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  // const [pressed, setPressed] = useState(false);
+  const [response, setResponse] = useState([]);
 
-  const id = "11";
+  const id = "31";
 
   const fetchInfosUser = async () => {
     try {
@@ -46,6 +46,28 @@ const UserInfosPage = () => {
   }, []);
   console.log(infos);
 
+  const handleOnSubmitSupp = async (values, actions) => {
+    console.log(values);
+
+    const donnees = new URLSearchParams();
+    donnees.append("password", values.password);
+
+    try {
+      const data = await userAPI.deleteUser(id, donnees);
+      console.log(data);
+      if (typeof data == "object") {
+        data.map((d) => {
+          setResponse(d.password_error);
+        });
+      } else {
+        setResponse(data);
+        navigation.navigate('HomePage');
+      }
+    } catch (error) {
+      setResponse(error);
+    }
+  }
+
   return (
     <View style={styles.connectPageContainer}>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -61,37 +83,51 @@ const UserInfosPage = () => {
               Cette action vous déconnectera immédiatement de votre compte et
               vous ne pourrez plus vous reconnecter.{" "}
             </Text>
-            <TextInput
-              style={{
-                height: 40,
-                borderColor: "white",
-                borderBottomColor: "grey",
-                borderWidth: 1,
-                width: "80%",
-                fontSize: 18,
-                marginBottom: 15,
+            <Formik
+              enableReinitialize
+              initialValues={{
+                password: "",
               }}
-              secureTextEntry={true}
-              placeholder="Mot de passe"
-            />
-            <View style={styles.fixToText}>
-              <TouchableOpacity
-                style={styles.boutonRight}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text style={styles.buttonTextLeft}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.boutonRight}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text style={styles.buttonTextRight}>Supprimer</Text>
-              </TouchableOpacity>
-            </View>
+              onSubmit={handleOnSubmitSupp}
+            >
+              {(formikprops) => (
+                <View style={{width:"100%", alignItems:"center"}}>
+                  <TextInput
+                    style={{
+                      height: 40,
+                      borderColor: "white",
+                      borderBottomColor: "grey",
+                      borderWidth: 1,
+                      width: "80%",
+                      fontSize: 18,
+                      marginBottom: 15,
+                    }}
+                    secureTextEntry={true}
+                    placeholder="Mot de passe"
+                    onChangeText={formikprops.handleChange("password")}
+                    value={formikprops.values.password}
+                  />
+                  <Text style={styles.errors}>{response}</Text>
+                  <View style={styles.fixToText}>
+                    <TouchableOpacity
+                      style={styles.boutonRight}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
+                        setResponse();
+                      }}
+                    >
+                      <Text style={styles.buttonTextLeft}>Annuler</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.boutonRight}
+                      onPress={formikprops.handleSubmit}
+                    >
+                      <Text style={styles.buttonTextRight}>Supprimer</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </Formik>
           </View>
         </View>
       </Modal>
@@ -265,6 +301,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     paddingRight: 20,
+  },
+  errors: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 12,
   },
 });
 

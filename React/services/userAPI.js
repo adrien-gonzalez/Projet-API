@@ -10,16 +10,17 @@ function checkUser(id) {
     .catch((error) => error);
 }
 
-// function sendMail(donnees) {
-//   return axios({
-//     method: "POST",
-//     url: "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword",
-//     data: donnees,
-//   })
-//     .then((response) => response.data)
-//     .catch((error) => error.response.data.errors);
-// }
+function deleteUser(id,donnees) {
+  return axios({
+    method: "DELETE",
+    url: "https://nicolas-camilloni.students-laplateforme.io/api/users?id="+id,
+    data: donnees,
+  })
+    .then((response) => response.data)
+    .catch((error) => error.response.data.errors);
+}
 
 export default {
   checkUser,
+  deleteUser,
 };
