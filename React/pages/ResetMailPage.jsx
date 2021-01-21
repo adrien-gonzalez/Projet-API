@@ -15,6 +15,8 @@ const ResetMail = ({navigation}) => {
 
   // DEBUT AXIOS
   const handleOnSubmit = async (values, actions) => {
+
+    console.log(values);
     const donnees = new URLSearchParams();
     donnees.append("email", values.email);
 

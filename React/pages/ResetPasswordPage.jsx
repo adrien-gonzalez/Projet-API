@@ -19,7 +19,6 @@ const ResetPassword = ({ navigation }) => {
 
   // DEBUT AXIOS PUT
   const handleOnSubmit = async (values, actions) => {
-
     // Variable pour l'AXIOS GET
     const token = values.token;
 
