@@ -40,7 +40,7 @@ const ConnectPage = () => {
                     <Formik initialValues={{ login: "", password: "" }} onSubmit={handleOnSubmit}>
                         {(formikprops) => (
                         <View style={styles.formContainer}>        
-                            <InputText placeholder="Nom d'utilisateur" icon="user" color="#00bcff" value={formikprops.values.username} onChangeText={formikprops.handleChange("username")} />
+                            <InputText placeholder="Nom d'utilisateur" icon="user" color="#00bcff" value={formikprops.values.login} onChangeText={formikprops.handleChange("login")} />
                             <InputText placeholder="Mot de passe" type="password" icon="lock" color="#00bcff" value={formikprops.values.password} onChangeText={formikprops.handleChange("password")} />
                             <Bouton type="submit" onPress={formikprops.handleSubmit} title="Se connecter" />
                         </View>
