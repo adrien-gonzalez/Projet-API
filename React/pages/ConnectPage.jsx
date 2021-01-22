@@ -8,6 +8,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import AuthAPI from '../services/authAPI';
 import { useNavigation } from '@react-navigation/native';
+import * as Updates from 'expo-updates';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -25,6 +26,7 @@ const ConnectPage = () => {
         try {
             await AuthAPI.authenticate(donnees);
             navigation.navigate("HomePage");
+            Updates.reloadAsync();
           } catch (error) {
             console.log(error);
           }
