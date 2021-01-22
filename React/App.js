@@ -11,6 +11,7 @@ import ServersListPage from './pages/ServersListPage.jsx';
 import AddServerPage from './pages/AddServerPage.jsx';
 import ServerInfoPage from './pages/ServerInfoPage.jsx';
 import ResetPassword from './pages/ResetPasswordPage.jsx';
+import UserInfosPage from './pages/UserInfosPage.jsx';
 import ResetMail from './pages/ResetMailPage.jsx';
 import ParamsPage from './pages/ParamsPage';
 import ConnectPage from './pages/ConnectPage';
@@ -26,6 +27,8 @@ import { useFonts } from 'expo-font';
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+
+  // SecureStore.deleteItemAsync("token");
 
   // CHECK SI L'UTILISATEUR EST CO
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,7 +71,7 @@ export default function App() {
   }
   else {
     // TAB NAV FOR CONNECTED USER
-    if ( isAuthenticated === false ) {
+    if ( isAuthenticated === true ) {
       AuthAPI.setup();
       return (
         <NavigationContainer>
@@ -77,7 +80,7 @@ export default function App() {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={UserInfosPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );
