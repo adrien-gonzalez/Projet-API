@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";
+import { StyleSheet, Platform, TextInput, View, Dimensions, Text } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Fumi } from 'react-native-textinput-effects';
 
@@ -31,21 +31,23 @@ const InputText = (props) => {
   }
   else {
     return (
-      <Fumi
-        label={props.placeholder}
-        iconClass={FontAwesome5}
-        iconName={props.icon}
-        iconColor={props.color}
-        iconSize={20}
-        iconWidth={40}
-        inputPadding={16}
-        style={{borderRadius: 20}}
-		onChangeText={props.onChangeText}
-        value={props.value}		height= {props.height}
-        textAlignVertical={props.textAlignVertical}
-        numberOfLines={props.numberOfLines}
-        multiline={props.multiline}        />
-        <Text style={styles.errors}>{props.error}</Text>
+      <View style={{width: '80%', paddingBottom: 34}}>
+
+        <Fumi
+          label={props.placeholder}
+          iconClass={FontAwesome5}
+          iconName={props.icon}
+          iconColor={props.color}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+          style={{borderRadius: 20}}
+          onChangeText={props.onChangeText}
+          value={props.value}		height= {props.height}
+          textAlignVertical={props.textAlignVertical}
+          numberOfLines={props.numberOfLines}
+          multiline={props.multiline}        />
+          <Text style={styles.errors}>{props.error}</Text>
     </View>
     );
   }
