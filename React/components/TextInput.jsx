@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Fumi } from 'react-native-textinput-effects';
 
 const windowWidth = Dimensions.get("window").width;
@@ -24,13 +23,13 @@ const InputText = (props) => {
           onChangeText={props.onChangeText}
           value={props.value}
           />
+        <Text style={styles.errors}>{props.error}</Text>
       </View>
     );
   }
   else {
     return (
-      <View style={{width: '80%', paddingBottom: 34}}>
-      <Fumi
+      <View style={{width: '80%', paddingBottom: 34}}>      <Fumi
         label={props.placeholder}
         iconClass={FontAwesomeIcon}
         iconName={props.icon}
@@ -42,6 +41,7 @@ const InputText = (props) => {
         onChangeText={props.onChangeText}
         value={props.value}
         />
+        <Text style={styles.errors}>{props.error}</Text>
     </View>
     );
   }
@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     marginBottom: 28,
     fontSize: Platform.OS === 'ios' ? 18 : 14,
+  },
+  errors: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 12,
   },
 });
 

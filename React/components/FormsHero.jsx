@@ -14,6 +14,9 @@ export default class Header extends React.Component {
         else if (this.props.title == "Inscription") {
             var image = require('../assets/register-hero.png');
         }
+        else if (this.props.title == "Mot de passe oublié") {
+            var image = require('../assets/reset-hero.png');
+        }        
         return (
             <ImageBackground style={styles.hero} source={image}>
                 <Text style={styles.text}>{this.props.title}</Text>

@@ -1,12 +1,12 @@
 import axios from "axios";
 
-function checkToken(token, donnees) {
+function checkToken(token) {
   return axios({
     method: "GET",
     url:
       "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword?token="+token,
   })
-    .then(() => resetPassword(donnees))
+    .then((response) => response.data)
     .catch((error) => error.response.data.errors);
 }
 
