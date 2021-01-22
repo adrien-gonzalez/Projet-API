@@ -27,7 +27,6 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
 
-
   // CHECK SI L'UTILISATEUR EST CO
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -69,16 +68,16 @@ export default function App() {
   }
   else {
     // TAB NAV FOR CONNECTED USER
-    if ( isAuthenticated === true ) {
+    if ( isAuthenticated === false ) {
       AuthAPI.setup();
       return (
         <NavigationContainer>
-          <Tab.Navigator>
+          <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
             <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
-            <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
-            <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
+            <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
+            <Tab.Screen name="ProfilePage" component={ParamsPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );
@@ -87,12 +86,12 @@ export default function App() {
     else {
       return (
         <NavigationContainer>
-          <Tab.Navigator>
+          <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
             <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
-            <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='add' />}} />
-            <Tab.Screen name="ProfilePage" component={ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='profile' />}} />
+            <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
+            <Tab.Screen name="ProfilePage" component={ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );

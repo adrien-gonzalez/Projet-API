@@ -1,20 +1,25 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Dimensions } from 'react-native';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
+
 function Tab(props) {
     
+    const isFocused = useIsFocused();
     const navigation = useNavigation();
 
-    const imageNames = {
-        home: require('../assets/icon-home.png'),
-        list: require('../assets/icon-list.png'),
-        add: require('../assets/icon-plus.png'),
-        profile: require('../assets/icon-account.png'),
-    };
+    if (isFocused) {
+        var color = "#00bcff";
+    }
+    else {
+        var color = "#262626";
+    }
+    
     if ( props.page == "ServersListPage" ) {
         var style = styles.btnIconMidLeft;
         var btnContainerStyle = styles.btnContainerList;
@@ -35,7 +40,7 @@ function Tab(props) {
     return (
         <TouchableOpacity style={btnContainerStyle} onPress={() => navigation.navigate(props.page)}>
             <View>
-                <Image resizeMode={'contain'} style={styles.btnIcon} source={imageNames[props.icon]} />
+                <FontAwesome5 name={props.icon} size={Platform.OS === "ios" ? 34: 26} color={color} />
             </View>
         </TouchableOpacity>
     );
@@ -47,27 +52,27 @@ const styles = StyleSheet.create({
     btnContainerHome: {
         width: windowWidth*17.5/100,
         height: '100%',
-        marginLeft: '6%'
+        marginLeft: '6%',
+        // paddingTop: 10,
+        justifyContent: 'center',
     },
     btnContainerList: {
         width: windowWidth*17.5/100,
         height: '100%',
-        marginLeft: '1%'
+        marginLeft: '1%',
+        justifyContent: 'center',
     },
     btnContainerAdd: {
         width: windowWidth*17.5/100,
         height: '100%',
-        marginLeft: '25%'
+        marginLeft: '25%',
+        justifyContent: 'center',
     },
     btnContainerProfile: {
         width: windowWidth*17.5/100,
         height: '100%',
-        marginLeft: '1%'
-    },
-    btnIcon: {
-        marginTop: 10,
-        height: windowWidth*9/100,
-        width: windowWidth*9/100,
+        marginLeft: '1%',
+        justifyContent: 'center',
     },
     // selectBar1: {
     //     position: 'absolute',
