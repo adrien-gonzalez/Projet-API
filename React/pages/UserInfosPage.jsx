@@ -19,12 +19,12 @@ import userAPI from "../services/userAPI.js";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserInfosPage = ({navigation}) => {
+const UserInfosPage = ({ navigation }) => {
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [response, setResponse] = useState([]);
 
-  const id = "31";
+  const id = "29";
 
   const fetchInfosUser = async () => {
     try {
@@ -61,15 +61,38 @@ const UserInfosPage = ({navigation}) => {
         });
       } else {
         setResponse(data);
-        navigation.navigate('HomePage');
+        navigation.navigate("HomePage");
       }
     } catch (error) {
       setResponse(error);
     }
-  }
+  };
+
+  const handleOnSubmitPut = async (values, actions) => {
+    console.log(values);
+
+    // const donnees = new URLSearchParams();
+    // donnees.append("password", values.password);
+
+    // try {
+    //   const data = await userAPI.deleteUser(id, donnees);
+    //   console.log(data);
+    //   if (typeof data == "object") {
+    //     data.map((d) => {
+    //       setResponse(d.password_error);
+    //     });
+    //   } else {
+    //     setResponse(data);
+    //     navigation.navigate("HomePage");
+    //   }
+    // } catch (error) {
+    //   setResponse(error);
+    // }
+  };
 
   return (
     <View style={styles.connectPageContainer}>
+      {/* Debut modal confirmation SuppUser */}
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -91,7 +114,7 @@ const UserInfosPage = ({navigation}) => {
               onSubmit={handleOnSubmitSupp}
             >
               {(formikprops) => (
-                <View style={{width:"100%", alignItems:"center"}}>
+                <View style={{ width: "100%", alignItems: "center" }}>
                   <TextInput
                     style={{
                       height: 40,
@@ -131,6 +154,7 @@ const UserInfosPage = ({navigation}) => {
           </View>
         </View>
       </Modal>
+      {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
         <Text style={styles.title}>Informations perso.</Text>
       </View>
@@ -138,11 +162,12 @@ const UserInfosPage = ({navigation}) => {
         <Formik
           enableReinitialize
           initialValues={{
-            password: "",
-            conf_password: "",
             email: infos.email,
             login: infos.login,
+            password: "",
+            conf_password: "",
           }}
+          onSubmit={handleOnSubmitPut}
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
@@ -151,12 +176,14 @@ const UserInfosPage = ({navigation}) => {
                 icon="user"
                 color="#66A5F9"
                 value={formikprops.values.login}
+                onChangeText={formikprops.handleChange("login")}
               />
               <InputText
                 placeholder="Adresse email"
                 icon="envelope"
                 color="#66A5F9"
                 value={formikprops.values.email}
+                onChangeText={formikprops.handleChange("email")}
               />
               <InputText
                 placeholder="Mot de passe"
@@ -164,6 +191,7 @@ const UserInfosPage = ({navigation}) => {
                 icon="lock"
                 color="#66A5F9"
                 value={formikprops.values.password}
+                onChangeText={formikprops.handleChange("password")}
               />
               <InputText
                 placeholder="Confirmation du mot de passe"
@@ -171,13 +199,10 @@ const UserInfosPage = ({navigation}) => {
                 icon="lock"
                 color="#66A5F9"
                 value={formikprops.values.conf_password}
+                onChangeText={formikprops.handleChange("conf_password")}
               />
-              {/* <Bouton title="Je m'inscris" /> */}
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-              >
+              <Bouton onPress={formikprops.handleSubmit} title="Modifier mon profil" />
+              <TouchableOpacity onPress={() => {setModalVisible(true);}}>
                 <Text style={styles.suppCompte}>Supprimer mon compte</Text>
               </TouchableOpacity>
             </View>
@@ -216,6 +241,7 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     fontSize: 18,
+    paddingTop:40,
   },
 
   centeredView: {
