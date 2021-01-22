@@ -23,6 +23,8 @@ const InputText = (props) => {
           inputPadding={16}
           secureTextEntry={true}
           style={{borderRadius: 20}} 
+          value={props.value}
+          onChangeText={props.onChangeText}
           />
       </View>
     );
@@ -43,6 +45,8 @@ const InputText = (props) => {
         textAlignVertical={props.textAlignVertical}
         numberOfLines={props.numberOfLines}
         multiline={props.multiline}
+        value={props.value}
+        onChangeText={props.onChangeText}
         />
     </View>
     );

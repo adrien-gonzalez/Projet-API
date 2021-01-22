@@ -23,10 +23,10 @@ const ServerInfoPage = (props) => {
         // donnees.append("date", '2021-01-15 10:00:00');
         
         try {
-            const data = await ResetPasswordAPI.postComment(donnees);
+            const data = await serverAPI.postComment(donnees);
             if (typeof data == "object") {
               data.map((d) => {
-                setResponse(d.email_error);
+                setResponse(d);
               });
             } else {
               setResponse(data);

@@ -15,7 +15,7 @@ function findServerByID() {
     .then((response) => response.data)
 }
 
-// Ecrire un commentaire 
+// Write a comment
 function postComment(donnees) {
     return axios
     .post("http://nicolas-camilloni.students-laplateforme.io/api/comment", donnees)
@@ -23,8 +23,20 @@ function postComment(donnees) {
     .catch((error) => error.response.data.errors);
 }
 
+// Create server
+function createServer(donnees) {
+    return axios({
+        method: "POST",
+        url: "http://nicolas-camilloni.students-laplateforme.io/api/servers",
+        data: donnees,
+    })
+        .then((response) => response)
+        .catch((error) => error.response.data.errors);
+}
+
 export default {
     findServerByGame,
     findServerByID,
     postComment,
+    createServer,
 };

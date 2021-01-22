@@ -17,26 +17,26 @@ class ServerController extends ResourceController
         
         $method = $_SERVER["REQUEST_METHOD"];
 
-        if ( $method == "POST" || $method == "PUT" || $method == "DELETE" ) {
-            $key        = Services::getSecretKey();
-            $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
-            if (is_null($authHeader)) { //JWT is absent
-                throw new Exception('Missing JWT in request');
-            }
-            else {
-                $arr        = explode(' ', $authHeader);
-                $token      = $arr[1];
-            }
+        // if ( $method == "POST" || $method == "PUT" || $method == "DELETE" ) {
+        //     $key        = Services::getSecretKey();
+        //     $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+        //     if (is_null($authHeader)) { //JWT is absent
+        //         throw new Exception('Missing JWT in request');
+        //     }
+        //     else {
+        //         $arr        = explode(' ', $authHeader);
+        //         $token      = $arr[1];
+        //     }
     
-            try
-            {
-                $decodedToken = JWT::decode($token, $key, ['HS256']);
-            }
-            catch (\Exception $e)
-            {
-                throw new Exception("Invalid JWT");
-            }
-        }
+        //     try
+        //     {
+        //         $decodedToken = JWT::decode($token, $key, ['HS256']);
+        //     }
+        //     catch (\Exception $e)
+        //     {
+        //         throw new Exception("Invalid JWT");
+        //     }
+        // }
 
         $actions = [
             "GET" => "getServers",
@@ -156,11 +156,11 @@ class ServerController extends ResourceController
         // Décodage du token pour récupérer les infos
         // $decodedToken = $this->decodeToken();
         // récup id user connecté
-        $user_fk = 1;
+        $user_fk = 20;
         $param = $this->request->getRawInput();
         $model = new ServerModel();
 
-        if ( !isset($param["name_server"]) || empty($param["name_server"]) ) {
+        if ( !isset($param["name"]) || empty($param["name"]) ) {
             array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
             $stop = true;
         }
@@ -175,7 +175,7 @@ class ServerController extends ResourceController
             $stop = true;
         }
 
-        if ( !isset($param["name_game"]) || empty($param["name_game"]) ) {
+        if ( !isset($param["gameId"]) || empty($param["gameId"]) ) {
             array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
             $stop = true;
         }
