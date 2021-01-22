@@ -39,12 +39,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: "center",
     borderRadius: 50,
-    backgroundColor: "#66A5F9",
+    backgroundColor: "#00bcff",
   },
   buttonText: {
     textAlign: "center",
     color: "white",
     fontSize: Platform.OS === 'ios' ? 20 : 16,
+    fontFamily: 'HomepageBaukasten',
   },
 });
 

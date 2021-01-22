@@ -24,11 +24,9 @@ const UserInfosPage = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [response, setResponse] = useState([]);
 
-  const id = "29";
-
   const fetchInfosUser = async () => {
     try {
-      const data = await userAPI.checkUser(id);
+      const data = await userAPI.checkUser("14");
       console.log(data);
       data.map((d) => {
         setInfos({
@@ -53,7 +51,7 @@ const UserInfosPage = ({ navigation }) => {
     donnees.append("password", values.password);
 
     try {
-      const data = await userAPI.deleteUser(id, donnees);
+      const data = await userAPI.deleteUser(donnees);
       console.log(data);
       if (typeof data == "object") {
         data.map((d) => {

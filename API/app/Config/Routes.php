@@ -35,7 +35,7 @@ $routes->setAutoRoute(true);
 
 $routes->add('/', 'Home::index');
 $routes->add('api/servers', 'ServerController::server');
-$routes->post('api/comment', 'Comment::create');
+$routes->post('api/comment', 'CommentController::comment');
 $routes->add('api/users', 'UserController::user');
 $routes->add('api/games', 'GameController::game');
 $routes->post('api/auth', 'Auth::create');

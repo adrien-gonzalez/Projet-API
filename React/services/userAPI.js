@@ -10,10 +10,10 @@ function checkUser(id) {
     .catch((error) => error);
 }
 
-function deleteUser(id,donnees) {
+function deleteUser(donnees) {
   return axios({
     method: "DELETE",
-    url: "https://nicolas-camilloni.students-laplateforme.io/api/users?id="+id,
+    url: "https://nicolas-camilloni.students-laplateforme.io/api/users",
     data: donnees,
   })
     .then((response) => response.data)
