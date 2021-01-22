@@ -21,16 +21,11 @@ import jwtDecode from "jwt-decode";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserInfosPage = ({ navigation }) => {
+const UserInfosPage = ({ navigation}) => {
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [response, setResponse] = useState([]);
-  // const [idToken, setIdToken] = useState([]);
-
-  // SecureStore.getItemAsync("token").then((result) =>
-  //   setIdToken(jwtDecode(result).id)
-  // );
-
+  
   const fetchInfosUser = async () => {
       try {
         const data = await userAPI.checkUser("11");

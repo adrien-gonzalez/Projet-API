@@ -22,6 +22,7 @@ import jwtDecode from "jwt-decode";
 
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
+import ParamStack from './routes/ParamStack.js';
 
 const Tab = createBottomTabNavigator();
 
@@ -79,7 +80,7 @@ export default function App() {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={UserInfosPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={ParamStack} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );

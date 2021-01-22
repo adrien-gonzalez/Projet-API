@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,7 +7,8 @@ import CatParams from "../components/cat_params";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ParamsPage = () => {
+const ParamsPage = ({navigation}) => {
+
   return (
     <ScrollView style={{ height: "60%" }}>
       <View style={styles.container}>
@@ -20,6 +21,11 @@ const ParamsPage = () => {
             cat="Mes informations perso."
             iconStart={require("../assets/icons/user.png")}
             iconEnd={require("../assets/icons/arrow.png")}
+            onPress={() => {
+              navigation.navigate("ProfilePage", {
+                screen: "UserInfosPage"},
+              )
+            }}
           />
           <CatParams
             cat="Mes serveurs"
