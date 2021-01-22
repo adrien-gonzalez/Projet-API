@@ -20,7 +20,6 @@ import AuthAPI from './services/authAPI';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from "jwt-decode";
 
-
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 

@@ -5,16 +5,18 @@ import {
   StyleSheet,
   Text,
   Modal,
-  TouchableHighlight,
   TouchableOpacity,
   TextInput,
-  Button,
 } from "react-native";
 import InputText from "../components/TextInput";
 import { Dimensions } from "react-native";
 import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
+
+// import TOKEN
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -23,30 +25,32 @@ const UserInfosPage = ({ navigation }) => {
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [response, setResponse] = useState([]);
+  // const [idToken, setIdToken] = useState([]);
+
+  // SecureStore.getItemAsync("token").then((result) =>
+  //   setIdToken(jwtDecode(result).id)
+  // );
 
   const fetchInfosUser = async () => {
-    try {
-      const data = await userAPI.checkUser("14");
-      console.log(data);
-      data.map((d) => {
-        setInfos({
-          login: d.login,
-          email: d.email,
+      try {
+        const data = await userAPI.checkUser("11");
+        data.map((d) => {
+          setInfos({
+            login: d.login,
+            email: d.email,
+          });
         });
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
   };
 
-  useEffect(() => {
-    fetchInfosUser();
-  }, []);
-  console.log(infos);
+  // console.log(idToken);
+    useEffect( () => {
+      fetchInfosUser();
+    }, []);
 
   const handleOnSubmitSupp = async (values, actions) => {
-    console.log(values);
-
     const donnees = new URLSearchParams();
     donnees.append("password", values.password);
 
@@ -199,8 +203,15 @@ const UserInfosPage = ({ navigation }) => {
                 value={formikprops.values.conf_password}
                 onChangeText={formikprops.handleChange("conf_password")}
               />
-              <Bouton onPress={formikprops.handleSubmit} title="Modifier mon profil" />
-              <TouchableOpacity onPress={() => {setModalVisible(true);}}>
+              <Bouton
+                onPress={formikprops.handleSubmit}
+                title="Modifier mon profil"
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
                 <Text style={styles.suppCompte}>Supprimer mon compte</Text>
               </TouchableOpacity>
             </View>
@@ -239,7 +250,7 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     fontSize: 18,
-    paddingTop:40,
+    paddingTop: 40,
   },
 
   centeredView: {
