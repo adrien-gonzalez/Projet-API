@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { StyleSheet, Platform, TextInput, View, Dimensions } from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Fumi } from 'react-native-textinput-effects';
 
 const windowWidth = Dimensions.get("window").width;
@@ -12,14 +13,15 @@ const InputText = (props) => {
       <View style={{width: '80%', paddingBottom: 34}}>
         <Fumi
           label={props.placeholder}
-          iconClass={FontAwesomeIcon}
+          iconClass={FontAwesome5}
           iconName={props.icon}
           iconColor={props.color}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
           secureTextEntry={true}
-          style={{borderRadius: 20}}
+          style={{borderRadius: 20}} 
+          value={props.value}
           onChangeText={props.onChangeText}
           value={props.value}
           />
@@ -29,18 +31,20 @@ const InputText = (props) => {
   }
   else {
     return (
-      <View style={{width: '80%', paddingBottom: 34}}>      <Fumi
+      <Fumi
         label={props.placeholder}
-        iconClass={FontAwesomeIcon}
+        iconClass={FontAwesome5}
         iconName={props.icon}
         iconColor={props.color}
         iconSize={20}
         iconWidth={40}
         inputPadding={16}
         style={{borderRadius: 20}}
-        onChangeText={props.onChangeText}
-        value={props.value}
-        />
+		onChangeText={props.onChangeText}
+        value={props.value}		height= {props.height}
+        textAlignVertical={props.textAlignVertical}
+        numberOfLines={props.numberOfLines}
+        multiline={props.multiline}        />
         <Text style={styles.errors}>{props.error}</Text>
     </View>
     );

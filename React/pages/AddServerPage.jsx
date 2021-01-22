@@ -1,22 +1,272 @@
-import React from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, Text, StyleSheet, SafeAreaView, Platform, ImageBackground, TouchableOpacity, Image } from 'react-native';
 import { Dimensions } from 'react-native';
+import FormsHero from '../components/FormsHero';
+import InputText from '../components/TextInput';
+import Bouton from '../components/bouton';
+import Carousel from 'react-native-snap-carousel';
+import GamesAPI from "../services/gamesAPI";
+import serverAPI from '../services/serverAPI.js'
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome } from '@expo/vector-icons'; 
+import { Formik } from "formik";
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const SLIDER_WIDTH = Dimensions.get('window').width;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.25);
+const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
+
 const AddServerPage = () => {
+    
+    var _carousel = React.createRef()
+    const [response, setResponse] = useState([]);
+
+    const handleOnSubmit = async (values, actions) => {
+        var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
+
+        const donnees = new URLSearchParams();
+        donnees.append("name", values.nameServer);
+        donnees.append("ip", values.ip);
+        donnees.append("port", values.port);
+        donnees.append("description", values.description);
+        donnees.append("website", values.webSite);
+        donnees.append("discord", values.discord);
+        donnees.append("miniature", selectedImage.localUri);
+        donnees.append("", gameId);
+        // donnees.append("users_fk", '20');
+
+        try {
+            const data = await serverAPI.createServer(donnees);
+            console.log(data)
+            if (typeof data == "object") {
+              data.map((d) => {
+                setResponse(d);
+              });
+            } else {
+              setResponse(data);
+            //   actions.resetForm();
+            }
+          } catch (error) {
+            setResponse(error);
+          }
+    }
+
+    const [selectedImage, setSelectedImage] = React.useState(null);
+    let openImagePickerAsync = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();    
+        
+        if (permissionResult.granted === false) {
+          alert('Permission to access camera roll is required!');
+          return;
+        }
+        
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5,
+            // base64: true,
+        });
+
+        if (pickerResult.cancelled === true) {
+          return;
+        }
+    
+        setSelectedImage({ localUri: pickerResult.uri });
+    };
+
+    function image (selectedImage){
+        if (selectedImage !== null) {
+            return (
+            <View style={styles.imageServer}>
+                <Image
+                source={{ uri: selectedImage.localUri }}
+                style={styles.thumbnail}
+                />
+            </View>
+            );
+        }
+    }
+
+
+    const [games, setGames] = useState([]);
+    const fetchGames = async () => {
+    try {
+        const data = await GamesAPI.findAll();
+        setGames(data);
+    } catch (error) {
+        console.log(error);
+        console.log("nope");
+    }
+    };
+
+    useEffect(() => {
+    fetchGames();
+    }, []
+    );
+
+    const _renderItem = ({item,index}) => {
+        return (
+            <View style={{
+                backgroundColor: games[index].color,
+                borderColor: 'white',
+                borderWidth: 3,
+                borderRadius: 50,
+                height: Platform.OS === 'ios' ? 90 : 80,
+                width: Platform.OS === 'ios' ? 90 : 80,
+                marginLeft: 10,
+                marginRight: 25,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <ImageBackground source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/'+games[index].logo+'?time=' + new Date()}} style={{width: Platform.OS === 'ios' ? 60 : 50, height: Platform.OS === 'ios' ? 60 : 50}}/>
+            </View>
+        )
+    }
+   
     return (
-        <View style={styles.globalPage}>
+        <View style={styles.createServerPageContainer}>
+            <View style={styles.headerContainer}>
+                <FormsHero title="Ajouter un serveur" />
+            </View>
+
+            <ScrollView style={{height: '60%'}}>
+            <Text style={styles.serverType}>Type de serveur</Text>
+            <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
+                    <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
+                        <Carousel
+                        ref={_carousel}
+                        layout={"default"}
+                        activeSlideAlignment={"center"}
+                        data={games}
+                        sliderWidth={SLIDER_WIDTH}
+                        itemWidth={ITEM_WIDTH}
+                        renderItem={_renderItem}  
+                        inactiveSlideScale={0.45}
+                        inactiveSlideOpacity= {0.25}
+                        firstItem={Math.round(games.length / 2)}
+                    />
+                    </View>
+                </SafeAreaView>
+
+                <Formik
+                    initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
+                    onSubmit={handleOnSubmit}
+                    >
+                    {(formikprops) => (
+                    <View style={styles.formContainer}>
+                        <InputText 
+                            placeholder="Nom du serveur" 
+                            icon="pen" 
+                            color="#66A5F9" 
+                            onChangeText={formikprops.handleChange("nameServer")}
+                            value={formikprops.values.nameServer}   
+                        />
+                        <InputText 
+                            placeholder="Adresse IP" 
+                            icon="server" 
+                            color="#66A5F9" 
+                            onChangeText={formikprops.handleChange("ip")}
+                            value={formikprops.values.ip} 
+                        />
+                        <InputText 
+                            placeholder="Port" 
+                            icon="plug" 
+                            color="#66A5F9" 
+                            onChangeText={formikprops.handleChange("port")}
+                            value={formikprops.values.port} 
+                        />
+                        <InputText 
+                            placeholder="Description" 
+                            icon="" 
+                            color="#66A5F9"
+                            height= {400}
+                            textAlignVertical='top'
+                            numberOfLines={40}
+                            multiline={true} 
+                            onChangeText={formikprops.handleChange("description")}
+                            value={formikprops.values.description}    
+                        />
+                        <InputText 
+                            placeholder="Site web" 
+                            icon="chrome" 
+                            color="#66A5F9" 
+                            onChangeText={formikprops.handleChange("webSite")}
+                            value={formikprops.values.webSite}   
+                        />
+                        <InputText 
+                            placeholder="Discord" 
+                            icon="discord" 
+                            color="#66A5F9" 
+                            onChangeText={formikprops.handleChange("discord")}
+                            value={formikprops.values.discord} 
+                        />
+                        <TouchableOpacity onPress={openImagePickerAsync} style={styles.input}>
+                            <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
+                            <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                            {image(selectedImage)}
+                        </TouchableOpacity>
+                        <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
+                    </View>
+                )}
+                </Formik>
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    globalPage: {
-        height: '100%',
-        backgroundColor: 'blue',
+    headerContainer: {
+        height: '40%',
     },
+    createServerPageContainer: {
+        minHeight: '100%',
+        width: '100%',
+        backgroundColor: '#F1F1F1',
+    },
+    formContainer: {
+        paddingTop: '6%',
+        width: windowWidth,
+        height: '100%',
+        alignItems: 'center',
+        paddingBottom: '14%'
+    },
+    serverType: {
+        textAlign: 'center', 
+        fontSize: Platform.OS === 'ios' ? 18: 15, 
+        marginBottom: 10, 
+        color: '#545453',
+        fontFamily: 'TwCent',
+        textTransform: 'uppercase',
+        letterSpacing: 2.5,
+        opacity: 0.65
+    },
+    imageServer: {
+        width:  50,
+        height: 14*windowWidth/100,
+    },
+    thumbnail: {
+        width: '100%',
+        height: '100%',
+        resizeMode: "contain",
+        borderRadius: 10
+    },
+    input: {
+        borderRadius: 20,
+        height: 14*windowWidth/100,
+        padding : 34,
+        paddingLeft: 18,
+        width: 80*windowWidth/100,
+        backgroundColor:"white",
+        paddingBottom: 34,
+        marginBottom: 34,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+      },
 });
 
 export default AddServerPage;

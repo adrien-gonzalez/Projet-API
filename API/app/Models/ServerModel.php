@@ -63,33 +63,33 @@ class ServerModel extends Model
 
     public function postServers($user_fk, $param)
     {
-        // Select games_fk
-        $builder = $this->db->table('games');
-        $builder->select('games.id');
-        $builder->where("games.name", $param['name_game']);
-        $query = $builder->get()->getResult();
+        // // Select games_fk
+        // $builder = $this->db->table('games');
+        // $builder->select('games.id');
+        // $builder->where("games.name", $param['name_game']);
+        // $query = $builder->get()->getResult();
           
-        if (sizeof($query) != 0){
-          $id_game = $query[0]->id;
-        }
+        // if (sizeof($query) != 0){
+        //   $id_game = $query[0]->id;
+        // }
 
         $builder = $this->db->table('servers');
         $builder->select('servers.name');
-        $builder->where("servers.name", $param['name_server']);
+        $builder->where("servers.name", $param['name']);
         $query = $builder->get()->getResult();
 
         if (sizeof($query) == 0){
 
             $builder = $this->db->table('servers');
             $builder->insert([
-                'name' => $param['name_server'],
+                'name' => $param['name'],
                 'website'   => $param['website'],
                 'discord' => $param['discord'],
                 'ip' => $param['ip'],
                 'port' => $param['port'],
                 'description' => $param['description'],
                 'miniature' => $param['miniature'],
-                'games_fk' => $id_game,
+                'games_fk' => $param['gameId'],
                 'users_fk' => $user_fk
             ]);
 
