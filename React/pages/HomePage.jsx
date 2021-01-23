@@ -34,7 +34,7 @@ const HomePage = (props) => {
                   source={require('../assets/bg-minecraft-dark.png')}
                   style={styles.containerHero}
                 >
-                  <Image style={{width: '90%'}} resizeMode='contain' source={require('../assets/logo-full.png')} />
+                  <Image style={{width: '90%'}} resizeMode='contain' source={require('../assets/app-logos/logo-full-default.png')} />
                   <Text style={styles.textHero}>Les meilleurs serveurs <Text style={styles.gameColor}>francophones</Text> répertoriés ici</Text>
                   <HomeCarousel />
                 </ImageBackground>

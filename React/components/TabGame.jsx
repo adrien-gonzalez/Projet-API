@@ -2,23 +2,60 @@ import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Dimensions } from 'react-native';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get('window').width;
 
-function TabGame(props) {
+const TabGame = (props) => {
     
     const navigation = useNavigation();
+    console.log(props);
+
+    const gamesLogos = props.selectedGame;
+
+    switch (gamesLogos) {
+        case "1":
+            var gameSelected = require('../assets/logos/minecraft-logo.png');
+            break;
+        case "2":
+            var gameSelected = require('../assets/logos/hytale-logo.png');
+            break;
+        case "3":
+            var gameSelected = require('../assets/logos/gtav-logo.png');
+            break;
+        case "4":
+            var gameSelected = require('../assets/logos/discord-logo.png');
+            break;
+        case "5":
+            var gameSelected = require('../assets/logos/ark-logo.png');
+            break;
+        case "6":
+            var gameSelected = require('../assets/logos/gmod-logo.png');
+            break;
+        case "7":
+            var gameSelected = require('../assets/logos/gtav-logo.png');
+            break;
+        case "8":
+            var gameSelected = require('../assets/logos/gtav-logo.png');
+            break;
+        default:
+            var gameSelected = require('../assets/logos/unselected-logo.png');
+    }
 
     return (
         <TouchableOpacity activeOpacity={1} style={styles.btnContainer} onPress={() => navigation.navigate(props.page)}>
             <View>
-                <Image resizeMode={'contain'} style={styles.btnIcon} source={require('../assets/minecraft-logo.png')} />
+                <Image resizeMode={'contain'} style={styles.btnIcon} source={gameSelected} />
             </View>
         </TouchableOpacity>
     );
 }
 
-export default TabGame;
+const mapStateToProps = ({ selectedGame }) => ({
+    selectedGame
+});
+
+export default connect(mapStateToProps)(TabGame);
 
 const styles = StyleSheet.create({
     btnContainer: {

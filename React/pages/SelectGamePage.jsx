@@ -3,17 +3,21 @@ import { View, ScrollView, Text, Image, StyleSheet, ImageBackground } from 'reac
 import { Dimensions } from 'react-native';
 import GamesAPI from "../services/gamesAPI";
 import * as SecureStore from 'expo-secure-store';
+import { connect } from "react-redux";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-const SelectGamePage = (idGame) => {
+const SelectGamePage = (props) => {
 
     const [games, setGames] = useState([]);
 
-    const handleOnPress = () => {
-        SecureStore.setItemAsync("selectedGame", idGame);
+    const _updateSelectedGame = (id) => {
+        const action = { type: "UPDATE_SELECTED_GAME", value: id }
+        props.dispatch(action)
+        // console.log(id)
     }
     
     const fetchGames = async () => {
@@ -29,7 +33,7 @@ const SelectGamePage = (idGame) => {
     useEffect(() => {
     fetchGames();
     }, []);
-    console.log(games);
+    // console.log(games);
 
     return (
         <View style={styles.globalPage}>
@@ -47,8 +51,10 @@ const SelectGamePage = (idGame) => {
                         {games.map((games) => {
                             return (
                                 <View style={styles.gameContainer} key={games.id}>
-                                    <Image style={styles.gameImage} source={{uri: 'https://gameservapi.000webhostapp.com/assets/'+games.image}} />
-                                    <Text style={{color: games.color, textAlign: 'center', fontSize: 18, fontFamily: 'TwCent',textTransform: 'uppercase', letterSpacing: 4}}>{games.name}</Text>
+                                    <TouchableOpacity style={{height: '100%', width: '100%'}} onPress={() => _updateSelectedGame(games.id)}>
+                                        <Image style={styles.gameImage} source={{uri: 'https://gameservapi.000webhostapp.com/assets/'+games.image}} />
+                                        <Text style={{color: games.color, textAlign: 'center', fontSize: 18, fontFamily: 'TwCent',textTransform: 'uppercase', letterSpacing: 4}}>{games.name}</Text>
+                                    </TouchableOpacity>
                                 </View>
                             )
                         })}
@@ -58,6 +64,14 @@ const SelectGamePage = (idGame) => {
         </View>
     );
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapDispatchToProps)(SelectGamePage);
 
 const styles = StyleSheet.create({
     pageContainer: {
@@ -98,5 +112,3 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
 });
-
-export default SelectGamePage;

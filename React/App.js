@@ -19,6 +19,8 @@ import RegisterPage from './pages/RegisterPage';
 import AuthAPI from './services/authAPI';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from "jwt-decode";
+import { Provider } from 'react-redux';
+import Store from './store/configureStore';
 
 
 import AppLoading from 'expo-app-loading';
@@ -72,15 +74,17 @@ export default function App() {
   else {
       if (isAuthenticated === true ) AuthAPI.setup();
       return (
-        <NavigationContainer>
-          <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
-            <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
-            <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
-            <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
-            <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={isAuthenticated === true ? UserInfosPage : ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
-          </Tab.Navigator>
-        </NavigationContainer>
+        <Provider store={Store}>
+          <NavigationContainer>
+            <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
+              <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
+              <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
+              <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
+              <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
+              <Tab.Screen name="ProfilePage" component={isAuthenticated === true ? UserInfosPage : ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </Provider>
       );
   }
 }
