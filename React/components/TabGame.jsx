@@ -11,7 +11,7 @@ const TabGame = (props) => {
     const navigation = useNavigation();
     console.log(props);
 
-    const gamesLogos = props.selectedGame;
+    const gamesLogos = props.selectedGame.id;
 
     switch (gamesLogos) {
         case "1":

@@ -13,9 +13,10 @@ const windowHeight = Dimensions.get('window').height;
 const SelectGamePage = (props) => {
 
     const [games, setGames] = useState([]);
+    // console.log(games);
 
-    const _updateSelectedGame = (id) => {
-        const action = { type: "UPDATE_SELECTED_GAME", value: id }
+    const _updateSelectedGame = (id, gamecolor) => {
+        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
         props.dispatch(action)
         // console.log(id)
     }
@@ -51,7 +52,7 @@ const SelectGamePage = (props) => {
                         {games.map((games) => {
                             return (
                                 <View style={styles.gameContainer} key={games.id}>
-                                    <TouchableOpacity style={{height: '100%', width: '100%'}} onPress={() => _updateSelectedGame(games.id)}>
+                                    <TouchableOpacity style={{height: '100%', width: '100%'}} onPress={() => _updateSelectedGame(games.id, games.color)}>
                                         <Image style={styles.gameImage} source={{uri: 'https://gameservapi.000webhostapp.com/assets/'+games.image}} />
                                         <Text style={{color: games.color, textAlign: 'center', fontSize: 18, fontFamily: 'TwCent',textTransform: 'uppercase', letterSpacing: 4}}>{games.name}</Text>
                                     </TouchableOpacity>
