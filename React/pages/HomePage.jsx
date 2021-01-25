@@ -11,6 +11,12 @@ const windowHeight = Dimensions.get('window').height;
 
 const HomePage = (props) => {
 
+  const _updateIsLogged = (id, gamecolor) => {
+    const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
+    props.dispatch(action)
+    // console.log(id)
+  }
+
     // GESTION DES COULEURS DE L'APP
   const appColor = props.selectedGame.gamecolor ? props.selectedGame.gamecolor : "#00BCFF";
 

@@ -51,15 +51,15 @@ function setup() {
         var token = result;
         // console.log(token);
         if(token) {
-        // {exp} => comme j'utilise que la propriété exp de l'objet jwtDecode, je le destructure et ne prend que exp
-        const {exp} = jwtDecode(token);
+            // {exp} => comme j'utilise que la propriété exp de l'objet jwtDecode, je le destructure et ne prend que exp
+            const {exp} = jwtDecode(token);
 
-        // console.log(exp, exp*1000, new Date().getTime());
+            // console.log(exp, exp*1000, new Date().getTime());
 
-        if(exp * 1000 > new Date().getTime()) {
-            // Donner le token à axios
-            setAxiosToken(token);
-        }
+            if(exp * 1000 > new Date().getTime()) {
+                // Donner le token à axios
+                setAxiosToken(token);
+            }
         }
     });
     

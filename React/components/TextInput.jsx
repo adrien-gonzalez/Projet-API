@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, Platform, TextInput, View, Dimensions, Text } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Fumi } from 'react-native-textinput-effects';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -15,7 +16,7 @@ const InputText = (props) => {
           label={props.placeholder}
           iconClass={FontAwesome5}
           iconName={props.icon}
-          iconColor={props.color}
+          iconColor={props.selectedGame.gamecolor ? props.selectedGame.gamecolor : props.color}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
@@ -37,7 +38,7 @@ const InputText = (props) => {
           label={props.placeholder}
           iconClass={FontAwesome5}
           iconName={props.icon}
-          iconColor={props.color}
+          iconColor={props.selectedGame.gamecolor ? props.selectedGame.gamecolor : props.color}
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
@@ -53,6 +54,13 @@ const InputText = (props) => {
   }
 };
 
+const mapStateToProps = ({ selectedGame }) => ({
+  selectedGame
+});
+
+
+export default connect(mapStateToProps)(InputText);
+
 const styles = StyleSheet.create({
   input: {
     borderWidth: 2,
@@ -66,10 +74,10 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'ios' ? 18 : 14,
   },
   errors: {
-    color: "red",
+    color: "salmon",
     textAlign: "center",
+    fontFamily: "HomepageBaukasten",
     fontSize: 12,
+    marginTop: 8,
   },
 });
-
-export default InputText;

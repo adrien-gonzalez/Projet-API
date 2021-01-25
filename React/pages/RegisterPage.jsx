@@ -18,7 +18,7 @@ const RegisterPage = () => {
                     <ScrollView style={{height: '60%',}}>
                         <View style={styles.formContainer}>
                             
-                                <InputText placeholder="Nom d'utilisateur" icon="user" color="#66A5F9" />
+                                <InputText placeholder="Nom d'utilisateur" icon="user-alt" color="#66A5F9" />
                                 <InputText placeholder="Adresse email" type="password" icon="envelope" color="#66A5F9" />
                                 <InputText placeholder="Mot de passe" type="password" icon="lock" color="#66A5F9" />
                                 <InputText placeholder="Confirmation du mot de passe" type="password" icon="lock" color="#66A5F9" />

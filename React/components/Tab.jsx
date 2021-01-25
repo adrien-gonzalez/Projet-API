@@ -4,6 +4,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Dimensions } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Platform } from 'react-native';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -14,7 +15,7 @@ function Tab(props) {
     const navigation = useNavigation();
 
     if (isFocused) {
-        var color = "#00bcff";
+        var color = props.selectedGame.gamecolor ? props.selectedGame.gamecolor : "#00BCFF";
     }
     else {
         var color = "#262626";
@@ -46,7 +47,11 @@ function Tab(props) {
     );
 }
 
-export default Tab;
+const mapStateToProps = ({ selectedGame }) => ({
+    selectedGame
+});
+
+export default connect(mapStateToProps)(Tab);
 
 const styles = StyleSheet.create({
     btnContainerHome: {

@@ -9,11 +9,20 @@ import axios from 'axios';
 import AuthAPI from '../services/authAPI';
 import { useNavigation } from '@react-navigation/native';
 import * as Updates from 'expo-updates';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const ConnectPage = () => {
+const ConnectPage = (props) => {
+
+    const _updateIsLogged = (isLogged) => {
+        const action = { type: "UPDATE_ISLOGGED", value: {isLogged: isLogged} }
+        props.dispatch(action)
+        // console.log(id)
+    }
+
+    const [errors, setErrors] = useState([]);
     
     const navigation = useNavigation();
     const handleOnSubmit = async (values, actions) => {
@@ -21,15 +30,17 @@ const ConnectPage = () => {
         donnees.append('login', values.login);
         donnees.append('password', values.password);
 
-        console.log(values);
-
         try {
             await AuthAPI.authenticate(donnees);
+            _updateIsLogged(true);
             navigation.navigate("HomePage");
-            Updates.reloadAsync();
+            // Updates.reloadAsync();
           } catch (error) {
-            console.log(error);
+            // console.log(error);
+            setErrors(error);
           }
+
+        console.log(errors);
     }
 
     if( Platform.OS === "ios" ) {
@@ -42,8 +53,8 @@ const ConnectPage = () => {
                     <Formik initialValues={{ login: "", password: "" }} onSubmit={handleOnSubmit}>
                         {(formikprops) => (
                         <View style={styles.formContainer}>        
-                            <InputText placeholder="Nom d'utilisateur" icon="user" color="#00bcff" value={formikprops.values.login} onChangeText={formikprops.handleChange("login")} />
-                            <InputText placeholder="Mot de passe" type="password" icon="lock" color="#00bcff" value={formikprops.values.password} onChangeText={formikprops.handleChange("password")} />
+                            <InputText placeholder="Nom d'utilisateur" icon="user-alt" color="#00bcff" value={formikprops.values.login} onChangeText={formikprops.handleChange("login")} error={errors.loginError} />
+                            <InputText placeholder="Mot de passe" type="password" icon="lock" color="#00bcff" value={formikprops.values.password} onChangeText={formikprops.handleChange("password")} error={errors.passwordError} />
                             <Bouton type="submit" onPress={formikprops.handleSubmit} title="Se connecter" />
                         </View>
                         )}
@@ -61,14 +72,20 @@ const ConnectPage = () => {
                 <Formik initialValues={{ login: "", password: "" }} onSubmit={handleOnSubmit}>
                     {(formikprops) => (
                     <View style={styles.formContainer}>        
-                        <InputText placeholder="Nom d'utilisateur" icon="user" color="#00bcff" value={formikprops.values.login} onChangeText={formikprops.handleChange("login")} />
-                        <InputText placeholder="Mot de passe" type="password" icon="lock" color="#00bcff" value={formikprops.values.password} onChangeText={formikprops.handleChange("password")} />
+                        <InputText placeholder="Nom d'utilisateur" icon="user-alt" color="#00bcff" value={formikprops.values.login} onChangeText={formikprops.handleChange("login")} error={errors.loginError} />
+                        <InputText placeholder="Mot de passe" type="password" icon="lock" color="#00bcff" value={formikprops.values.password} onChangeText={formikprops.handleChange("password")} error={errors.passwordError} />
                         <Bouton type="submit" onPress={formikprops.handleSubmit} title="Se connecter" />
                     </View>
                     )}
                 </Formik>
             </View>
         );
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
     }
 }
 
@@ -90,4 +107,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ConnectPage;
+export default connect(mapDispatchToProps)(ConnectPage);

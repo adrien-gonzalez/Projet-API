@@ -1,4 +1,4 @@
 import { createStore } from 'redux';
-import updateSelectedGame from './reducers/gamesReducers';
+import appStore from './reducers/appReducers';
 
-export default createStore(updateSelectedGame);
+export default createStore(appStore);

@@ -9,7 +9,7 @@ const windowWidth = Dimensions.get('window').width;
 const TabGame = (props) => {
     
     const navigation = useNavigation();
-    console.log(props);
+    // console.log(props);
 
     const gamesLogos = props.selectedGame.id;
 
@@ -43,7 +43,39 @@ const TabGame = (props) => {
     }
 
     return (
-        <TouchableOpacity activeOpacity={1} style={styles.btnContainer} onPress={() => navigation.navigate(props.page)}>
+        <TouchableOpacity activeOpacity={1} style={
+            props.selectedGame.id != 0 ?
+            {
+                backgroundColor: props.selectedGame.gamecolor, position: 'absolute',
+                top: -40,
+                height: windowWidth*25/100,
+                borderRadius: 2000,
+                borderWidth: 6,
+                borderColor: 'white',
+                left: (windowWidth*50/100)-(windowWidth*25/100)/2,
+                width: windowWidth*25/100,
+                zIndex: 1000,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }
+            :
+            {
+                backgroundColor: "whitesmoke", position: 'absolute',
+                top: -40,
+                height: windowWidth*25/100,
+                borderRadius: 2000,
+                borderWidth: 6,
+                borderColor: 'white',
+                left: (windowWidth*50/100)-(windowWidth*25/100)/2,
+                width: windowWidth*25/100,
+                zIndex: 1000,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }
+        
+        } onPress={() => navigation.navigate(props.page)}>
             <View>
                 <Image resizeMode={'contain'} style={styles.btnIcon} source={gameSelected} />
             </View>
@@ -67,12 +99,10 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         left: (windowWidth*50/100)-(windowWidth*25/100)/2,
         width: windowWidth*25/100,
-        backgroundColor: 'whitesmoke',
         zIndex: 1000,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // width: windowWidth*30/100,
     },
     gameLogo: {
         height: '74%',
