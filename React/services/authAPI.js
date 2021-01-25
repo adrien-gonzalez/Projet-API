@@ -8,6 +8,7 @@ import * as SecureStore from 'expo-secure-store';
  */
 function logout() {
     SecureStore.deleteItemAsync("token");
+    SecureStore.deleteItemAsync("refreshtoken");
     delete axios.defaults.headers["Authorization"];
 }
 
@@ -22,7 +23,9 @@ function authenticate(credentials) {
         .then(function (response) {
             // handle success
             const token = response.data.token;
+            const refreshtoken = response.data.refreshtoken;
             SecureStore.setItemAsync("token", token);
+            SecureStore.setItemAsync("refreshtoken", refreshtoken);
             // SecureStore.getItemAsync("token").then(result => {
             //     console.log(result);
             // });
