@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 12,
-  },
+  }
 });
 
 export default InputText;

@@ -20,7 +20,15 @@ function deleteUser(donnees) {
     .catch((error) => error.response.data.errors);
 }
 
+function updateUser(donnees) {
+  return axios
+    .post("https://nicolas-camilloni.students-laplateforme.io/api/users/update", donnees)
+    .then((response) => response.data)
+    .catch((error) => error.response.data.errors);
+}
+
 export default {
   checkUser,
   deleteUser,
+  updateUser,
 };

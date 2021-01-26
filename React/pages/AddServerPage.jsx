@@ -6,7 +6,7 @@ import InputText from '../components/TextInput';
 import Bouton from '../components/bouton';
 import Carousel from 'react-native-snap-carousel';
 import GamesAPI from "../services/gamesAPI";
-import serverAPI from '../services/serverAPI.js'
+import userAPI from '../services/userAPI.js'
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
@@ -70,6 +70,8 @@ const AddServerPage = () => {
             quality: 0.5,
             // base64: true,
         });
+
+        // console.log(pickerResult);
 
         if (pickerResult.cancelled === true) {
           return;

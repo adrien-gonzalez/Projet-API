@@ -5,12 +5,12 @@ import Header from '../components/header.jsx'
 import serverAPI from '../services/serverAPI.js'
 
 
-const ServersListPage = (props) => {
+const ServersListPage = () => {
 
   const [servers, setServer] = useState([]);
   const fetchServers = async () => {
     try {
-      const data = await serverAPI.findServerByGame();
+      const data = await serverAPI.findServerByGame(idGame);
       setServer(data);
     } catch (error) {
       console.log(error);

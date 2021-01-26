@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, Image, StyleSheet, ImageBackground } from 'react-native';
 import { Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import GamesAPI from "../services/gamesAPI";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 const SelectGamePage = () => {
 
@@ -42,7 +42,9 @@ const SelectGamePage = () => {
                         {games.map((games) => {
                             return (
                                 <View style={styles.gameContainer} key={games.id}>
-                                    <Image style={styles.gameImage} source={{uri: 'https://gameservapi.000webhostapp.com/assets/'+games.image}} />
+                                    <TouchableOpacity>
+                                        <Image style={styles.gameImage} source={{uri: 'https://gameservapi.000webhostapp.com/assets/'+games.image}} />
+                                    </TouchableOpacity>
                                     <Text style={{color: games.color, textAlign: 'center', fontSize: 18, fontFamily: 'TwCent',textTransform: 'uppercase', letterSpacing: 4}}>{games.name}</Text>
                                 </View>
                             )
