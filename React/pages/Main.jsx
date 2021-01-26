@@ -22,13 +22,134 @@ import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
+import axios from "axios";
 
 
 const Tab = createBottomTabNavigator();
 
 const Main = (props) => {
 
+    axios.interceptors.response.use(
+        function(response) {
+          // If the request succeeds, we don't have to do anything and just return the response
+          return response
+        },
+        function(error) {
+          const errorResponse = error.response
+          console.log(errorResponse);
+          if (isTokenExpiredError(errorResponse)) {
+            return resetTokenAndReattemptRequest(error)
+          }
+          // If the error is due to other reasons, we just throw it back to axios
+          return Promise.reject(error)
+        }
+      )
+      function isTokenExpiredError(errorResponse) {
+          if (errorResponse.data.message === "Token invalide" && errorResponse.status === 401) {
+             console.log("ok4");
+          } else return false;
+      }
+
     // SecureStore.deleteItemAsync("token");
+    // SecureStore.deleteItemAsync("refreshtoken");
+    // delete axios.defaults.headers["Authorization"];
+    // SecureStore.setItemAsync("token", "salut");
+    // axios.defaults.headers["Authorization"] = "Bearer " + "salut";
+    // SecureStore.setItemAsync("refreshtoken", "yoooo");
+
+
+    // const handleRefresh = async (donnees) => {
+    //     try {
+    //         await AuthAPI.refresh(donnees);
+    //         // _updateIsLogged(true);
+    //         // navigation.navigate("HomePage");
+    //         // Updates.reloadAsync();
+    //     } catch (error) {
+    //         // console.log(error);
+    //     }
+    // }
+
+
+
+    // axios.interceptors.response.use(res => {
+    //     // console.log(res.request._header)
+    //     return res;
+    //   }, error => Promise.reject(error));
+    // const test = async () => await SecureStore.getItemAsync("token").then(result => {
+    //     if(result !== null ) {
+    //         // console.log(result);
+    //         const donnees = new URLSearchParams();
+    //         donnees.append('refresh', result);
+    //         handleRefresh(donnees)
+    //     }
+    //     else {
+    //         console.log("refreshtoken vide");
+    //     }
+    // })
+
+
+
+    // const getRefresh = async () => await SecureStore.getItemAsync("refreshtoken").then(result => {
+    //     if(result !== null ) {
+    //         // console.log(result);
+    //         const donnees = new URLSearchParams();
+    //         donnees.append('refresh', result);
+    //         handleRefresh(donnees)
+    //     }
+    //     else {
+    //         console.log("refreshtoken vide");
+    //     }
+    // })
+
+
+
+
+    // axios.defaults.headers["Authorization"] = "Bearer salut";
+
+
+
+
+    // axios.interceptors.request.use(request => {
+    //     console.log('Starting Request', JSON.stringify(request, null, 2))
+    //     return request
+    //   })
+      
+
+
+
+
+    // axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+    //     if ((err.response.status === 401 || err.response.data.message === "Token invalide") && err.response.data.message != "Token faux") {
+    //         // console.log(err.response.data.message);
+    //         console.log("lolo");
+    //         getRefresh();
+    //     }
+    //     else if (err.repsonse.data.message === "Token faux") {
+    //         console.log("stop");
+    //     }
+    //     return Promise.reject(err);
+    // })
+
+
+
+
+    // axios.interceptors.response.use(function (response) {
+    //     // Any status code that lie within the range of 2xx cause this function to trigger
+    //     // Do something with response data
+    //     console.log("okok");
+    //     // return response;
+    //   }, function (error) {
+    //     // Any status codes that falls outside the range of 2xx cause this function to trigger
+    //     // Do something with response error
+    //     // console.log(error);
+    //     console.log(error.response);
+    //     // return Promise.reject(error);
+    //   });
+
+
+
+
+
 
     const _updateIsLogged = (isLogged) => {
         const action = { type: "UPDATE_ISLOGGED", value: {isLogged: isLogged} }
@@ -61,6 +182,7 @@ const Main = (props) => {
   
     // call checkLoginState as soon as the component mounts
     useEffect(() => {
+        AuthAPI.setup();
         checkLoginState();
         // console.log(props);
     });
@@ -75,7 +197,6 @@ const Main = (props) => {
         return <AppLoading />;
     }
     else {
-        if (props.auth.isLogged === true ) AuthAPI.setup();
         return (
             <NavigationContainer>
                 <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>

@@ -26,7 +26,7 @@ const UserInfosPage = ({ navigation }) => {
 
   const fetchInfosUser = async () => {
     try {
-      const data = await userAPI.checkUser("14");
+      const data = await userAPI.checkUser("11");
       console.log(data);
       data.map((d) => {
         setInfos({

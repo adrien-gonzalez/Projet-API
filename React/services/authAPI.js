@@ -23,7 +23,28 @@ function authenticate(credentials) {
         .then(function (response) {
             // handle success
             const token = response.data.token;
-            const refreshtoken = response.data.refreshtoken;
+            const refreshtoken = response.data.refresh;
+            SecureStore.setItemAsync("token", token);
+            SecureStore.setItemAsync("refreshtoken", refreshtoken);
+            // SecureStore.getItemAsync("token").then(result => {
+            //     console.log(result);
+            // });
+            setAxiosToken(token);
+        })
+        .catch(function (error) {
+            // handle error
+            throw error.response.data;
+        });
+}
+
+function refresh(refresh) {
+    return axios
+        .post(
+            "https://nicolas-camilloni.students-laplateforme.io/api/refresh", refresh)
+        .then(function (response) {
+            // handle success
+            const token = response.data.token;
+            const refreshtoken = response.data.refresh;
             SecureStore.setItemAsync("token", token);
             SecureStore.setItemAsync("refreshtoken", refreshtoken);
             // SecureStore.getItemAsync("token").then(result => {
@@ -73,5 +94,6 @@ function setup() {
 export default {
     authenticate,
     logout,
-    setup
+    setup,
+    refresh
 }

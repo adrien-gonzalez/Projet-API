@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView} from 'react-native';
-import Header from '../components/header.jsx'
-import serverAPI from '../services/serverAPI.js'
-
+import Header from '../components/header.jsx';
+import serverAPI from '../services/serverAPI.js';
+import { connect } from "react-redux";
 
 const ServersListPage = (props) => {
 
@@ -21,6 +21,7 @@ const ServersListPage = (props) => {
     fetchServers();
   }, []);
   // console.log(servers);
+  // console.log(props);
 
   return (
     <ScrollView style={styles.contain}>
@@ -74,7 +75,12 @@ const ServersListPage = (props) => {
   );
 }
 
-export default ServersListPage;
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ auth }) => ({
+  auth
+});
+
+export default connect(mapStateToProps)(ServersListPage);
 
 
 const styles = StyleSheet.create({
