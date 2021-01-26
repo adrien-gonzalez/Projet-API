@@ -66,7 +66,7 @@ const HomePage = (props) => {
       const data = await GamesAPI.findPopular();
       setGames(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       console.log("nope");
     }
   };

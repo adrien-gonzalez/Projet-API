@@ -22,7 +22,8 @@ function authenticate(credentials) {
             "https://nicolas-camilloni.students-laplateforme.io/api/auth", credentials)
         .then(function (response) {
             // handle success
-            const token = response.data.token;
+            // const token = response.data.token;
+            const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTEsImxvZ2luIjoicGxhcCIsImlhdCI6MTYwOTkyNzA2NywiZXhwIjoxNjA5OTMwNjY3fQ.uDHteXL7mk3dFoyMR3bGyIQS9j4RGFHLhVEQaEz9pxk";
             const refreshtoken = response.data.refresh;
             SecureStore.setItemAsync("token", token);
             SecureStore.setItemAsync("refreshtoken", refreshtoken);
