@@ -22,14 +22,11 @@ function authenticate(credentials) {
             "https://nicolas-camilloni.students-laplateforme.io/api/auth", credentials)
         .then(function (response) {
             // handle success
-            // const token = response.data.token;
-            const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTEsImxvZ2luIjoicGxhcCIsImlhdCI6MTYwOTkyNzA2NywiZXhwIjoxNjA5OTMwNjY3fQ.uDHteXL7mk3dFoyMR3bGyIQS9j4RGFHLhVEQaEz9pxk";
+            const token = response.data.token;
+            // const refreshtoken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjksImxvZ2luIjoiYXJpZWxsZTc2IiwiaWF0IjoxNjExNzU4MTQ4fQ.Bw7mmMZgGRkReE7SX__fDfPWCiCeh9v6q1gYu-5aQ4g";
             const refreshtoken = response.data.refresh;
             SecureStore.setItemAsync("token", token);
             SecureStore.setItemAsync("refreshtoken", refreshtoken);
-            // SecureStore.getItemAsync("token").then(result => {
-            //     console.log(result);
-            // });
             setAxiosToken(token);
         })
         .catch(function (error) {
@@ -39,6 +36,7 @@ function authenticate(credentials) {
 }
 
 function refresh(refresh) {
+    console.log("choppe", refresh);
     return axios
         .post(
             "https://nicolas-camilloni.students-laplateforme.io/api/refresh", refresh)

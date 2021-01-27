@@ -75,6 +75,7 @@ const HomePage = (props) => {
     fetchGames();
   }, []);
   
+  console.log(props);
 
   // VUE
   return (
@@ -126,8 +127,8 @@ const HomePage = (props) => {
 }
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedGame }) => ({
-  selectedGame
+const mapStateToProps = ({ selectedGame, auth }) => ({
+  selectedGame, auth
 });
 
 export default connect(mapStateToProps)(HomePage);

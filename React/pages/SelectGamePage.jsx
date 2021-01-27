@@ -12,7 +12,6 @@ const windowHeight = Dimensions.get('window').height;
 
 
 const SelectGamePage = (props) => {
-    console.log("start");
     
     const navigation = useNavigation();
     const [games, setGames] = useState([]);
