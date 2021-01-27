@@ -9,6 +9,8 @@ import TabComponent from './components/Tab';
 import TabGame from './components/TabGame';
 import ServersListPage from './pages/ServersListPage.jsx';
 import AddServerPage from './pages/AddServerPage.jsx';
+import UpdateServerPage from './pages/UpdateServerPage.jsx';
+import UserServerPage from './pages/UserServerPage.jsx'
 import ServerInfoPage from './pages/ServerInfoPage.jsx';
 import ResetPassword from './pages/ResetPasswordPage.jsx';
 import UserInfosPage from './pages/UserInfosPage.jsx';
@@ -19,6 +21,7 @@ import RegisterPage from './pages/RegisterPage';
 import AuthAPI from './services/authAPI';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from "jwt-decode";
+import ParamStack from "./routes/ParamStack.js"
 
 
 import AppLoading from 'expo-app-loading';
@@ -80,7 +83,7 @@ export default function App() {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={UserInfosPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={ParamStack} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );
@@ -97,6 +100,7 @@ export default function App() {
             <Tab.Screen name="ProfilePage" component={ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
+        // <UserServerPage/>
       );
     }
   }

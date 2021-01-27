@@ -1,13 +1,23 @@
-import React from "react";
+import React, {useState} from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import CatParams from "../components/cat_params";
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ParamsPage = () => {
+const ParamsPage = ({navigation}) => {
+
+  const [idUser, setId] = useState([]);
+
+  SecureStore.getItemAsync('token').then(result => {
+    const {id} = jwtDecode(result);
+    setId(id);
+  });
+
   return (
     <ScrollView style={{ height: "60%" }}>
       <View style={styles.container}>
@@ -25,6 +35,12 @@ const ParamsPage = () => {
             cat="Mes serveurs"
             iconStart={require("../assets/icons/gamepad.png")}
             iconEnd={require("../assets/icons/arrow.png")}
+            onPress={() =>{
+              navigation.navigate('ProfilePage', {
+                screen: 'UserServerPage',
+                params: {idUser: idUser}
+              })
+            }}
           />
         </View>
         <View style={styles.container_BlocParams}>

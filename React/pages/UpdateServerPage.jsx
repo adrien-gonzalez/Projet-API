@@ -23,29 +23,26 @@ const AddServerPage = () => {
     
     var _carousel = React.createRef()
     const [response, setResponse] = useState([]);
+    const [selectedImage, setSelectedImage] = React.useState(null);
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
-    const [miniatureError, setMiniatureError] = useState([]);
 
-    const [selectedImage, setSelectedImage] = React.useState(null);
     const handleOnSubmit = async (values, actions) => {
+        var serverId = 14;
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
 
         setNameError('')
         setDescriptionError('')
-        setMiniatureError('')
-    
+
         if(values.nameServer == "") {
             setNameError("Veuillez renseigner un nom de serveur")
         }
         if(values.description == "") {
             setDescriptionError("Veuillez renseigner une description")
         }
-        if(selectedImage == null) {
-            setMiniatureError("Veuillez renseigner une miniature")
-        }
 
         let formData = new FormData();
+        
         if(selectedImage != null) {
             let imageBody = {
                 uri: selectedImage.localUri,
@@ -54,7 +51,7 @@ const AddServerPage = () => {
             };
             formData.append('file', (imageBody)) 
         }
-
+        
         formData.append("name", values.nameServer);
         formData.append("ip", values.ip);
         formData.append("port", values.port);
@@ -64,19 +61,21 @@ const AddServerPage = () => {
         formData.append("gameId", gameId);
 
         try {
-            const data = await serverAPI.createServer(formData);
-           
+            const data = await serverAPI.updateServer(formData, serverId);
+            console.log(data.data)
+
             if (typeof data == "object") {
-                setResponse(data)
+              data.map((d) => {
+                setResponse(d);
+              });
             } else {
               setResponse(data);
-              actions.resetForm();
+            //   actions.resetForm();
             }
           } catch (error) {
             setResponse(error);
           }
     }
-
 
     let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();    
@@ -89,16 +88,58 @@ const AddServerPage = () => {
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [4.00, 1],
+            aspect: [4, 3],
             quality: 0.5,
+            base64: true,
         });
 
         if (pickerResult.cancelled === true) {
           return;
         }
-    
-        setSelectedImage({ localUri: pickerResult.uri });
+
+        setSelectedImage({localUri: pickerResult.uri });
     };
+
+    const [games, setGames] = useState([]);
+    const fetchGames = async () => {
+        try {
+            const data = await GamesAPI.findAll();
+            setGames(data);
+        } catch (error) {
+            console.log(error);
+            console.log("nope");
+        }
+    };
+
+    const serverId = 14
+    const [serverInfo, setServerInfo] = useState([]);
+    const fetchServers = async () => {
+        try {
+            const data = await serverAPI.findServerByID(serverId);
+            data.map((serverInfo) => {
+                setServerInfo({
+                    id : serverInfo.id,
+                    descriptionServer : serverInfo.descriptionServer,
+                    color : serverInfo.color,
+                    games_fk : serverInfo.games_fk,
+                    ip : serverInfo.ip,
+                    port : serverInfo.port,
+                    discord : serverInfo.discord,
+                    website : serverInfo.website,
+                    name : serverInfo.name,
+                    miniature : serverInfo.miniature
+                })
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchGames();
+        fetchServers();
+        }, []
+    );
 
     function image (selectedImage){
         if (selectedImage !== null) {
@@ -110,24 +151,17 @@ const AddServerPage = () => {
                 />
             </View>
             );
+        } else {
+            return (
+            <View style={styles.imageServer}>
+            <Image
+                source={{ uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+serverInfo.miniature+'?time=' + new Date() }}
+                style={styles.thumbnail}
+                />
+            </View>
+            );
         }
     }
-    
-    const [games, setGames] = useState([]);
-    const fetchGames = async () => {
-    try {
-        const data = await GamesAPI.findAll();
-        setGames(data);
-    } catch (error) {
-        console.log(error);
-        console.log("nope");
-    }
-    };
-
-    useEffect(() => {
-    fetchGames();
-    }, []
-    );
 
     const _renderItem = ({item,index}) => {
         return (
@@ -151,7 +185,7 @@ const AddServerPage = () => {
     return (
         <View style={styles.createServerPageContainer}>
             <View style={styles.headerContainer}>
-                <FormsHero title="Ajouter un serveur" />
+                <FormsHero title="Modifier un serveur" />
             </View>
 
             <ScrollView style={{height: '60%'}}>
@@ -168,13 +202,14 @@ const AddServerPage = () => {
                         renderItem={_renderItem}  
                         inactiveSlideScale={0.45}
                         inactiveSlideOpacity= {0.25}
-                        firstItem={Math.round(games.length / 2)}
+                        firstItem={parseInt(serverInfo.games_fk)-1}
                     />
                     </View>
                 </SafeAreaView>
-
                 <Formik
-                    initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
+                    enableReinitialize
+                    initialValues={{ description: serverInfo.descriptionServer, nameServer: serverInfo.name, 
+                    ip: serverInfo.ip, port: serverInfo.port, webSite: serverInfo.website, discord: serverInfo.discord}}
                     onSubmit={handleOnSubmit}
                     >
                     {(formikprops) => (
@@ -184,7 +219,7 @@ const AddServerPage = () => {
                             icon="pen" 
                             color="#66A5F9" 
                             onChangeText={formikprops.handleChange("nameServer")}
-                            value={formikprops.values.nameServer} 
+                            value={formikprops.values.nameServer}  
                             error={nameError}  
                         />
                         <InputText 
@@ -210,7 +245,7 @@ const AddServerPage = () => {
                             numberOfLines={40}
                             multiline={true} 
                             onChangeText={formikprops.handleChange("description")}
-                            value={formikprops.values.description}    
+                            value={formikprops.values.description}  
                             error={descriptionError}  
                         />
                         <InputText 
@@ -232,8 +267,7 @@ const AddServerPage = () => {
                             <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
                             {image(selectedImage)}
                         </TouchableOpacity>
-                        <Text style={styles.error}>{miniatureError}</Text>
-                        <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
+                        <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
                     </View>
                 )}
                 </Formik>
@@ -285,19 +319,11 @@ const styles = StyleSheet.create({
         paddingLeft: 18,
         width: 80*windowWidth/100,
         backgroundColor:"white",
+        paddingBottom: 34,
+        marginBottom: 34,
         alignItems: 'center',
         justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingBottom: 34,
-        marginBottom: 34
-
-      },
-      error: {
-        color: "red",
-        textAlign: "center",
-        fontSize: 12,
-        position: 'relative',
-        bottom: 34,
+        flexDirection: 'row'
       },
 });
 

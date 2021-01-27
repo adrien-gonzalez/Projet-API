@@ -9,10 +9,19 @@ function findServerByGame() {
 }
 
 // Informations server by id
-function findServerByID() {
+function findServerByID(id) {
     return axios
-    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?id=4")
+    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?id="+id)
     .then((response) => response.data)
+    .catch((error) => error.response.data.errors);    
+}
+
+// Informations server by user
+function findServerByUser(user) {
+    return axios
+    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?user="+user)
+    .then((response) => response.data)
+    .catch((error) => error.response.data.errors);    
 }
 
 // Write a comment
@@ -24,12 +33,27 @@ function postComment(donnees) {
 }
 
 // Create server
-function createServer(donnees) {
-    return axios({
-        method: "POST",
-        url: "http://nicolas-camilloni.students-laplateforme.io/api/servers",
-        data: donnees,
-    })
+function createServer(formData) {
+    return axios.post(
+        'http://nicolas-camilloni.students-laplateforme.io/api/servers', formData)
+        .then((response) => response)
+        .catch((error) => error.response.data.errors);
+}
+
+// Update server
+function updateServer(formData, id) {
+    return axios.post(
+        'http://nicolas-camilloni.students-laplateforme.io/api/servers/update?id='+id, 
+        formData)
+        .then((response) => response)
+        .catch((error) => error.response.data.errors);
+}
+
+// Delete Server
+function deleteServer(donnees, id) {
+    return axios.delete(
+        'http://nicolas-camilloni.students-laplateforme.io/api/servers?id='+id, 
+        donnees)
         .then((response) => response)
         .catch((error) => error.response.data.errors);
 }
@@ -39,4 +63,7 @@ export default {
     findServerByID,
     postComment,
     createServer,
+    updateServer,
+    findServerByUser,
+    deleteServer,
 };

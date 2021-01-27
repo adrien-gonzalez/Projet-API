@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions, Text, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -12,7 +13,9 @@ const CatParams = (props) => {
         source={props.iconStart}
       />
       <Text style={styles.title}> {props.cat} </Text>
-      <Image style={styles.imageEnd} source={props.iconEnd}/>
+      <TouchableOpacity onPress={props.onPress}>
+        <Image style={styles.imageEnd} source={props.iconEnd}/>
+      </TouchableOpacity>
     </View>
   );
 };
