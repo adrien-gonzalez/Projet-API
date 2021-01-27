@@ -7,6 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Text,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import FormsHero from "../components/FormsHero";
 import InputText from "../components/TextInput";
