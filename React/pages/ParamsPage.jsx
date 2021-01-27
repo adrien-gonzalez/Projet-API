@@ -20,8 +20,8 @@ const ParamsPage = ({navigation}) => {
   });
 
   return (
-    <ScrollView style={{ height: "60%" }}>
-      <View style={styles.container}>
+        <ScrollView style={{ height: "20%" }}>
+    <View style={styles.container}>
         <View style={styles.container_top}>
           <Text style={styles.title}> Paramètres </Text>
         </View>
@@ -92,17 +92,14 @@ const styles = StyleSheet.create({
     flex: 0.075,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "green",
     width: windowWidth,
   },
   container_BlocParams: {
     alignItems: "center",
-    // backgroundColor: "grey",
     width: windowWidth,
     flex: 0.2,
   },
   titleParams: {
-    // backgroundColor: "black",
     justifyContent: "flex-start",
     fontSize: 22,
     fontWeight: "bold",

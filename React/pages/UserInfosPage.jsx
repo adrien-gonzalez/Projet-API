@@ -122,17 +122,11 @@ const UserInfosPage = ({ route, navigation }) => {
       // console.log(data);
       if (typeof data == "object") {
         data.map((d) => {
-          if (
-            d.login_error ||
-            d.email_error ||
-            d.old_password_error ||
-            d.password_error
-          ) {
-            setLoginError(d.login_error);
-            setEmailError(d.email_error);
-            setOldPasswordError(d.old_password_error);
-            setPasswordError(d.password_error);
-          } else if (d.login_success || d.email_success || d.password_success) {
+          if(d.login_error) {setLoginError(d.login_error)}
+          if(d.email_error) {setEmailError(d.email_error)}
+          if(d.old_password_error) {setOldPasswordError(d.old_password_error) }
+          if(d.password_error) {setPasswordError(d.password_error)}
+          else if (d.login_success || d.email_success || d.password_success) {
             setResponsePut("Informations modifiées");
           }
         });
@@ -238,7 +232,14 @@ const UserInfosPage = ({ route, navigation }) => {
       </Modal>
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
-        <Text style={styles.title}>Informations perso.</Text>
+        <View style={styles.backTitle}>
+          <TouchableOpacity style={styles.logoBack}  onPress={() => {
+                        navigation.goBack();
+                      }}>
+            <Image style={styles.logoBack} source={require("../assets/icons/backArrow.png")}></Image>
+          </TouchableOpacity>
+          <Text style={styles.title}>Informations perso.</Text>
+        </View>
         {image(selectedImage)}
         <View style={styles.viewLogoPhoto}>
           <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
@@ -335,6 +336,19 @@ const styles = StyleSheet.create({
     color: "#262626",
     paddingTop: windowHeight / 20,
     paddingBottom: 10,
+  },
+  backTitle: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent:"space-evenly",
+    alignSelf:"flex-start",
+    width:"90%",
+  },
+  logoBack: {
+    alignSelf:"flex-end",
+    width: 22,
+    height: 22,
+    marginBottom:14,
   },
   suppCompte: {
     color: "red",

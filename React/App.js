@@ -13,6 +13,7 @@ import ServerInfoPage from './pages/ServerInfoPage.jsx';
 import ResetPassword from './pages/ResetPasswordPage.jsx';
 import UserInfosPage from './pages/UserInfosPage.jsx';
 import ResetMailPage from './pages/ResetMailPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import ParamsPage from './pages/ParamsPage';
 import ConnectPage from './pages/ConnectPage';
 import RegisterPage from './pages/RegisterPage';
@@ -24,6 +25,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 import ParamStack from './routes/ParamStack.js';
 import ResetStack from './routes/ResetStack.js';
+import ResetMail from './pages/ResetMailPage.jsx';
 
 const Tab = createBottomTabNavigator();
 
@@ -95,7 +97,7 @@ export default function App() {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={ParamStack} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={ResetStack} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
           </Tab.Navigator>
         </NavigationContainer>
       );
