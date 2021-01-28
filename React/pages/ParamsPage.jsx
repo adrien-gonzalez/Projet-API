@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import CatParams from "../components/cat_params";
+import CatParams from "../components/catParams";
+// import TOKEN
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ParamsPage = () => {
+const ParamsPage = ({navigation}) => {
+
+  const [idUser, setId] = useState([]);
+
+  SecureStore.getItemAsync("token").then(result => {
+    const {id} = jwtDecode(result);
+    setId(id);
+  });
+
   return (
-    <ScrollView style={{ height: "60%" }}>
-      <View style={styles.container}>
+        <ScrollView style={{ height: "20%" }}>
+    <View style={styles.container}>
         <View style={styles.container_top}>
           <Text style={styles.title}> Paramètres </Text>
         </View>
@@ -20,6 +31,12 @@ const ParamsPage = () => {
             cat="Mes informations perso."
             iconStart={require("../assets/icons/user.png")}
             iconEnd={require("../assets/icons/arrow.png")}
+            onPress={() => {
+              navigation.navigate('ProfilePage', {
+                screen: 'UserInfosPage',
+                params: { idUser: idUser },
+              });
+            }}
           />
           <CatParams
             cat="Mes serveurs"
@@ -75,17 +92,14 @@ const styles = StyleSheet.create({
     flex: 0.075,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "green",
     width: windowWidth,
   },
   container_BlocParams: {
     alignItems: "center",
-    // backgroundColor: "grey",
     width: windowWidth,
     flex: 0.2,
   },
   titleParams: {
-    // backgroundColor: "black",
     justifyContent: "flex-start",
     fontSize: 22,
     fontWeight: "bold",

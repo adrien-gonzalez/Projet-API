@@ -16,7 +16,7 @@ export default class Header extends React.Component {
         }
 		else if (this.props.title == "Ajouter un serveur") {
             var image = require('../assets/addserv-hero.png');
-        }		else if (this.props.title == "Mot de passe oubli�") {
+}		else if (this.props.title == "Mot de passe oublié") {
             var image = require('../assets/reset-hero.png');
         }                return (
             <ImageBackground style={styles.hero} source={image}>

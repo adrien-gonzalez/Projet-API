@@ -32,7 +32,6 @@ const ResetMail = ({navigation}) => {
         navigation.navigate("ProfilePage", {
           screen: "ResetPasswordPage",
         });
-        // navigation.navigate('ResetPasswordPage');
       }
     } catch (error) {
       setResponse(error);

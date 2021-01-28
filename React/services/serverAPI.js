@@ -2,9 +2,9 @@ import axios from "axios";
 
 
 // All servers informations by game
-function findServerByGame() {
+function findServerByGame(idGame) {
     return axios
-    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game=1")
+    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game="+idGame)
     .then((response) => response.data)
 }
 

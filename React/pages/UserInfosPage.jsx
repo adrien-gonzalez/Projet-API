@@ -5,33 +5,64 @@ import {
   StyleSheet,
   Text,
   Modal,
-  TouchableHighlight,
   TouchableOpacity,
   TextInput,
-  Button,
+  Image,
 } from "react-native";
 import InputText from "../components/TextInput";
 import { Dimensions } from "react-native";
 import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
+import * as ImagePicker from "expo-image-picker";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserInfosPage = ({ navigation }) => {
+const UserInfosPage = ({ route, navigation }) => {
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [response, setResponse] = useState([]);
+  const [responseSupp, setResponseSupp] = useState([]);
+  const [responsePut, setResponsePut] = useState([]);
+  const { idUser } = route.params;
+
+  const [loginError, setLoginError] = useState([]);
+  const [emailError, setEmailError] = useState([]);
+  const [oldPasswordError, setOldPasswordError] = useState([]);
+  const [passwordError, setPasswordError] = useState([]);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4,3],
+      quality: 0.5,
+    });
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: pickerResult.uri, type: pickerResult.type });
+  };
 
   const fetchInfosUser = async () => {
     try {
-      const data = await userAPI.checkUser("11");
+      const data = await userAPI.checkUser(idUser);
       console.log(data);
       data.map((d) => {
         setInfos({
           login: d.login,
           email: d.email,
+          pictureProfil: d.picture_profil,
         });
       });
     } catch (error) {
@@ -42,11 +73,8 @@ const UserInfosPage = ({ navigation }) => {
   useEffect(() => {
     fetchInfosUser();
   }, []);
-  console.log(infos);
 
   const handleOnSubmitSupp = async (values, actions) => {
-    console.log(values);
-
     const donnees = new URLSearchParams();
     donnees.append("password", values.password);
 
@@ -55,38 +83,88 @@ const UserInfosPage = ({ navigation }) => {
       console.log(data);
       if (typeof data == "object") {
         data.map((d) => {
-          setResponse(d.password_error);
+          setResponseSupp(d.password_error);
         });
       } else {
-        setResponse(data);
+        setResponseSupp(data);
         navigation.navigate("HomePage");
       }
     } catch (error) {
-      setResponse(error);
+      setResponseSupp(error);
     }
   };
 
   const handleOnSubmitPut = async (values, actions) => {
-    console.log(values);
+    if (values.old_password == "" && values.password != "") {
+      setOldPasswordError(
+        "Le mot de passe est obligatoire pour modifier le mot de passe"
+      );
+    }
 
     // const donnees = new URLSearchParams();
-    // donnees.append("password", values.password);
+    const donnees = new FormData();
+    donnees.append("login", values.login);
+    donnees.append("email", values.email);
+    donnees.append("old_password", values.old_password);
+    donnees.append("password", values.password);
+    
+    if(selectedImage != null) {
+      const imageBody = {
+        uri: selectedImage.localUri,
+        name: selectedImage.localUri,
+        type: "image/jpeg",
+      };
+      donnees.append("file", (imageBody));
+    }
 
-    // try {
-    //   const data = await userAPI.deleteUser(id, donnees);
-    //   console.log(data);
-    //   if (typeof data == "object") {
-    //     data.map((d) => {
-    //       setResponse(d.password_error);
-    //     });
-    //   } else {
-    //     setResponse(data);
-    //     navigation.navigate("HomePage");
-    //   }
-    // } catch (error) {
-    //   setResponse(error);
-    // }
+    try {
+      const data = await userAPI.updateUser(donnees);
+      // console.log(data);
+      if (typeof data == "object") {
+        data.map((d) => {
+          if(d.login_error) {setLoginError(d.login_error)}
+          if(d.email_error) {setEmailError(d.email_error)}
+          if(d.old_password_error) {setOldPasswordError(d.old_password_error) }
+          if(d.password_error) {setPasswordError(d.password_error)}
+          else if (d.login_success || d.email_success || d.password_success) {
+            setResponsePut("Informations modifiées");
+          }
+        });
+      }
+    } catch (error) {
+      setResponsePut(error);
+    }
   };
+
+  function image(selectedImage) {
+    if (selectedImage !== null) {
+      return (
+        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
+          <View >
+            <Image
+              source={{ uri: selectedImage.localUri }}
+              style={styles.pictureProfil}
+            />
+          </View>
+        </TouchableOpacity>
+
+      );
+    } else {
+      return (
+        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
+          <View>
+            <Image style={styles.pictureProfil}
+              source={{
+                uri:
+                  "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/" +
+                  infos.pictureProfil,
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  }
 
   return (
     <View style={styles.connectPageContainer}>
@@ -128,13 +206,13 @@ const UserInfosPage = ({ navigation }) => {
                     onChangeText={formikprops.handleChange("password")}
                     value={formikprops.values.password}
                   />
-                  <Text style={styles.errors}>{response}</Text>
+                  <Text style={styles.errors}>{responseSupp}</Text>
                   <View style={styles.fixToText}>
                     <TouchableOpacity
                       style={styles.boutonRight}
                       onPress={() => {
                         setModalVisible(!modalVisible);
-                        setResponse();
+                        setResponseSupp();
                       }}
                     >
                       <Text style={styles.buttonTextLeft}>Annuler</Text>
@@ -154,7 +232,18 @@ const UserInfosPage = ({ navigation }) => {
       </Modal>
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
-        <Text style={styles.title}>Informations perso.</Text>
+        <View style={styles.backTitle}>
+          <TouchableOpacity style={styles.logoBack}  onPress={() => {
+                        navigation.goBack();
+                      }}>
+            <Image style={styles.logoBack} source={require("../assets/icons/backArrow.png")}></Image>
+          </TouchableOpacity>
+          <Text style={styles.title}>Informations perso.</Text>
+        </View>
+        {image(selectedImage)}
+        <View style={styles.viewLogoPhoto}>
+          <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+        </View>
       </View>
       <ScrollView style={{ height: "60%" }}>
         <Formik
@@ -162,8 +251,8 @@ const UserInfosPage = ({ navigation }) => {
           initialValues={{
             email: infos.email,
             login: infos.login,
+            old_password: "",
             password: "",
-            conf_password: "",
           }}
           onSubmit={handleOnSubmitPut}
         >
@@ -175,6 +264,7 @@ const UserInfosPage = ({ navigation }) => {
                 color="#66A5F9"
                 value={formikprops.values.login}
                 onChangeText={formikprops.handleChange("login")}
+                error={loginError}
               />
               <InputText
                 placeholder="Adresse email"
@@ -182,25 +272,36 @@ const UserInfosPage = ({ navigation }) => {
                 color="#66A5F9"
                 value={formikprops.values.email}
                 onChangeText={formikprops.handleChange("email")}
+                error={emailError}
               />
               <InputText
-                placeholder="Mot de passe"
+                placeholder="Mot de passe actuel"
+                type="password"
+                icon="lock"
+                color="#66A5F9"
+                value={formikprops.values.old_password}
+                onChangeText={formikprops.handleChange("old_password")}
+                error={oldPasswordError}
+              />
+              <InputText
+                placeholder="Nouveau mot de passe"
                 type="password"
                 icon="lock"
                 color="#66A5F9"
                 value={formikprops.values.password}
                 onChangeText={formikprops.handleChange("password")}
+                error={passwordError}
               />
-              <InputText
-                placeholder="Confirmation du mot de passe"
-                type="password"
-                icon="lock"
-                color="#66A5F9"
-                value={formikprops.values.conf_password}
-                onChangeText={formikprops.handleChange("conf_password")}
+              <Bouton
+                onPress={formikprops.handleSubmit}
+                title="Modifier mon profil"
               />
-              <Bouton onPress={formikprops.handleSubmit} title="Modifier mon profil" />
-              <TouchableOpacity onPress={() => {setModalVisible(true);}}>
+              <Text style={styles.success}>{responsePut}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
                 <Text style={styles.suppCompte}>Supprimer mon compte</Text>
               </TouchableOpacity>
             </View>
@@ -212,15 +313,15 @@ const UserInfosPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    height: "20%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   connectPageContainer: {
     minHeight: "100%",
     width: "100%",
     backgroundColor: "#F1F1F1",
+  },
+  headerContainer: {
+    height: "32%",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   formContainer: {
     paddingTop: "2%",
@@ -233,15 +334,28 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     color: "#262626",
-    paddingTop: windowHeight / 40,
+    paddingTop: windowHeight / 20,
+    paddingBottom: 10,
+  },
+  backTitle: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent:"space-evenly",
+    alignSelf:"flex-start",
+    width:"90%",
+  },
+  logoBack: {
+    alignSelf:"flex-end",
+    width: 22,
+    height: 22,
+    marginBottom:14,
   },
   suppCompte: {
     color: "red",
     fontWeight: "bold",
     fontSize: 18,
-    paddingTop:40,
+    paddingTop: 40,
   },
-
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -291,8 +405,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#D67777",
   },
-  input: {
-    borderBottomColor: "black",
+  ViewProfil: {
+    width: 120,
+    height: 120,
+    borderRadius: 200,
+    borderColor:"#66A5F9",
+    borderWidth:4,
+    backgroundColor:"white",
   },
   fixToText: {
     flexDirection: "row",
@@ -331,6 +450,36 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
   },
+  success: {
+    color: "green",
+    textAlign: "center",
+    fontSize: 12,
+  },
+  pictureProfil: {
+    width: "100%",
+    height: "100%",
+    resizeMode:"cover",
+    borderRadius: 200,
+    borderColor:"white",
+    borderWidth:3,
+  },
+  logoPhoto: {
+    alignSelf:"center",
+    width: 22,
+    height: 22,
+  },
+  viewLogoPhoto: {
+    position: "relative",
+    top:-30,
+    left:37,
+    height:35,
+    width:35,
+    backgroundColor:"white",
+    borderRadius:20,
+    justifyContent:"center", 
+    borderColor:"#66A5F9",
+    borderWidth:1,
+  }
 });
 
 export default UserInfosPage;
