@@ -18,17 +18,17 @@ const windowHeight = Dimensions.get("window").height;
 
 const UserServerPage = ({route, navigation}) => {
 
-    const {idUser} = route.params;
+    // const {idUser} = route.params;
     const [userServer, setUserServer] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [response, setResponse] = useState([]);
     const [idServer, setIdServer] = useState([]);
 
-    console.log(idUser)
 
     const fetchServers = async () => {
         try {
-            const data = await serverAPI.findServerByUser(idUser);
+            // const data = await serverAPI.findServerByUser(idUser);
+            const data = await serverAPI.findServerByUser(11);
             setUserServer(data)
         } catch (error) {
             console.log(error);
@@ -46,13 +46,15 @@ const UserServerPage = ({route, navigation}) => {
         const donnees = new URLSearchParams();
         donnees.append("password", values.password);
 
+  
         try {
           const data = await serverAPI.deleteServer(donnees, idServer);
-          console.log(data.data);
+          console.log(data);
+        
           if (typeof data == "object") {
-            // data.map((d) => {
-            //   setResponse(d.password_error);
-            // });
+            data.map((d) => {
+              setResponse(d.password_error);
+            });
           } else {
             setResponse(data);
             // navigation.navigate("HomePage");
@@ -62,71 +64,96 @@ const UserServerPage = ({route, navigation}) => {
         }
       };
 
+
+    function myServer(userServer){
+        if(userServer.length > 0) {
+            return (
+                <View style={styles.listMyserver}>
+                    {userServer.map((userServer, key) => {
+                        return (
+                            <View key={userServer.id} style={{ 
+                                    marginBottom: 68, 
+                                    alignItems: 'center',
+                                    borderRadius: 12,
+                                    height: 280,
+                                    backgroundColor: 'white',
+                                    borderColor: userServer.color,
+                                    borderWidth: 2
+                                }}>
+                                <View style={styles.miniature}>
+                                    <ImageBackground
+                                    source={{ uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+userServer.miniature+'?time=' + new Date() }}
+                                    style={{width: '100%', height: '100%'}}
+                                    imageStyle={{resizeMode: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10}}
+                                    />
+                                </View>
+                                <View style={{width: '100%', alignItems:'center', justifyContent: 'center', height: '30%'}}>
+                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: 'black'}}>{userServer.name}</Text>
+                                    <Text style={{fontSize: 14, color: userServer.color}}>{userServer.nameGame}</Text>
+                                </View>
+                                <View style={styles.infoServer}>
+                                    <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: userServer.color, padding: 5}}>
+                                        <View style={{alignItems: 'center'}}>
+                                            <AntDesign name="like2" size={16} color="white" />
+                                            <Text style={styles.detailServer}>{userServer.vote} Vote(s)</Text>
+                                        </View>
+                                        <View style={{alignItems: 'center'}}>
+                                        <FontAwesome name="comment-o" size={16} color="white" />
+                                            <Text style={styles.detailServer}>{userServer.avis} Avi(s)</Text>
+                                        </View>
+                                        <View style={{alignItems: 'center'}}>
+                                            <MaterialCommunityIcons name="cursor-default-outline" size={16} color="white" />
+                                            <Text style={styles.detailServer}>Click(s)</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%', padding: 5}}>
+                                        <View>
+                                            <TouchableOpacity
+                                                onPress={() =>{
+                                                navigation.navigate('ProfilePage', {
+                                                    screen: 'UpdateServerPage',
+                                                    params: {serverId: userServer.id}
+                                                    })
+                                                }}
+                                            >
+                                                <View style={{alignItems: 'center'}}>
+                                                    <FontAwesome name="pencil-square-o" size={24} color="#6B77C6" />
+                                                    <Text style={{color: 'white'}}>Modifier</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View>
+                                            <TouchableOpacity
+                                                onPress={() => {setIdServer(userServer.id), setModalVisible(true);}}
+                                            >
+                                                <View style={{alignItems: 'center'}}>
+                                                    <AntDesign name="delete" size={24} color="#CD3538" />
+                                                    <Text style={{color: 'white'}}>Supprimer</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                        )
+                    })}
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.listMyserver}>
+                    <Text style={{textAlign: 'center', color: 'black', fontSize: 20}}>Vous n'avez aucun serveur</Text>
+                </View>
+            )
+        }
+    }
+
     return(
         <ScrollView style={styles.container}>
             <View style={styles.namePage}>
                 <Text style={{fontSize: 24}}>Mes serveurs</Text>
             </View>
-            <View style={styles.listMyserver}>
-                {userServer.map((userServer, key) => {
-                    return (
-                        <View key={userServer.id} style={{ 
-                                marginBottom: 68, 
-                                alignItems: 'center',
-                                borderRadius: 12,
-                                height: 280,
-                                backgroundColor: 'white',
-                                borderColor: userServer.color,
-                                borderWidth: 2
-                            }}>
-                            <View style={styles.miniature}>
-                                <ImageBackground
-                                source={{ uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+userServer.miniature+'?time=' + new Date() }}
-                                style={{width: '100%', height: '100%'}}
-                                imageStyle={{resizeMode: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10}}
-                                />
-                            </View>
-                            <View style={{width: '100%', alignItems:'center', justifyContent: 'center', height: '30%'}}>
-                                <Text style={{fontSize: 22, fontWeight: 'bold', color: 'black'}}>{userServer.name}</Text>
-                                <Text style={{fontSize: 14, color: userServer.color}}>{userServer.nameGame}</Text>
-                            </View>
-                            <View style={styles.infoServer}>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: userServer.color, padding: 5}}>
-                                    <View style={{alignItems: 'center'}}>
-                                        <AntDesign name="like2" size={16} color="white" />
-                                        <Text style={styles.detailServer}>{userServer.vote} Vote(s)</Text>
-                                    </View>
-                                    <View style={{alignItems: 'center'}}>
-                                    <FontAwesome name="comment-o" size={16} color="white" />
-                                        <Text style={styles.detailServer}>{userServer.avis} Avi(s)</Text>
-                                    </View>
-                                    <View style={{alignItems: 'center'}}>
-                                        <MaterialCommunityIcons name="cursor-default-outline" size={16} color="white" />
-                                        <Text style={styles.detailServer}>Click(s)</Text>
-                                    </View>
-                                </View>
-                                <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%', padding: 5}}>
-                                    <View style={{alignItems: 'center'}}>
-                                        <FontAwesome name="pencil-square-o" size={24} color="#6B77C6" />
-                                        <Text style={{color: 'white'}}>Modifier</Text>
-                                    </View>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => {setIdServer(userServer.id), setModalVisible(true);}}
-                                        >
-                                            <View style={{alignItems: 'center'}}>
-                                                <AntDesign name="delete" size={24} color="#CD3538" />
-                                                <Text style={{color: 'white'}}>Supprimer</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                    )
-                })}
-            </View>
-
+                {myServer(userServer)}
             <Modal animationType="slide" transparent={true} visible={modalVisible}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
@@ -313,5 +340,6 @@ const styles = StyleSheet.create({
         color: "red",
         textAlign: "center",
         fontSize: 12,
+        marginBottom: 10,
     },
 })

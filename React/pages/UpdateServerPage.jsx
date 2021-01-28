@@ -19,16 +19,16 @@ const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.25);
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
-const AddServerPage = () => {
+const AddServerPage = ({route, navigation}) => {
     
     var _carousel = React.createRef()
+    const {serverId} = route.params;
     const [response, setResponse] = useState([]);
     const [selectedImage, setSelectedImage] = React.useState(null);
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
 
     const handleOnSubmit = async (values, actions) => {
-        var serverId = 14;
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
 
         setNameError('')
@@ -111,7 +111,6 @@ const AddServerPage = () => {
         }
     };
 
-    const serverId = 14
     const [serverInfo, setServerInfo] = useState([]);
     const fetchServers = async () => {
         try {

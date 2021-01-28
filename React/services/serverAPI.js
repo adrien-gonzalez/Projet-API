@@ -2,9 +2,9 @@ import axios from "axios";
 
 
 // All servers informations by game
-function findServerByGame() {
+function findServerByGame(id) {
     return axios
-    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game=1")
+    .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game="+id)
     .then((response) => response.data)
 }
 
@@ -51,10 +51,12 @@ function updateServer(formData, id) {
 
 // Delete Server
 function deleteServer(donnees, id) {
-    return axios.delete(
-        'http://nicolas-camilloni.students-laplateforme.io/api/servers?id='+id, 
-        donnees)
-        .then((response) => response)
+    return axios({
+        method: "DELETE",
+        url: 'http://nicolas-camilloni.students-laplateforme.io/api/servers?id='+id,
+        data: donnees,
+    })
+        .then((response) => response.data)
         .catch((error) => error.response.data.errors);
 }
 
