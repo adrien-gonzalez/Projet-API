@@ -18,6 +18,10 @@ import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from 'expo-secure-store';
 import axios from "axios";
 
+import { MaterialIcons } from '@expo/vector-icons'; 
+
+import { useRef } from 'react';
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -34,6 +38,9 @@ const UserInfosPage = ({ route, navigation }) => {
   const [passwordError, setPasswordError] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const scrollRef = useRef();
+
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -99,6 +106,15 @@ const UserInfosPage = ({ route, navigation }) => {
   };
 
   const handleOnSubmitPut = async (values, actions) => {
+
+    // On set les messages d'erreur à null
+    setLoginError("");
+    setEmailError("");
+    setOldPasswordError("");
+    setPasswordError("");
+
+    scrollRef.current?.scrollTo({x:0,y:0,animated:true});
+
     if (values.old_password == "" && values.password != "") {
       setOldPasswordError(
         "Le mot de passe est obligatoire pour modifier le mot de passe"
@@ -240,16 +256,16 @@ const UserInfosPage = ({ route, navigation }) => {
           <TouchableOpacity style={styles.logoBack}  onPress={() => {
                         navigation.goBack();
                       }}>
-            <Image style={styles.logoBack} source={require("../assets/icons/backArrow.png")}></Image>
+            <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.title}>Informations perso.</Text>
         </View>
         {image(selectedImage)}
         <View style={styles.viewLogoPhoto}>
-          <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+        <MaterialIcons style={styles.logoPhoto} name="add-a-photo" size={24} color="black" />
         </View>
       </View>
-      <ScrollView style={{ height: "60%" }}>
+      <ScrollView ref={scrollRef} style={{ height: "60%" }}>
         <Formik
           enableReinitialize
           initialValues={{
@@ -262,6 +278,7 @@ const UserInfosPage = ({ route, navigation }) => {
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
+              {/* <Text style={styles.success}>{responsePut}</Text> */}
               <InputText
                 placeholder="Nom d'utilisateur"
                 icon="user"
@@ -300,7 +317,6 @@ const UserInfosPage = ({ route, navigation }) => {
                 onPress={formikprops.handleSubmit}
                 title="Modifier mon profil"
               />
-              <Text style={styles.success}>{responsePut}</Text>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(true);
@@ -350,8 +366,6 @@ const styles = StyleSheet.create({
   },
   logoBack: {
     alignSelf:"flex-end",
-    width: 22,
-    height: 22,
     marginBottom:14,
   },
   suppCompte: {
@@ -469,8 +483,6 @@ const styles = StyleSheet.create({
   },
   logoPhoto: {
     alignSelf:"center",
-    width: 22,
-    height: 22,
   },
   viewLogoPhoto: {
     position: "relative",
