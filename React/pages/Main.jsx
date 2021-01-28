@@ -22,6 +22,7 @@ import * as SecureStore from 'expo-secure-store';
 import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import axios from "axios";
+import ResetStack from '../routes/ResetStack.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -227,7 +228,7 @@ const Main = (props) => {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={props.auth.isLogged === true ? ParamStack : ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={ParamStack} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
             </Tab.Navigator>
         </NavigationContainer>
     );

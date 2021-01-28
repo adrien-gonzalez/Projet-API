@@ -15,6 +15,8 @@ import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
 import * as ImagePicker from "expo-image-picker";
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -87,6 +89,8 @@ const UserInfosPage = ({ route, navigation }) => {
         });
       } else {
         setResponseSupp(data);
+        setModalVisible(!modalVisible);
+        navigation.goBack();
         navigation.navigate("HomePage");
       }
     } catch (error) {

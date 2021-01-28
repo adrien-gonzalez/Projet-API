@@ -18,7 +18,7 @@ const windowHeight = Dimensions.get("window").height;
 
 const UserServerPage = ({route, navigation}) => {
 
-    // const {idUser} = route.params;
+    const {idUser} = route.params;
     const [userServer, setUserServer] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [response, setResponse] = useState([]);
@@ -27,8 +27,8 @@ const UserServerPage = ({route, navigation}) => {
 
     const fetchServers = async () => {
         try {
-            // const data = await serverAPI.findServerByUser(idUser);
-            const data = await serverAPI.findServerByUser(11);
+            const data = await serverAPI.findServerByUser(idUser);
+            // const data = await serverAPI.findServerByUser(11);
             setUserServer(data)
         } catch (error) {
             console.log(error);

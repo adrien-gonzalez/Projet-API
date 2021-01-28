@@ -6,8 +6,6 @@ import serverAPI from '../services/serverAPI.js'
 import Svg, { Circle, Path, G, Image as Img} from 'react-native-svg';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 
-
-
 const ServersListPage = (props) => {
 
   const [servers, setServer] = useState([]);

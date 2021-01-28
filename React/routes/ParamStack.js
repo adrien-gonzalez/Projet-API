@@ -4,6 +4,10 @@ import ParamsPage from "../pages/ParamsPage";
 import UserInfosPage from "../pages/UserInfosPage";
 import UserServerPage from "../pages/UserServerPage";
 import UpdateServerPage from "../pages/UpdateServerPage";
+import ConnectPage from "../pages/ConnectPage";
+import RegisterPage from "../pages/RegisterPage";
+import ResetMailPage from "../pages/ResetMailPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +19,12 @@ export default function ParamStack() {
       {/* Route pour la liste de mes serveurs */}
       <Stack.Screen headerMode="none" name="UserServerPage" component={UserServerPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="UpdateServerPage" component={UpdateServerPage} options={{ headerShown: false }}/>
+      {/* Route connexion/inscription */}
+      <Stack.Screen headerMode="none" name="ConnectPage" component={ConnectPage} options={{ headerShown: false }}/>
+      <Stack.Screen headerMode="none" name="RegisterPage" component={RegisterPage} options={{ headerShown: false }}/>
+      {/* Route Reset Mdp */}
+      <Stack.Screen headerMode="none" name="ResetMailPage" component={ResetMailPage} options={{ headerShown: false }}/>
+      <Stack.Screen headerMode="none" name="ResetPasswordPage" component={ResetPasswordPage} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 }

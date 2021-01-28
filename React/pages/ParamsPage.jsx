@@ -7,10 +7,17 @@ import CatParams from "../components/catParams";
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 
+import { useNavigation } from "@react-navigation/native";
+
+import { connect } from "react-redux";
+
+
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ParamsPage = ({navigation}) => {
+const ParamsPage = (props) => {
+
+  const navigation = useNavigation();
 
   const [idUser, setId] = useState([]);
 
@@ -19,18 +26,18 @@ const ParamsPage = ({navigation}) => {
     setId(id);
   });
 
-  return (
-        <ScrollView style={{ height: "20%" }}>
-    <View style={styles.container}>
-        <View style={styles.container_top}>
-          <Text style={styles.title}> Paramètres </Text>
-        </View>
+  console.log(props.auth);
+
+  function ParamUser() {
+    if(props.auth.isLogged === true)
+    {
+      return (
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Paramètres utilisateur</Text>
           <CatParams
             cat="Mes informations perso."
-            iconStart={require("../assets/icons/user.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="user-alt"
+            iconEnd="keyboard-arrow-right"
             onPress={() => {
               navigation.navigate('ProfilePage', {
                 screen: 'UserInfosPage',
@@ -40,8 +47,8 @@ const ParamsPage = ({navigation}) => {
           />
           <CatParams
             cat="Mes serveurs"
-            iconStart={require("../assets/icons/gamepad.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="server"
+            iconEnd="keyboard-arrow-right"
             onPress={() =>{
               navigation.navigate('ProfilePage', {
                 screen: 'UserServerPage',
@@ -50,35 +57,73 @@ const ParamsPage = ({navigation}) => {
             }}
           />
         </View>
+      )
+    }
+    else {
+      return (
+      <View style={styles.container_BlocParams}>
+          <Text style={styles.titleParams}>Paramètres utilisateur</Text>
+          <CatParams
+            cat="Se connecter"
+            iconStart="user-alt"
+            iconEnd="keyboard-arrow-right"
+            onPress={() => {
+              navigation.navigate('ProfilePage', {
+                screen: 'ConnectPage',
+              });
+            }}
+          />
+          <CatParams
+            cat="S'inscrire"
+            iconStart="user-plus"
+            iconEnd="keyboard-arrow-right"
+            onPress={() =>{
+              navigation.navigate('ProfilePage', {
+                screen: 'RegisterPage',
+              })
+            }}
+          />
+        </View>
+      )
+    }
+  }
+
+  return (
+        <ScrollView style={{ height: "20%" }}>
+    <View style={styles.container}>
+        <View style={styles.container_top}>
+          <Text style={styles.title}> Paramètres </Text>
+        </View>
+        {ParamUser()}
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Paramètres de l'application</Text>
           <CatParams
             cat="Notifications"
-            iconStart={require("../assets/icons/bell.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="bell"
+            iconEnd="keyboard-arrow-right"
           />
           <CatParams
             cat="Apparences"
-            iconStart={require("../assets/icons/eye.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="eye"
+            iconEnd="keyboard-arrow-right"
           />
           <CatParams
             cat="Langues"
-            iconStart={require("../assets/icons/lang.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="language"
+            iconEnd="keyboard-arrow-right"
           />
         </View>
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Infos supplémentaires</Text>
           <CatParams
             cat="Confidentialités & Securité"
-            iconStart={require("../assets/icons/lock.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="lock"
+            iconEnd="keyboard-arrow-right"
           />
           <CatParams
             cat="Aide & Support"
-            iconStart={require("../assets/icons/audio.png")}
-            iconEnd={require("../assets/icons/arrow.png")}
+            iconStart="headphones-alt"
+            iconEnd="keyboard-arrow-right"
           />
         </View>
       </View>
@@ -120,4 +165,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ParamsPage;
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ auth }) => ({
+  auth
+});
+
+export default connect(mapStateToProps)(ParamsPage);
+
+// export default ParamsPage;
