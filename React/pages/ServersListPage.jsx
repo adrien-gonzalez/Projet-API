@@ -1,32 +1,88 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView} from 'react-native';
-import Header from '../components/header.jsx';
-import serverAPI from '../services/serverAPI.js';
-import { connect } from "react-redux";
+import { StyleSheet, Text, View, Image, ScrollView, ImageBackground} from 'react-native';
+// import Header from '../components/header.jsx'
+import serverAPI from '../services/serverAPI.js'
+import Svg, { Circle, Path, G, Image as Img} from 'react-native-svg';
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
-const ServersListPage = () => {
+
+
+const ServersListPage = (props) => {
 
   const [servers, setServer] = useState([]);
+  const [Infoservers, setInfoServer] = useState([]);
+
   const fetchServers = async () => {
     try {
-      const data = await serverAPI.findServerByGame(idGame);
-      setServer(data);
+      const data = await serverAPI.findServerByGame(1);
+      setServer(data)
+      data.map((d) => {
+        setInfoServer({
+          color: d.color,
+          logo: d.logo,
+          backgroundImage: d.backgroundImage
+        })
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
+
   useEffect(() => {
     fetchServers();
   }, []);
-  // console.log(servers);
-  // console.log(props);
+  
 
+
+  console.log(Infoservers.backgroundImage)
+  function detail(servers) {
+    if(servers.ip != "") {
+      return(
+        <View style={styles.bloc1}>
+          <View style={styles.ipServer}>
+            <Text style={styles.colorWhite}>{servers.ip}</Text>
+          </View>
+          <View style={styles.serverPlayer}>
+              <Text>xx/xxx</Text>
+              <Text>Joueurs</Text>
+          </View>
+        </View>
+      )
+    } else {
+      return(
+        <View style={styles.bloc1}>
+          <View style={{
+             flex: 1,
+             backgroundColor: '#EEEEEE',
+             alignItems: 'center',
+             padding: 15
+          }}>
+              <Text>xx/xxx Joueurs</Text>
+          </View>
+        </View>
+      )
+    }
+  }
+ 
   return (
     <ScrollView style={styles.contain}>
       <View style={styles.server}>
-        <Header/>
+        {/* <Header/> */}
+        <View style={styles.svgHeader}>
+          <ImageBackground source={{uri: '../assets/'+Infoservers.backgroundImage}} style={styles.image}>
+              <Svg xmlns="http://www.w3.org/2000/svg" width="146" height="146" viewBox="0 0 146 146" style={styles.logo}>
+                  <G fill="none">
+                      <Path d="M73,0A73,73,0,1,1,0,73,73,73,0,0,1,73,0Z" stroke="none"/>
+                      <Path fill={Infoservers.color} d="M 73 2 C 63.41417694091797 2 54.11615753173828 3.876937866210938 45.36421966552734 7.578720092773438 C 41.15760040283203 9.357955932617188 37.10015869140625 11.56028747558594 33.30461883544922 14.12449645996094 C 29.54461669921875 16.66470336914063 26.00881958007813 19.58202362060547 22.79541778564453 22.79541778564453 C 19.58202362060547 26.00881958007813 16.66470336914063 29.54461669921875 14.12449645996094 33.30461883544922 C 11.56028747558594 37.10015869140625 9.357955932617188 41.15760040283203 7.578720092773438 45.36421966552734 C 3.876937866210938 54.11615753173828 2 63.41417694091797 2 73 C 2 82.5858154296875 3.876937866210938 91.88383483886719 7.578720092773438 100.6357803344727 C 9.357955932617188 104.842399597168 11.56028747558594 108.8998413085938 14.12449645996094 112.6953811645508 C 16.66470336914063 116.4553833007813 19.58202362060547 119.9911804199219 22.79541778564453 123.2045822143555 C 26.00881958007813 126.4179840087891 29.54461669921875 129.3352966308594 33.30461883544922 131.8755035400391 C 37.10015869140625 134.4397277832031 41.15760040283203 136.6420440673828 45.36421966552734 138.4212799072266 C 54.11615753173828 142.1230621337891 63.41417694091797 144 73 144 C 82.5858154296875 144 91.88383483886719 142.1230621337891 100.6357803344727 138.4212799072266 C 104.842399597168 136.6420440673828 108.8998413085938 134.4397277832031 112.6953811645508 131.8755035400391 C 116.4553833007813 129.3352966308594 119.9911804199219 126.4179840087891 123.2045822143555 123.2045822143555 C 126.4179840087891 119.9911804199219 129.3352966308594 116.4553833007813 131.8755035400391 112.6953811645508 C 134.4397277832031 108.8998413085938 136.6420440673828 104.842399597168 138.4212799072266 100.6357803344727 C 142.1230621337891 91.88383483886719 144 82.5858154296875 144 73 C 144 63.41417694091797 142.1230621337891 54.11615753173828 138.4212799072266 45.36421966552734 C 136.6420440673828 41.15760040283203 134.4397277832031 37.10015869140625 131.8755035400391 33.30461883544922 C 129.3352966308594 29.54461669921875 126.4179840087891 26.00881958007813 123.2045822143555 22.79541778564453 C 119.9911804199219 19.58202362060547 116.4553833007813 16.66470336914063 112.6953811645508 14.12449645996094 C 108.8998413085938 11.56028747558594 104.842399597168 9.357955932617188 100.6357803344727 7.578720092773438 C 91.88383483886719 3.876937866210938 82.5858154296875 2 73 2 M 73 0 C 113.316780090332 0 146 32.68321990966797 146 73 C 146 113.316780090332 113.316780090332 146 73 146 C 32.68321990966797 146 0 113.316780090332 0 73 C 0 32.68321990966797 32.68321990966797 0 73 0 Z" stroke="none"/>
+                  </G>
+                  <Circle cx="50%" cy="50%" r="65" fill="#fff" opacity="0.28"/>
+                  <Img x="25" y="25"  width='94' height='94' href={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/'+Infoservers.logo+'?time=' + new Date()}}/>                        
+              </Svg>
+          <Text style={styles.textColor}>{servers.length} serveur(s)</Text> 
+          </ImageBackground>
+        </View>
       </View>
       <View>
         <Text  style={styles.title}>Serveurs à l'affiche</Text>
@@ -34,34 +90,19 @@ const ServersListPage = () => {
         <View style={styles.listServer}>
           {servers.map((servers) => (
           <View style={styles.infoServer} key={servers.id}>
-            {/* Requete API bannière serveur */}
-            <Image source={require('../assets/banniere_server.jpg')} style={styles.banniere}/>
-            {/* Requête API Titre serveur */}
+            <View style={styles.banniere}>
+              <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>
+            </View>
             <View style={styles.description}>
               <Text style={styles.titleServer}>{servers.name}</Text>
-              {/* Requête API Notes (étoiles) */}
-              {/* <Text style={styles.noteServer}></Text> */}
-
-              {/* Requête API description server */}
               <Text style={styles.descriptionText}>{servers.descriptionServer}</Text>
               {/* Tags */}
             </View>
             <View style={styles.bottomBloc}>
-              <View style={styles.bloc1}>
-                <View style={styles.ipServer}>
-                  {/* Requête API IP */}
-                  <Text style={styles.colorWhite}>{servers.ip}</Text>
-                </View>
-                <View style={styles.serverPlayer}>
-                    <Text>xx/xxx</Text>
-                    <Text>Joueurs</Text>
-                </View>
-              </View>
+              {detail(servers)}
               <View style={styles.detailServer}>
-                <Text>discord</Text>
-                <Text>crack</Text>
-                <Text>version</Text>
-                <Text>Site</Text>
+                <FontAwesome5 name="discord" size={24} color="#6B77C6" />
+                <FontAwesome5 name="chrome" size={24} color="black" />
               </View>
               <View style={styles.voteServer}>
                 <Text style={styles.vote}>Voter</Text>
@@ -75,19 +116,13 @@ const ServersListPage = () => {
   );
 }
 
-// RECUP DU STORE REDUX
-const mapStateToProps = ({ auth }) => ({
-  auth
-});
-
-export default connect(mapStateToProps)(ServersListPage);
+export default ServersListPage;
 
 
 const styles = StyleSheet.create({
   contain: {
     flex: 1,
     backgroundColor: '#F1F1F1',
-    // justifyContent: 'center',
     width: '100%',
   },
   colorWhite: {
@@ -119,7 +154,7 @@ const styles = StyleSheet.create({
   },
   banniere: {
     width: '100%',
-    height: 130,
+    height: '35%',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
@@ -133,6 +168,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    height: '20%'
   },
   descriptionText: {
     marginTop: 15,
@@ -161,17 +197,21 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: "space-around",
     padding: 10,
     backgroundColor: '#E6E6E6',
+    height: '25%',
   },
   voteServer: {
-    height: 50,
+    height: '25%',
     backgroundColor: '#26C96D',
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
     justifyContent: "center",
     alignItems: 'center',
+    position: 'relative',
+    bottom: 0,
   },
   vote: {
     color: 'white',
@@ -179,5 +219,23 @@ const styles = StyleSheet.create({
   },
   bottomBloc: {
     textAlign: 'center',
-  }
+    height: '50%',
+    justifyContent: 'flex-end'
+  },
+  svgHeader: {
+    width: '100%',
+    height: '100%',
+  },
+  textColor: {
+      color: "white",
+      fontSize: 20,
+  },
+  image: {
+      flex: 1,
+      justifyContent: "space-evenly",
+      alignItems: "center",
+  },
+  logo: {
+      marginTop: 50,
+  },
 });

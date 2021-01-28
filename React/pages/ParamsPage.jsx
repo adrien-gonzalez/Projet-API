@@ -42,6 +42,12 @@ const ParamsPage = ({navigation}) => {
             cat="Mes serveurs"
             iconStart={require("../assets/icons/gamepad.png")}
             iconEnd={require("../assets/icons/arrow.png")}
+            onPress={() =>{
+              navigation.navigate('ProfilePage', {
+                screen: 'UserServerPage',
+                params: {idUser: idUser}
+              })
+            }}
           />
         </View>
         <View style={styles.container_BlocParams}>

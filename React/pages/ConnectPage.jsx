@@ -59,7 +59,7 @@ const ConnectPage = (props) => {
           <View style={styles.headerContainer}>
             <FormsHero title="Connexion" />
           </View>
-          <ScollView style={{ height: "60%" }}>
+          <ScrollView style={{ height: "60%" }}>
             <Formik
               initialValues={{ login: "", password: "" }}
               onSubmit={handleOnSubmit}
@@ -113,7 +113,7 @@ const ConnectPage = (props) => {
                 </View>
               )}
             </Formik>
-          </ScollView>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
     );
@@ -123,7 +123,7 @@ const ConnectPage = (props) => {
         <View style={styles.headerContainer}>
           <FormsHero title="Connexion" />
         </View>
-        <ScollView style={{ height: "60%" }}>
+        <ScrollView style={{ height: "60%" }}>
           <Formik
             initialValues={{ login: "", password: "" }}
             onSubmit={handleOnSubmit}
@@ -177,7 +177,7 @@ const ConnectPage = (props) => {
               </View>
             )}
           </Formik>
-        </ScollView>
+        </ScrollView>
       </View>
     );
   }

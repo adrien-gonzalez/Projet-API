@@ -14,8 +14,7 @@ const CatParams = (props) => {
       />
       <Text style={styles.title}> {props.cat} </Text>
       <TouchableOpacity onPress={props.onPress}>
-
-      <Image style={styles.imageEnd} source={props.iconEnd}/>
+        <Image style={styles.imageEnd} source={props.iconEnd}/>
       </TouchableOpacity>
     </View>
   );
