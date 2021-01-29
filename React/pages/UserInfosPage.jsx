@@ -140,33 +140,7 @@ const UserInfosPage = (props) => {
   };
 
   function image(selectedImage) {
-    if (selectedImage !== null) {
-      return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white"}}>
-          <View >
-            <Image
-              source={{ uri: selectedImage.localUri }}
-              style={styles.pictureProfil}
-            />
-          </View>
-        </TouchableOpacity>
-
-      );
-    } else {
-      return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white"}}>
-          <View>
-            <Image style={styles.pictureProfil}
-              source={{
-                uri:
-                  "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/" +
-                  infos.pictureProfil,
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      );
-    }
+    
   }
 
   return (
@@ -236,10 +210,34 @@ const UserInfosPage = (props) => {
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
         <Topbar color="#262626" title="Mon compte" isText={true} navigation={navigation} backgroundColor="transparent" />
-        {image(selectedImage)}
-        <View style={{position: "relative", top:-30, left:37, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3,}}>
-          <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
-        </View>
+        {selectedImage !== null ?
+            <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20}}>
+              <View >
+                <Image
+                  source={{ uri: selectedImage.localUri }}
+                  style={styles.pictureProfil}
+                />
+              </View>
+              <View style={{position: "relative", top:-30, left:80, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3}}>
+                <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+              </View>
+            </TouchableOpacity>
+        :
+            <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20}}>
+              <View>
+                <Image style={styles.pictureProfil}
+                  source={{
+                    uri:
+                      "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/" +
+                      infos.pictureProfil,
+                  }}
+                />
+              </View>
+              <View style={{position: "relative", top:-30, left:80, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3}}>
+                <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+              </View>
+            </TouchableOpacity>
+        }
       </View>
       <ScrollView style={{ height: "60%" }}>
         <Formik
