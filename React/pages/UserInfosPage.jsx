@@ -15,11 +15,14 @@ import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
 import * as ImagePicker from "expo-image-picker";
+import Topbar from "../components/Topbar";
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserInfosPage = ({ route, navigation }) => {
+const UserInfosPage = (props) => {
+  const { route, navigation } = props
   const [infos, setInfos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [responseSupp, setResponseSupp] = useState([]);
@@ -139,7 +142,7 @@ const UserInfosPage = ({ route, navigation }) => {
   function image(selectedImage) {
     if (selectedImage !== null) {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
+        <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white"}}>
           <View >
             <Image
               source={{ uri: selectedImage.localUri }}
@@ -151,7 +154,7 @@ const UserInfosPage = ({ route, navigation }) => {
       );
     } else {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
+        <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white"}}>
           <View>
             <Image style={styles.pictureProfil}
               source={{
@@ -232,16 +235,9 @@ const UserInfosPage = ({ route, navigation }) => {
       </Modal>
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
-        <View style={styles.backTitle}>
-          <TouchableOpacity style={styles.logoBack}  onPress={() => {
-                        navigation.goBack();
-                      }}>
-            <Image style={styles.logoBack} source={require("../assets/icons/backArrow.png")}></Image>
-          </TouchableOpacity>
-          <Text style={styles.title}>Informations perso.</Text>
-        </View>
+        <Topbar color="#262626" title="Mon compte" isText={true} navigation={navigation} backgroundColor="transparent" />
         {image(selectedImage)}
-        <View style={styles.viewLogoPhoto}>
+        <View style={{position: "relative", top:-30, left:37, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3,}}>
           <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
         </View>
       </View>
@@ -312,6 +308,12 @@ const UserInfosPage = ({ route, navigation }) => {
   );
 };
 
+const mapStateToProps = ({ selectedGame }) => ({
+  selectedGame,
+});
+
+export default connect(mapStateToProps)(UserInfosPage);
+
 const styles = StyleSheet.create({
   connectPageContainer: {
     minHeight: "100%",
@@ -324,7 +326,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   formContainer: {
-    paddingTop: "2%",
+    paddingTop: "8%",
     width: windowWidth,
     height: "100%",
     alignItems: "center",
@@ -405,14 +407,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#D67777",
   },
-  ViewProfil: {
-    width: 120,
-    height: 120,
-    borderRadius: 200,
-    borderColor:"#66A5F9",
-    borderWidth:4,
-    backgroundColor:"white",
-  },
   fixToText: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -465,21 +459,7 @@ const styles = StyleSheet.create({
   },
   logoPhoto: {
     alignSelf:"center",
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
   },
-  viewLogoPhoto: {
-    position: "relative",
-    top:-30,
-    left:37,
-    height:35,
-    width:35,
-    backgroundColor:"white",
-    borderRadius:20,
-    justifyContent:"center", 
-    borderColor:"#66A5F9",
-    borderWidth:1,
-  }
 });
-
-export default UserInfosPage;

@@ -6,13 +6,17 @@ import CatParams from "../components/catParams";
 // import TOKEN
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
+import Topbar from "../components/Topbar";
+import { useNavigation } from "@react-navigation/native";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ParamsPage = ({navigation}) => {
+const ParamsPage = (props) => {
 
   const [idUser, setId] = useState([]);
+
+  const navigation = useNavigation();
 
   SecureStore.getItemAsync("token").then(result => {
     const {id} = jwtDecode(result);
@@ -20,11 +24,9 @@ const ParamsPage = ({navigation}) => {
   });
 
   return (
-        <ScrollView style={{ height: "20%" }}>
+    <ScrollView stickyHeaderIndices={[0]} style={{ height: "20%" }}>
+    <Topbar color="#262626" title="Paramètres" isText={true} navigation={navigation} backgroundColor="white" />
     <View style={styles.container}>
-        <View style={styles.container_top}>
-          <Text style={styles.title}> Paramètres </Text>
-        </View>
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Paramètres utilisateur</Text>
           <CatParams

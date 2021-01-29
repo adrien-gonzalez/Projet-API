@@ -4,6 +4,7 @@ import ParamsPage from "../pages/ParamsPage";
 import UserInfosPage from "../pages/UserInfosPage";
 import UserServerPage from "../pages/UserServerPage";
 import UpdateServerPage from "../pages/UpdateServerPage";
+import Topbar from '../components/Topbar';
 
 const Stack = createStackNavigator();
 

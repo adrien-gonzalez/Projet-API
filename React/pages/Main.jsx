@@ -19,6 +19,7 @@ import RegisterPage from './RegisterPage';
 import ParamStack from '../routes/ParamStack';
 import AuthAPI from '../services/authAPI';
 import * as SecureStore from 'expo-secure-store';
+import userAPI from '../services/userAPI';
 import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -136,9 +137,28 @@ const Main = (props) => {
     // ACTION POUR UPDATE LE STATE ISLOGGED DU STORE REDUX
 
     const _updateIsLogged = (isLogged) => {
-        const action = { type: "UPDATE_ISLOGGED", value: {isLogged: isLogged} }
-        props.dispatch(action)
+        
+        const fetchInfosUser = async (idUser) => {
+            const data = await userAPI.checkUser(idUser);
+            console.log(data);
+            data.map((d) => {
+                const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged, pp: d.picture_profil} };
+                props.dispatch(action);
+            });
+        }
+    
+        if (isLogged) {
+            SecureStore.getItemAsync("token").then(result => {
+                var token = result;
+                fetchInfosUser(jwtDecode(token).id)
+            })
+        }
+        else {
+        const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged } };
+        props.dispatch(action);
         // console.log(id)
+        }
+
     }
 
 
@@ -222,12 +242,13 @@ const Main = (props) => {
 
     return (
         <NavigationContainer>
+            <StatusBar translucent backgroundColor="transparent" />
             <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
             <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={props.auth.isLogged === true ? ParamStack : ConnectPage} options={{ tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={props.auth.isLogged === true ? ParamStack : ConnectPage} options={props.auth.isLogged ?{ tabBarButton: (props) => <TabComponent accountTab={true} page='ProfilePage' icon='user-circle' />} : { tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
             </Tab.Navigator>
         </NavigationContainer>
     );

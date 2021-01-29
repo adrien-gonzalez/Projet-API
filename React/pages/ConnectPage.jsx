@@ -15,16 +15,38 @@ import { Formik } from "formik";
 import axios from "axios";
 import AuthAPI from "../services/authAPI";
 import { useNavigation } from "@react-navigation/native";
+import * as SecureStore from 'expo-secure-store';
+import jwtDecode from 'jwt-decode';
+import userAPI from '../services/userAPI';
 import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ConnectPage = (props) => {
+
   const _updateIsLogged = (isLogged) => {
+    const fetchInfosUser = async (idUser) => {
+        const data = await userAPI.checkUser(idUser);
+        console.log(data);
+        data.map((d) => {
+            const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged, pp: d.picture_profil} };
+            props.dispatch(action);
+        });
+    }
+
+    if (isLogged) {
+        SecureStore.getItemAsync("token").then(result => {
+            var token = result;
+            fetchInfosUser(jwtDecode(token).id)
+        })
+    }
+    else {
     const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged } };
     props.dispatch(action);
     // console.log(id)
+    }
+    
   };
 
   const [errors, setErrors] = useState([]);

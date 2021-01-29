@@ -1,14 +1,14 @@
-const initialState = { auth: {isLogged: false}, selectedGame: {id: 0, gamecolor: "#00BCFF"} }
+const initialState = { auth: {isLogged: false, pp: ""}, selectedGame: {id: 0, gamecolor: "#00BCFF"} }
 
 function appState(state = initialState, action) {
     let nextState;
     switch (action.type) {
         case 'UPDATE_SELECTED_GAME':
-            console.log("state", state);
+            // console.log("state", state);
             nextState = {
                 ...state, selectedGame: (action.value)
             }
-            console.log("next", nextState);
+            // console.log("next", nextState);
             return nextState || state
         case 'UPDATE_ISLOGGED':
             // console.log("state", state);
