@@ -95,7 +95,7 @@ const RegisterPage = ({ navigation }) => {
       >
         <View style={styles.connectPageContainer}>
           <View style={styles.headerContainer}>
-            <FormsHero title="Inscription" />
+            <FormsHero navigation={navigation} title="Inscription" />
           </View>
           <ScrollView style={{ height: "60%" }}>
             <Formik
@@ -142,7 +142,7 @@ const RegisterPage = ({ navigation }) => {
                     color="#66A5F9"
                     value={formikprops.values.cpassword}
                     onChangeText={formikprops.handleChange("cpassword")}
-                    error={cpasswordError}
+                    error={cPasswordError}
                   />
                   <Bouton
                     type="submit"
@@ -161,7 +161,7 @@ const RegisterPage = ({ navigation }) => {
     return (
       <View style={styles.connectPageContainer}>
         <View style={styles.headerContainer}>
-          <FormsHero title="Inscription" />
+          <FormsHero navigation={navigation} title="Inscription" />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik

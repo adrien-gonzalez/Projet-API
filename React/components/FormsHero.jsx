@@ -1,11 +1,16 @@
 import React from 'react';
 import { Text, Platform, StyleSheet, ImageBackground } from 'react-native';
 import { Dimensions } from 'react-native';
+import Topbar from './Topbar';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default class Header extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
     
     render() {
         if (this.props.title == "Connexion") {
@@ -16,10 +21,17 @@ export default class Header extends React.Component {
         }
 		else if (this.props.title == "Ajouter un serveur") {
             var image = require('../assets/addserv-hero.png');
-}		else if (this.props.title == "Mot de passe oublié") {
+
+        }
+        else if (this.props.title == "Mot de passe oublié") {
             var image = require('../assets/reset-hero.png');
-        }                return (
+        }      
+        else if (this.props.title == "Modifier un serveur") {
+            var image = require('../assets/updateserver-hero.png');
+        }           
+        return (
             <ImageBackground style={styles.hero} source={image}>
+                <Topbar color="white" isText={false} navigation={this.props.navigation} backgroundColor="transparent" />
                 <Text style={styles.text}>{this.props.title}</Text>
             </ImageBackground>
         );

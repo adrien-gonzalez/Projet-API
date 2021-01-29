@@ -8,6 +8,7 @@ import { Formik } from "formik";
 
 const ServerInfoPage = (props) => {
 
+    const { route, navigation } = props;
     const [feedBackUser, setFeedBackUser] = useState(0);
     const [dataServer, setDataServer] = useState(0);
     const [response, setResponse] = useState([]);
@@ -40,7 +41,7 @@ const ServerInfoPage = (props) => {
     const [server, setServer] = useState([]);
     const fetchServers = async () => {
         try {
-        const data = await serverAPI.findServerByID(17);
+        const data = await serverAPI.findServerByID(route.params.serverId);
         setServer(data);
         setFeedBackUser(0);
         data.map((d) => {

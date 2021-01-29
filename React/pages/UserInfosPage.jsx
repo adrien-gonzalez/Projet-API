@@ -367,10 +367,11 @@ const styles = StyleSheet.create({
     marginBottom:14,
   },
   suppCompte: {
-    color: "red",
+    color: "coral",
     fontWeight: "bold",
     fontSize: 18,
-    paddingTop: 40,
+    paddingTop: 14,
+    paddingBottom: 64,
   },
   centeredView: {
     flex: 1,

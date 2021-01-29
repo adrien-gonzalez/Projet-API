@@ -6,6 +6,7 @@ function findServerByGame(id) {
     return axios
     .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game="+id)
     .then((response) => response.data)
+    .catch((error) => error.response.data.errors);
 }
 
 // Informations server by id
@@ -36,7 +37,7 @@ function postComment(donnees) {
 function createServer(formData) {
     return axios.post(
         'http://nicolas-camilloni.students-laplateforme.io/api/servers', formData)
-        .then((response) => response)
+        .then((response) => response.data)
         .catch((error) => error.response.data.errors);
 }
 
@@ -45,7 +46,7 @@ function updateServer(formData, id) {
     return axios.post(
         'http://nicolas-camilloni.students-laplateforme.io/api/servers/update?id='+id, 
         formData)
-        .then((response) => response)
+        .then((response) => response.data)
         .catch((error) => error.response.data.errors);
 }
 

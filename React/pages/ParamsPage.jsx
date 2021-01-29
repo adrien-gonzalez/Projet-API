@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     paddingTop: windowHeight / 40,
   },
   deco: {
-    color: "red",
+    color: "coral",
     fontWeight: "bold",
     fontSize: 18,
     alignSelf: "flex-start",

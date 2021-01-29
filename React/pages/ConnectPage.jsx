@@ -80,7 +80,7 @@ const ConnectPage = (props) => {
       >
         <View style={styles.connectPageContainer}>
           <View style={styles.headerContainer}>
-            <FormsHero title="Connexion" />
+            <FormsHero navigation={navigation} title="Connexion" />
           </View>
           <ScrollView style={{ height: "60%" }}>
             <Formik
@@ -144,7 +144,7 @@ const ConnectPage = (props) => {
     return (
       <View style={styles.connectPageContainer}>
         <View style={styles.headerContainer}>
-          <FormsHero title="Connexion" />
+          <FormsHero navigation={navigation} title="Connexion" />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik

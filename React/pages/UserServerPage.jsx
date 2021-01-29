@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Formik } from "formik";
+import Topbar from '../components/Topbar';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -24,11 +25,9 @@ const UserServerPage = ({route, navigation}) => {
     const [response, setResponse] = useState([]);
     const [idServer, setIdServer] = useState([]);
 
-
     const fetchServers = async () => {
         try {
             const data = await serverAPI.findServerByUser(idUser);
-            // const data = await serverAPI.findServerByUser(11);
             setUserServer(data)
         } catch (error) {
             console.log(error);
@@ -46,24 +45,22 @@ const UserServerPage = ({route, navigation}) => {
         const donnees = new URLSearchParams();
         donnees.append("password", values.password);
 
-  
         try {
           const data = await serverAPI.deleteServer(donnees, idServer);
-          console.log(data);
         
-          if (typeof data == "object") {
-            data.map((d) => {
-              setResponse(d.password_error);
-            });
-          } else {
-            setResponse(data);
-            // navigation.navigate("HomePage");
-          }
+            if (typeof data == "object") {
+                data.map((d) => {
+                setResponse(d.password_error);
+                });
+            } else {
+                setResponse(data);
+                setModalVisible(false)
+                fetchServers()
+            }
         } catch (error) {
-          setResponse(error);
-        }
-      };
-
+                setResponse(error);
+            }
+        };
 
     function myServer(userServer){
         if(userServer.length > 0) {
@@ -150,9 +147,7 @@ const UserServerPage = ({route, navigation}) => {
 
     return(
         <ScrollView style={styles.container}>
-            <View style={styles.namePage}>
-                <Text style={{fontSize: 24}}>Mes serveurs</Text>
-            </View>
+            <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
                 {myServer(userServer)}
             <Modal animationType="slide" transparent={true} visible={modalVisible}>
                 <View style={styles.centeredView}>
