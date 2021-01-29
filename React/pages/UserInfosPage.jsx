@@ -15,12 +15,12 @@ import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
 import * as ImagePicker from "expo-image-picker";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from "@expo/vector-icons";
 
-import { useRef } from 'react';
+import { useRef } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -52,7 +52,7 @@ const UserInfosPage = ({ route, navigation }) => {
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4,3],
+      aspect: [4, 3],
       quality: 0.5,
     });
 
@@ -106,14 +106,13 @@ const UserInfosPage = ({ route, navigation }) => {
   };
 
   const handleOnSubmitPut = async (values, actions) => {
-
     // On set les messages d'erreur à null
     setLoginError("");
     setEmailError("");
     setOldPasswordError("");
     setPasswordError("");
 
-    scrollRef.current?.scrollTo({x:0,y:0,animated:true});
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
 
     if (values.old_password == "" && values.password != "") {
       setOldPasswordError(
@@ -127,14 +126,14 @@ const UserInfosPage = ({ route, navigation }) => {
     donnees.append("email", values.email);
     donnees.append("old_password", values.old_password);
     donnees.append("password", values.password);
-    
-    if(selectedImage != null) {
+
+    if (selectedImage != null) {
       const imageBody = {
         uri: selectedImage.localUri,
         name: selectedImage.localUri,
         type: "image/jpeg",
       };
-      donnees.append("file", (imageBody));
+      donnees.append("file", imageBody);
     }
 
     try {
@@ -142,11 +141,18 @@ const UserInfosPage = ({ route, navigation }) => {
       // console.log(data);
       if (typeof data == "object") {
         data.map((d) => {
-          if(d.login_error) {setLoginError(d.login_error)}
-          if(d.email_error) {setEmailError(d.email_error)}
-          if(d.old_password_error) {setOldPasswordError(d.old_password_error) }
-          if(d.password_error) {setPasswordError(d.password_error)}
-          else if (d.login_success || d.email_success || d.password_success) {
+          if (d.login_error) {
+            setLoginError(d.login_error);
+          }
+          if (d.email_error) {
+            setEmailError(d.email_error);
+          }
+          if (d.old_password_error) {
+            setOldPasswordError(d.old_password_error);
+          }
+          if (d.password_error) {
+            setPasswordError(d.password_error);
+          } else if (d.login_success || d.email_success || d.password_success) {
             setResponsePut("Informations modifiées");
           }
         });
@@ -159,21 +165,27 @@ const UserInfosPage = ({ route, navigation }) => {
   function image(selectedImage) {
     if (selectedImage !== null) {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
-          <View >
+        <TouchableOpacity
+          onPress={openImagePickerAsync}
+          style={styles.ViewProfil}
+        >
+          <View>
             <Image
               source={{ uri: selectedImage.localUri }}
               style={styles.pictureProfil}
             />
           </View>
         </TouchableOpacity>
-
       );
     } else {
       return (
-        <TouchableOpacity onPress={openImagePickerAsync} style={styles.ViewProfil}>
+        <TouchableOpacity
+          onPress={openImagePickerAsync}
+          style={styles.ViewProfil}
+        >
           <View>
-            <Image style={styles.pictureProfil}
+            <Image
+              style={styles.pictureProfil}
               source={{
                 uri:
                   "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/" +
@@ -253,16 +265,24 @@ const UserInfosPage = ({ route, navigation }) => {
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
         <View style={styles.backTitle}>
-          <TouchableOpacity style={styles.logoBack}  onPress={() => {
-                        navigation.goBack();
-                      }}>
+          <TouchableOpacity
+            style={styles.logoBack}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
             <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.title}>Informations perso.</Text>
         </View>
         {image(selectedImage)}
         <View style={styles.viewLogoPhoto}>
-        <MaterialIcons style={styles.logoPhoto} name="add-a-photo" size={24} color="black" />
+          <MaterialIcons
+            style={styles.logoPhoto}
+            name="add-a-photo"
+            size={24}
+            color="black"
+          />
         </View>
       </View>
       <ScrollView ref={scrollRef} style={{ height: "60%" }}>
@@ -360,13 +380,13 @@ const styles = StyleSheet.create({
   backTitle: {
     flexDirection: "row",
     alignContent: "center",
-    justifyContent:"space-evenly",
-    alignSelf:"flex-start",
-    width:"90%",
+    justifyContent: "space-evenly",
+    alignSelf: "flex-start",
+    width: "90%",
   },
   logoBack: {
-    alignSelf:"flex-end",
-    marginBottom:14,
+    alignSelf: "flex-end",
+    marginBottom: 14,
   },
   suppCompte: {
     color: "red",
@@ -427,9 +447,9 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 200,
-    borderColor:"#66A5F9",
-    borderWidth:4,
-    backgroundColor:"white",
+    borderColor: "#66A5F9",
+    borderWidth: 4,
+    backgroundColor: "white",
   },
   fixToText: {
     flexDirection: "row",
@@ -476,26 +496,26 @@ const styles = StyleSheet.create({
   pictureProfil: {
     width: "100%",
     height: "100%",
-    resizeMode:"cover",
+    resizeMode: "cover",
     borderRadius: 200,
-    borderColor:"white",
-    borderWidth:3,
+    borderColor: "white",
+    borderWidth: 3,
   },
   logoPhoto: {
-    alignSelf:"center",
+    alignSelf: "center",
   },
   viewLogoPhoto: {
     position: "relative",
-    top:-30,
-    left:37,
-    height:35,
-    width:35,
-    backgroundColor:"white",
-    borderRadius:20,
-    justifyContent:"center", 
-    borderColor:"#66A5F9",
-    borderWidth:1,
-  }
+    top: -30,
+    left: 37,
+    height: 35,
+    width: 35,
+    backgroundColor: "white",
+    borderRadius: 20,
+    justifyContent: "center",
+    borderColor: "#66A5F9",
+    borderWidth: 1,
+  },
 });
 
 export default UserInfosPage;
