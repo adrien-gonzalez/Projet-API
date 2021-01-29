@@ -34,8 +34,9 @@ const Main = (props) => {
     // SecureStore.deleteItemAsync("refreshtoken");
     // delete axios.defaults.headers["Authorization"];
 
-    // SecureStore.getItemAsync("refreshtoken").then(result => {
+    // SecureStore.getItemAsync("token").then(result => {
     //     var token = result;
+    //     console.log(token);
     // })
     // SecureStore.getItemAsync("token").then(result => {
     //     var token = result;
@@ -132,8 +133,6 @@ const Main = (props) => {
 
     // FIN INTERCEPTEUR
 
-
-
     // ACTION POUR UPDATE LE STATE ISLOGGED DU STORE REDUX
 
     const _updateIsLogged = (isLogged) => {
@@ -141,7 +140,6 @@ const Main = (props) => {
         props.dispatch(action)
         // console.log(id)
     }
-
 
     // // CHECK SI L'UTILISATEUR EST CO AU CHARGEMENT DE L'APP
 

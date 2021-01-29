@@ -1,36 +1,39 @@
 import React, { useState } from "react";
 import { Dimensions } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import CatParams from "../components/catParams";
 // import TOKEN
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
+import axios from "axios";
 
 import { useNavigation } from "@react-navigation/native";
 
 import { connect } from "react-redux";
 
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 const ParamsPage = (props) => {
+  const _updateIsLogged = (isLogged) => {
+    const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged } };
+    props.dispatch(action);
+  };
 
   const navigation = useNavigation();
 
   const [idUser, setId] = useState([]);
 
-  SecureStore.getItemAsync("token").then(result => {
-    const {id} = jwtDecode(result);
-    setId(id);
+  SecureStore.getItemAsync("token").then((result) => {
+    if (result !== null) {
+      const { id } = jwtDecode(result);
+      setId(id);
+    }
   });
 
-  console.log(props.auth);
-
   function ParamUser() {
-    if(props.auth.isLogged === true)
-    {
+    if (props.auth.isLogged === true) {
       return (
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Paramètres utilisateur</Text>
@@ -39,8 +42,8 @@ const ParamsPage = (props) => {
             iconStart="user-alt"
             iconEnd="keyboard-arrow-right"
             onPress={() => {
-              navigation.navigate('ProfilePage', {
-                screen: 'UserInfosPage',
+              navigation.navigate("ProfilePage", {
+                screen: "UserInfosPage",
                 params: { idUser: idUser },
               });
             }}
@@ -49,27 +52,26 @@ const ParamsPage = (props) => {
             cat="Mes serveurs"
             iconStart="server"
             iconEnd="keyboard-arrow-right"
-            onPress={() =>{
-              navigation.navigate('ProfilePage', {
-                screen: 'UserServerPage',
-                params: {idUser: idUser}
-              })
+            onPress={() => {
+              navigation.navigate("ProfilePage", {
+                screen: "UserServerPage",
+                params: { idUser: idUser },
+              });
             }}
           />
         </View>
-      )
-    }
-    else {
+      );
+    } else {
       return (
-      <View style={styles.container_BlocParams}>
+        <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Paramètres utilisateur</Text>
           <CatParams
             cat="Se connecter"
             iconStart="user-alt"
             iconEnd="keyboard-arrow-right"
             onPress={() => {
-              navigation.navigate('ProfilePage', {
-                screen: 'ConnectPage',
+              navigation.navigate("ProfilePage", {
+                screen: "ConnectPage",
               });
             }}
           />
@@ -77,20 +79,20 @@ const ParamsPage = (props) => {
             cat="S'inscrire"
             iconStart="user-plus"
             iconEnd="keyboard-arrow-right"
-            onPress={() =>{
-              navigation.navigate('ProfilePage', {
-                screen: 'RegisterPage',
-              })
+            onPress={() => {
+              navigation.navigate("ProfilePage", {
+                screen: "RegisterPage",
+              });
             }}
           />
         </View>
-      )
+      );
     }
   }
 
   return (
-        <ScrollView style={{ height: "20%" }}>
-    <View style={styles.container}>
+    <ScrollView style={{ height: "20%" }}>
+      <View style={styles.container}>
         <View style={styles.container_top}>
           <Text style={styles.title}> Paramètres </Text>
         </View>
@@ -107,11 +109,6 @@ const ParamsPage = (props) => {
             iconStart="eye"
             iconEnd="keyboard-arrow-right"
           />
-          <CatParams
-            cat="Langues"
-            iconStart="language"
-            iconEnd="keyboard-arrow-right"
-          />
         </View>
         <View style={styles.container_BlocParams}>
           <Text style={styles.titleParams}>Infos supplémentaires</Text>
@@ -125,6 +122,19 @@ const ParamsPage = (props) => {
             iconStart="headphones-alt"
             iconEnd="keyboard-arrow-right"
           />
+          {props.auth.isLogged && (
+            <TouchableOpacity
+              onPress={() => {
+                SecureStore.deleteItemAsync("token");
+                SecureStore.deleteItemAsync("refreshtoken");
+                delete axios.defaults.headers["Authorization"];
+                _updateIsLogged(false);
+                navigation.navigate("HomePage");
+              }}
+            >
+              <Text style={styles.deco}>Deconnexion</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScrollView>
@@ -147,7 +157,7 @@ const styles = StyleSheet.create({
   },
   container_BlocParams: {
     alignItems: "center",
-    width: windowWidth,
+    width: windowWidth - 75,
     flex: 0.2,
   },
   titleParams: {
@@ -163,13 +173,27 @@ const styles = StyleSheet.create({
     color: "#262626",
     paddingTop: windowHeight / 40,
   },
+  deco: {
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 18,
+    alignSelf: "flex-start",
+  },
 });
 
 // RECUP DU STORE REDUX
 const mapStateToProps = ({ auth }) => ({
-  auth
+  auth,
 });
 
-export default connect(mapStateToProps)(ParamsPage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch: (action) => {
+      dispatch(action);
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ParamsPage);
 
 // export default ParamsPage;
