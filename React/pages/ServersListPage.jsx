@@ -9,14 +9,32 @@ import { connect } from "react-redux";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import { useNavigation } from '@react-navigation/native';
+
+
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ServersListPage = (props) => {
   
-  const { route, navigation } = props;
+  // const { route, navigation } = props;
+  const navigation = useNavigation();
   const [servers, setServer] = useState([]);
   const [game, setGame] = useState([]);
+
+
+  const combinedFunctions = (id) => {
+    _updateSelectedGame(id);
+    navigation.navigate("ProfilePage", {
+      screen: "ServerInfoPage",
+    })
+  }
+
+  const _updateSelectedGame = (id) => {
+      const action = { type: "UPDATE_SELECTED_SERVER", value: {id: id} }
+      props.dispatch(action)
+  }
 
   const fetchServers = async () => {
     try {
@@ -156,9 +174,10 @@ const ServersListPage = (props) => {
               {servers.map((servers) => (
               <View style={styles.infoServer} key={servers.id}>
                 <View style={styles.banniere}>
-                  <TouchableOpacity onPress={() => navigation.navigate("ProfilePage", {
-                    screen: "ServerInfoPage",
-                    params: { serverId: servers.id },})}>
+                  <TouchableOpacity 
+                    onPress={
+                      () => combinedFunctions(servers.id)
+                      }>
                     <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>
                   </TouchableOpacity>
                 </View>
@@ -221,8 +240,14 @@ const mapStateToProps = ({ selectedGame }) => ({
   selectedGame
 });
 
-export default connect(mapStateToProps)(ServersListPage);
+// STORE SELECTED SERVER TO REDUC
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch: (action) => { dispatch(action) }
+  }
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(ServersListPage);
 
 
 const styles = StyleSheet.create({

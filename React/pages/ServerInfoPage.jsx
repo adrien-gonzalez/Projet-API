@@ -4,14 +4,45 @@ import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, 
 import Svg, { Path, Rect} from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
+import { connect } from "react-redux";
+
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const ServerInfoPage = (props) => {
 
-    const { route, navigation } = props;
+    // const { route, navigation } = props;
+    const navigation = useNavigation();
     const [feedBackUser, setFeedBackUser] = useState(0);
     const [dataServer, setDataServer] = useState(0);
     const [response, setResponse] = useState([]);
+
+     const [server, setServer] = useState([]);
+    const fetchServers = async () => {
+        try {
+        const data = await serverAPI.findServerByID(props.selectedServer.id);
+        setServer(data);
+        setFeedBackUser(0);
+        data.map((d) => {
+            setDataServer({
+                id: d.id,
+                descriptionServer: d.descriptionServer,
+                color: d.color,
+                name: d.name,
+                comment: d.numberComment,
+                vote: d.vote
+            })
+          });
+        
+        } catch (error) {
+        console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchServers();
+    }, [props.selectedServer.id]);
 
     var getElement = (numberStarId) => e => { 
         setFeedBackUser(numberStarId+1)
@@ -37,32 +68,6 @@ const ServerInfoPage = (props) => {
             setResponse(error);
           }
     };
-
-    const [server, setServer] = useState([]);
-    const fetchServers = async () => {
-        try {
-        const data = await serverAPI.findServerByID(route.params.serverId);
-        setServer(data);
-        setFeedBackUser(0);
-        data.map((d) => {
-            setDataServer({
-                id: d.id,
-                descriptionServer: d.descriptionServer,
-                color: d.color,
-                name: d.name,
-                comment: d.numberComment,
-                vote: d.vote
-            })
-          });
-        
-        } catch (error) {
-        console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        fetchServers();
-    }, []);
 
     // Tableau de notes
     const notes = [];
@@ -256,7 +261,14 @@ const ServerInfoPage = (props) => {
     )
 }
 
-export default ServerInfoPage
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ selectedServer }) => ({
+    selectedServer
+});
+  
+export default connect(mapStateToProps)(ServerInfoPage);
+  
+
 
 const styles = StyleSheet.create({
     contain: {
