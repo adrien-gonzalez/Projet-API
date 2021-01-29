@@ -18,17 +18,15 @@ const windowHeight = Dimensions.get("window").height;
 
 const UserServerPage = ({route, navigation}) => {
 
-    // const {idUser} = route.params;
+    const {idUser} = route.params;
     const [userServer, setUserServer] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [response, setResponse] = useState([]);
     const [idServer, setIdServer] = useState([]);
 
-
     const fetchServers = async () => {
         try {
-            // const data = await serverAPI.findServerByUser(idUser);
-            const data = await serverAPI.findServerByUser(11);
+            const data = await serverAPI.findServerByUser(idUser);
             setUserServer(data)
         } catch (error) {
             console.log(error);
@@ -46,24 +44,22 @@ const UserServerPage = ({route, navigation}) => {
         const donnees = new URLSearchParams();
         donnees.append("password", values.password);
 
-  
         try {
           const data = await serverAPI.deleteServer(donnees, idServer);
-          console.log(data);
         
-          if (typeof data == "object") {
-            data.map((d) => {
-              setResponse(d.password_error);
-            });
-          } else {
-            setResponse(data);
-            // navigation.navigate("HomePage");
-          }
+            if (typeof data == "object") {
+                data.map((d) => {
+                setResponse(d.password_error);
+                });
+            } else {
+                setResponse(data);
+                setModalVisible(false)
+                fetchServers()
+            }
         } catch (error) {
-          setResponse(error);
-        }
-      };
-
+                setResponse(error);
+            }
+        };
 
     function myServer(userServer){
         if(userServer.length > 0) {

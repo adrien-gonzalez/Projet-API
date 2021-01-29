@@ -1,42 +1,65 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, ImageBackground} from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, ImageBackground,Dimensions} from 'react-native';
 // import Header from '../components/header.jsx'
 import serverAPI from '../services/serverAPI.js'
 import Svg, { Circle, Path, G, Image as Img} from 'react-native-svg';
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import { connect } from "react-redux";
+import { MaterialIcons } from '@expo/vector-icons'; 
 
-
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const ServersListPage = (props) => {
-
+  
   const [servers, setServer] = useState([]);
-  const [Infoservers, setInfoServer] = useState([]);
+  const [game, setGame] = useState([]);
 
   const fetchServers = async () => {
     try {
-      const data = await serverAPI.findServerByGame(1);
+      const data = await serverAPI.findServerByGame(props.selectedGame.id);
       setServer(data)
       data.map((d) => {
-        setInfoServer({
-          color: d.color,
-          logo: d.logo,
-          backgroundImage: d.backgroundImage
-        })
+        setGame(d.nameGame);
       });
+
     } catch (error) {
       console.log(error);
     }
   };
-
-
   useEffect(() => {
     fetchServers();
-  }, []);
+  }, [props.selectedGame.id]);
+
+  const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
+    switch (appImages) {
+      case "1":
+          var appLogo = require('../assets/logos/minecraft-logo.png');
+          var backgroundImage = require('../assets/background/minecraft-background.png');
+          break;
+      case "2":
+          var appLogo = require('../assets/logos/hytale-logo.png');
+          var backgroundImage = require('../assets/background/hytale-background.png');
+          break;
+      case "3":
+          var appLogo = require('../assets/logos/gtav-logo.png');
+          var backgroundImage = require('../assets/background/gtav-background.png');
+          break;
+      case "4":
+          var appLogo = require('../assets/logos/discord-logo.png');
+          var backgroundImage = require('../assets/background/discord-background.png');
+          break;
+      case "5":
+          var appLogo = require('../assets/logos/ark-logo.png');
+          var backgroundImage = require('../assets/background/ark-background.png');
+          break;
+      case "6":
+          var appLogo = require('../assets/logos/gmod-logo.png');
+          var backgroundImage = require('../assets/background/gmod-background.png');
+          break;
+  };
   
-
-
-  console.log(Infoservers.backgroundImage)
   function detail(servers) {
     if(servers.ip != "") {
       return(
@@ -65,78 +88,160 @@ const ServersListPage = (props) => {
       )
     }
   }
- 
+
+  function topServer(servers){
+    if(servers.length > 1) {
+      return(
+        <View style={styles.leaderBoard}>
+          <Text style={styles.title}>Classement des <Text style={{color: props.selectedGame.gamecolor}}>{servers.length}</Text></Text>
+          <Text style={styles.title}>serveurs <Text style={{color: props.selectedGame.gamecolor}}>{game}</Text></Text>
+        </View>
+      )
+    } else {
+      return(
+        <View style={styles.leaderBoard}>
+          <Text style={styles.title}>Classement</Text>
+        </View>
+      )
+    }
+  }
+
+  function listServer(servers){
+    return(
+        <View style={styles.listServer}>
+        {servers.map((servers) => (
+        <View style={styles.infoServer} key={servers.id}>
+          <View style={styles.banniere}>
+            <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>
+          </View>
+          <View style={styles.description}>
+            <Text style={styles.titleServer}>{servers.name}</Text>
+            <Text style={styles.descriptionText}>{servers.descriptionServer}</Text>
+            {/* Tags */}
+          </View>
+          <View style={styles.bottomBloc}>
+            {detail(servers)}
+            <View style={styles.detailServer}>
+              <FontAwesome5 name="discord" size={24} color="#6B77C6" />
+              <FontAwesome5 name="chrome" size={24} color="black" />
+            </View>
+            <View style={styles.voteServer}>
+              <Text style={styles.vote}>Voter</Text>
+            </View>
+          </View>
+      </View>
+      ))}
+      </View>  
+      )
+    }
+
+    function numberServer(servers){
+      if(servers.length > 1) {
+        return(
+          <Text style={styles.text}>{servers.length} serveurs</Text>
+        )
+      } else {
+        return(
+          <Text style={styles.text}>{servers.length} serveur</Text>
+        )
+      }
+    }
+
+    function listServer(servers) {
+      if(servers.length > 0){
+        return(
+            <View style={styles.listServer}>
+              {servers.map((servers) => (
+              <View style={styles.infoServer} key={servers.id}>
+                <View style={styles.banniere}>
+                  <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>
+                </View>
+                <View style={styles.description}>
+                  <Text style={styles.titleServer}>{servers.name}</Text>
+                  <Text style={styles.descriptionText}>{servers.descriptionServer}</Text>
+                  {/* Tags */}
+                </View>
+                <View style={styles.bottomBloc}>
+                  {detail(servers)}
+                  <View style={styles.detailServer}>
+                    <FontAwesome5 name="discord" size={24} color="#6B77C6" />
+                    <FontAwesome5 name="chrome" size={24} color="black" />
+                  </View>
+                  <View style={styles.voteServer}>
+                    <Text style={styles.vote}>Voter</Text>
+                  </View>
+                </View>
+              </View>
+              ))}
+            </View>  
+        )
+      } else {
+        return (
+          <View style={{width: '100%', alignItems: 'center', marginTop: 80}}>
+            <Text style={{color: 'black', fontSize: 18}}>Aucun serveur pour le moment</Text>
+          </View>
+        )
+      }
+
+    }
+
   return (
     <ScrollView style={styles.contain}>
-      <View style={styles.server}>
-        {/* <Header/> */}
         <View style={styles.svgHeader}>
-          <ImageBackground source={{uri: '../assets/'+Infoservers.backgroundImage}} style={styles.image}>
-              <Svg xmlns="http://www.w3.org/2000/svg" width="146" height="146" viewBox="0 0 146 146" style={styles.logo}>
+          <ImageBackground source={backgroundImage} style={styles.image}>
+              <Svg xmlns="http://www.w3.org/2000/svg" width={10*windowWidth/24.5} height={10*windowHeight/47} viewBox="0 0 146 146">
                   <G fill="none">
                       <Path d="M73,0A73,73,0,1,1,0,73,73,73,0,0,1,73,0Z" stroke="none"/>
-                      <Path fill={Infoservers.color} d="M 73 2 C 63.41417694091797 2 54.11615753173828 3.876937866210938 45.36421966552734 7.578720092773438 C 41.15760040283203 9.357955932617188 37.10015869140625 11.56028747558594 33.30461883544922 14.12449645996094 C 29.54461669921875 16.66470336914063 26.00881958007813 19.58202362060547 22.79541778564453 22.79541778564453 C 19.58202362060547 26.00881958007813 16.66470336914063 29.54461669921875 14.12449645996094 33.30461883544922 C 11.56028747558594 37.10015869140625 9.357955932617188 41.15760040283203 7.578720092773438 45.36421966552734 C 3.876937866210938 54.11615753173828 2 63.41417694091797 2 73 C 2 82.5858154296875 3.876937866210938 91.88383483886719 7.578720092773438 100.6357803344727 C 9.357955932617188 104.842399597168 11.56028747558594 108.8998413085938 14.12449645996094 112.6953811645508 C 16.66470336914063 116.4553833007813 19.58202362060547 119.9911804199219 22.79541778564453 123.2045822143555 C 26.00881958007813 126.4179840087891 29.54461669921875 129.3352966308594 33.30461883544922 131.8755035400391 C 37.10015869140625 134.4397277832031 41.15760040283203 136.6420440673828 45.36421966552734 138.4212799072266 C 54.11615753173828 142.1230621337891 63.41417694091797 144 73 144 C 82.5858154296875 144 91.88383483886719 142.1230621337891 100.6357803344727 138.4212799072266 C 104.842399597168 136.6420440673828 108.8998413085938 134.4397277832031 112.6953811645508 131.8755035400391 C 116.4553833007813 129.3352966308594 119.9911804199219 126.4179840087891 123.2045822143555 123.2045822143555 C 126.4179840087891 119.9911804199219 129.3352966308594 116.4553833007813 131.8755035400391 112.6953811645508 C 134.4397277832031 108.8998413085938 136.6420440673828 104.842399597168 138.4212799072266 100.6357803344727 C 142.1230621337891 91.88383483886719 144 82.5858154296875 144 73 C 144 63.41417694091797 142.1230621337891 54.11615753173828 138.4212799072266 45.36421966552734 C 136.6420440673828 41.15760040283203 134.4397277832031 37.10015869140625 131.8755035400391 33.30461883544922 C 129.3352966308594 29.54461669921875 126.4179840087891 26.00881958007813 123.2045822143555 22.79541778564453 C 119.9911804199219 19.58202362060547 116.4553833007813 16.66470336914063 112.6953811645508 14.12449645996094 C 108.8998413085938 11.56028747558594 104.842399597168 9.357955932617188 100.6357803344727 7.578720092773438 C 91.88383483886719 3.876937866210938 82.5858154296875 2 73 2 M 73 0 C 113.316780090332 0 146 32.68321990966797 146 73 C 146 113.316780090332 113.316780090332 146 73 146 C 32.68321990966797 146 0 113.316780090332 0 73 C 0 32.68321990966797 32.68321990966797 0 73 0 Z" stroke="none"/>
+                      <Path fill={props.selectedGame.gamecolor} d="M 73 2 C 63.41417694091797 2 54.11615753173828 3.876937866210938 45.36421966552734 7.578720092773438 C 41.15760040283203 9.357955932617188 37.10015869140625 11.56028747558594 33.30461883544922 14.12449645996094 C 29.54461669921875 16.66470336914063 26.00881958007813 19.58202362060547 22.79541778564453 22.79541778564453 C 19.58202362060547 26.00881958007813 16.66470336914063 29.54461669921875 14.12449645996094 33.30461883544922 C 11.56028747558594 37.10015869140625 9.357955932617188 41.15760040283203 7.578720092773438 45.36421966552734 C 3.876937866210938 54.11615753173828 2 63.41417694091797 2 73 C 2 82.5858154296875 3.876937866210938 91.88383483886719 7.578720092773438 100.6357803344727 C 9.357955932617188 104.842399597168 11.56028747558594 108.8998413085938 14.12449645996094 112.6953811645508 C 16.66470336914063 116.4553833007813 19.58202362060547 119.9911804199219 22.79541778564453 123.2045822143555 C 26.00881958007813 126.4179840087891 29.54461669921875 129.3352966308594 33.30461883544922 131.8755035400391 C 37.10015869140625 134.4397277832031 41.15760040283203 136.6420440673828 45.36421966552734 138.4212799072266 C 54.11615753173828 142.1230621337891 63.41417694091797 144 73 144 C 82.5858154296875 144 91.88383483886719 142.1230621337891 100.6357803344727 138.4212799072266 C 104.842399597168 136.6420440673828 108.8998413085938 134.4397277832031 112.6953811645508 131.8755035400391 C 116.4553833007813 129.3352966308594 119.9911804199219 126.4179840087891 123.2045822143555 123.2045822143555 C 126.4179840087891 119.9911804199219 129.3352966308594 116.4553833007813 131.8755035400391 112.6953811645508 C 134.4397277832031 108.8998413085938 136.6420440673828 104.842399597168 138.4212799072266 100.6357803344727 C 142.1230621337891 91.88383483886719 144 82.5858154296875 144 73 C 144 63.41417694091797 142.1230621337891 54.11615753173828 138.4212799072266 45.36421966552734 C 136.6420440673828 41.15760040283203 134.4397277832031 37.10015869140625 131.8755035400391 33.30461883544922 C 129.3352966308594 29.54461669921875 126.4179840087891 26.00881958007813 123.2045822143555 22.79541778564453 C 119.9911804199219 19.58202362060547 116.4553833007813 16.66470336914063 112.6953811645508 14.12449645996094 C 108.8998413085938 11.56028747558594 104.842399597168 9.357955932617188 100.6357803344727 7.578720092773438 C 91.88383483886719 3.876937866210938 82.5858154296875 2 73 2 M 73 0 C 113.316780090332 0 146 32.68321990966797 146 73 C 146 113.316780090332 113.316780090332 146 73 146 C 32.68321990966797 146 0 113.316780090332 0 73 C 0 32.68321990966797 32.68321990966797 0 73 0 Z" stroke="none"/>
                   </G>
-                  <Circle cx="50%" cy="50%" r="65" fill="#fff" opacity="0.28"/>
-                  <Img x="25" y="25"  width='94' height='94' href={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/'+Infoservers.logo+'?time=' + new Date()}}/>                        
+                  <Circle cx="50%" cy="50%" r="65" fill="#fff" opacity="0.50"/>
+                  <Img x="25" y="25"  width='94' height='94' href={appLogo}/>                        
               </Svg>
-          <Text style={styles.textColor}>{servers.length} serveur(s)</Text> 
+              {numberServer(servers)} 
           </ImageBackground>
         </View>
-      </View>
-      <View>
-        <Text  style={styles.title}>Serveurs à l'affiche</Text>
-      </View>
-        <View style={styles.listServer}>
-          {servers.map((servers) => (
-          <View style={styles.infoServer} key={servers.id}>
-            <View style={styles.banniere}>
-              <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>
-            </View>
-            <View style={styles.description}>
-              <Text style={styles.titleServer}>{servers.name}</Text>
-              <Text style={styles.descriptionText}>{servers.descriptionServer}</Text>
-              {/* Tags */}
-            </View>
-            <View style={styles.bottomBloc}>
-              {detail(servers)}
-              <View style={styles.detailServer}>
-                <FontAwesome5 name="discord" size={24} color="#6B77C6" />
-                <FontAwesome5 name="chrome" size={24} color="black" />
-              </View>
-              <View style={styles.voteServer}>
-                <Text style={styles.vote}>Voter</Text>
-              </View>
-            </View>
+        <View style={styles.topServer}>
+          <MaterialIcons name="leaderboard" size={24} color={props.selectedGame.gamecolor} />
+            {topServer(servers)}
+          <MaterialIcons name="leaderboard" size={24} color={props.selectedGame.gamecolor} />
         </View>
-        ))}
-        {/* <StatusBar style="auto" /> */}
-      </View>  
+          {listServer(servers, game)}
     </ScrollView>    
   );
 }
 
-export default ServersListPage;
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ selectedGame }) => ({
+  selectedGame
+});
+
+export default connect(mapStateToProps)(ServersListPage);
+
 
 
 const styles = StyleSheet.create({
   contain: {
-    flex: 1,
-    backgroundColor: '#F1F1F1',
+    minHeight: '100%',
     width: '100%',
+    backgroundColor: '#F1F1F1',
   },
   colorWhite: {
     color: 'white',
   },
-  server: {
-    height: 250,
-    width: '100%',
+  topServer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    marginTop: 30,
+    maxWidth: 600
+  },
+  leaderBoard: {
     justifyContent: 'center',
+    alignItems: 'center'
   },
   title: {
     fontSize: 18,
-    marginTop: 50,
     fontWeight: "bold",
     textTransform: "uppercase",
     textAlign: 'center',
@@ -223,19 +328,23 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   svgHeader: {
-    width: '100%',
-    height: '100%',
+    height: 36.5*windowHeight/100,
   },
-  textColor: {
+  text: {
+      width: '100%',
+      textAlign: 'center',
       color: "white",
-      fontSize: 20,
+      fontSize: 7*windowWidth/100,
+      fontFamily: 'HomepageBaukasten',
+      position: 'absolute',
+      bottom: Platform.OS === 'ios' ? '10%' : '5%',
+      textShadowColor: 'rgba(0, 0, 0, 0.75)',
+      textShadowOffset: {width: -1, height: 1},
+      textShadowRadius: 4,
   },
   image: {
       flex: 1,
       justifyContent: "space-evenly",
       alignItems: "center",
-  },
-  logo: {
-      marginTop: 50,
   },
 });

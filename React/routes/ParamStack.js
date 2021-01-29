@@ -4,6 +4,8 @@ import ParamsPage from "../pages/ParamsPage";
 import UserInfosPage from "../pages/UserInfosPage";
 import UserServerPage from "../pages/UserServerPage";
 import UpdateServerPage from "../pages/UpdateServerPage";
+import AddServerPage from "../pages/AddServerPage";
+
 
 const Stack = createStackNavigator();
 
@@ -15,6 +17,8 @@ export default function ParamStack() {
       {/* Route pour la liste de mes serveurs */}
       <Stack.Screen headerMode="none" name="UserServerPage" component={UserServerPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="UpdateServerPage" component={UpdateServerPage} options={{ headerShown: false }}/>
+      <Stack.Screen headerMode="none" name="AddServerPage" component={AddServerPage} options={{ headerShown: false }}/>
+
     </Stack.Navigator>
   );
 }
