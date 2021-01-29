@@ -23,6 +23,7 @@ import userAPI from '../services/userAPI';
 import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import axios from "axios";
+import ResetStack from '../routes/ResetStack.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -34,8 +35,9 @@ const Main = (props) => {
     // SecureStore.deleteItemAsync("refreshtoken");
     // delete axios.defaults.headers["Authorization"];
 
-    // SecureStore.getItemAsync("refreshtoken").then(result => {
+    // SecureStore.getItemAsync("token").then(result => {
     //     var token = result;
+    //     console.log(token);
     // })
     // SecureStore.getItemAsync("token").then(result => {
     //     var token = result;
@@ -132,8 +134,6 @@ const Main = (props) => {
 
     // FIN INTERCEPTEUR
 
-
-
     // ACTION POUR UPDATE LE STATE ISLOGGED DU STORE REDUX
 
     const _updateIsLogged = (isLogged) => {
@@ -160,7 +160,6 @@ const Main = (props) => {
         }
 
     }
-
 
     // // CHECK SI L'UTILISATEUR EST CO AU CHARGEMENT DE L'APP
 
@@ -248,7 +247,7 @@ const Main = (props) => {
             <Tab.Screen name="ServersListPage" component={ServersListPage} options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
             <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
             <Tab.Screen name="AddServerPage" component={AddServerPage} options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
-            <Tab.Screen name="ProfilePage" component={props.auth.isLogged === true ? ParamStack : ConnectPage} options={props.auth.isLogged ?{ tabBarButton: (props) => <TabComponent accountTab={true} page='ProfilePage' icon='user-circle' />} : { tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
+            <Tab.Screen name="ProfilePage" component={ParamStack} options={props.auth.isLogged ?{ tabBarButton: (props) => <TabComponent accountTab={true} page='ProfilePage' icon='user-circle' />} : { tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
             </Tab.Navigator>
         </NavigationContainer>
     );

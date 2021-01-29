@@ -60,6 +60,7 @@ const ConnectPage = (props) => {
     try {
       await AuthAPI.authenticate(donnees);
       _updateIsLogged(true);
+      navigation.goBack();
       navigation.navigate("HomePage");
       // Updates.reloadAsync();
     } catch (error) {

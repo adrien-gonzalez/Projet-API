@@ -76,6 +76,7 @@ const RegisterPage = ({ navigation }) => {
           }
         });
       } else {
+        navigation.goBack();
         navigation.navigate("ProfilePage", {
           screen: "ConnectPage",
         });

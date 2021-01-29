@@ -17,6 +17,10 @@ import userAPI from "../services/userAPI.js";
 import * as ImagePicker from "expo-image-picker";
 import Topbar from "../components/Topbar";
 import { connect } from "react-redux";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRef } from "react";
+
+
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -35,6 +39,9 @@ const UserInfosPage = (props) => {
   const [passwordError, setPasswordError] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const scrollRef = useRef();
+  
   let openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -46,7 +53,7 @@ const UserInfosPage = (props) => {
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4,3],
+      aspect: [4, 3],
       quality: 0.5,
     });
 
@@ -98,6 +105,15 @@ const UserInfosPage = (props) => {
   };
 
   const handleOnSubmitPut = async (values, actions) => {
+
+    // On set les messages d'erreur à null
+    setLoginError("");
+    setEmailError("");
+    setOldPasswordError("");
+    setPasswordError("");
+
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+
     if (values.old_password == "" && values.password != "") {
       setOldPasswordError(
         "Le mot de passe est obligatoire pour modifier le mot de passe"
@@ -219,7 +235,7 @@ const UserInfosPage = (props) => {
                 />
               </View>
               <View style={{position: "relative", top:-30, left:80, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3}}>
-                <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+                <MaterialIcons style={styles.logoPhoto} name="add-a-photo" size={18} color="black" />
               </View>
             </TouchableOpacity>
         :
@@ -234,12 +250,12 @@ const UserInfosPage = (props) => {
                 />
               </View>
               <View style={{position: "relative", top:-30, left:80, height:35, width:35, backgroundColor:"white", borderRadius:20,justifyContent:"center", borderColor:props.selectedGame.gamecolor, borderWidth:3}}>
-                <Image style={styles.logoPhoto} source={require("../assets/icons/photo.png")}></Image>
+                <MaterialIcons style={styles.logoPhoto} name="add-a-photo" size={18} color="black" />
               </View>
             </TouchableOpacity>
         }
       </View>
-      <ScrollView style={{ height: "60%" }}>
+      <ScrollView ref={scrollRef} style={{ height: "60%" }}>
         <Formik
           enableReinitialize
           initialValues={{
@@ -328,7 +344,7 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: "100%",
     alignItems: "center",
-    paddingBottom: "14%",
+    // paddingBottom: "14%",
   },
   title: {
     textAlign: "center",
@@ -457,7 +473,6 @@ const styles = StyleSheet.create({
   },
   logoPhoto: {
     alignSelf:"center",
-    width: 18,
-    height: 18,
+    // justifyContent: "center",
   },
 });
