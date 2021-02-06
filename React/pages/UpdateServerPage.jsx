@@ -10,6 +10,7 @@ import serverAPI from '../services/serverAPI.js'
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
+import { connect } from "react-redux";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -29,6 +30,19 @@ const UpdateServerPage = (props) => {
     const [selectedImage, setSelectedImage] = React.useState(null);
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
+
+    const combinedFunctions = () => {
+        _updateSelectedGame();
+        navigation.navigate("ProfilePage", {
+          screen: "UserServerPage",
+        })
+    }
+    
+    const _updateSelectedGame = () => {
+        const action = { type: "UPDATE_LIST_SERVER", value: {isUpdated: true} }
+        props.dispatch(action)
+    }
+
 
     const handleOnSubmit = async (values, actions) => {
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
@@ -62,6 +76,7 @@ const UpdateServerPage = (props) => {
         formData.append("discord", values.discord);
         formData.append("gameId", gameId);
 
+
         try {
             const data = await serverAPI.updateServer(formData, serverId);
            
@@ -69,7 +84,10 @@ const UpdateServerPage = (props) => {
             } else {
                 setResponse(data);
                 actions.resetForm();
-                navigation.goBack();
+                combinedFunctions();
+                // navigation.navigate('ProfilePage', {
+                //     screen: 'UserServerPage',
+                //  });
             }
           } catch (error) {
                 setResponse(error);
@@ -425,4 +443,11 @@ const styles = StyleSheet.create({
       },
 });
 
-export default UpdateServerPage;
+// STORE SELECTED SERVER TO REDUC
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+  }
+
+export default connect(mapDispatchToProps)(UpdateServerPage);

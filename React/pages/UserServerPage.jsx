@@ -13,12 +13,14 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Formik } from "formik";
 import Topbar from '../components/Topbar';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const UserServerPage = ({route, navigation}) => {
+const UserServerPage = (props) => {
 
+    const { route, navigation } = props;
     const {idUser} = route.params;
     const [userServer, setUserServer] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -39,6 +41,21 @@ const UserServerPage = ({route, navigation}) => {
         fetchServers();
         }, []
     );
+
+ 
+    const combinedFunctions = () => {
+        _updateSelectedGame();
+        fetchServers()
+    }
+    
+    const _updateSelectedGame = () => {
+        const action = { type: "UPDATE_LIST_SERVER", value: {isUpdated: false} }
+        props.dispatch(action)
+    }
+
+    if (props.myServer.isUpdated == true) {
+        combinedFunctions()
+    }
     
     const handleOnSubmitSupp = async (values, actions) => {
     
@@ -214,7 +231,22 @@ const UserServerPage = ({route, navigation}) => {
         </ScrollView>
     )
 }
-export default UserServerPage
+
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ myServer }) => ({
+    myServer
+});
+
+// STORE SELECTED SERVER TO REDUC
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+}
+  
+export default connect(mapStateToProps)(UserServerPage);
+  
+  
 
 
 const styles = StyleSheet.create({
