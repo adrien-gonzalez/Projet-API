@@ -103,9 +103,14 @@ const ParamsPage = (props) => {
             iconEnd="keyboard-arrow-right"
           />
           <CatParams
-            cat="Apparences"
+            cat="Thème"
             iconStart="eye"
             iconEnd="keyboard-arrow-right"
+            onPress={() => {
+              navigation.navigate("ProfilePage", {
+                screen: "ApparencePage",
+              });
+            }}
           />
         </View>
         <View style={styles.container_BlocParams}>
