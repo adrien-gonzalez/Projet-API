@@ -36,7 +36,10 @@ const UserServerPage = ({route, navigation}) => {
     };
 
     useEffect(() => {
-        fetchServers();
+        const focus = navigation.addListener('focus', () => {
+            fetchServers();
+          });                                
+          return focus;
         }, []
     );
     

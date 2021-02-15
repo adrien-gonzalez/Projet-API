@@ -32,7 +32,10 @@ const ServersListPage = (props) => {
     }
   };
   useEffect(() => {
-    fetchServers();
+    const focus = navigation.addListener('focus', () => {
+      fetchServers();
+    });                                
+    return focus;
   }, [props.selectedGame.id]);
 
   const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
