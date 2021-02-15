@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export default function ServerStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen headerMode="none" name="ServersListPage" component={ServersListPage} options={{ headerShown: false }}/>
+      <Stack.Screen headerMode="none" name="ListServersPage" component={ServersListPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="ServerInfoPage" component={ServerInfoPage} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );

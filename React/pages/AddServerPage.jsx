@@ -273,7 +273,7 @@ console.log(nameError)
         return(
             <View style={styles.createServerPageContainer}>
                 <View style={styles.headerContainer}>
-                    <FormsHero title="Ajouter un serveur" />
+                    <FormsHero title="Ajouter un serveur" needBar={false}/>
                 </View>
 
                 <ScrollView ref={scrollRef} style={{height: '60%'}}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ProgressBarAndroidComponent } from 'react-native';
 import { Text, Platform, StyleSheet, ImageBackground } from 'react-native';
 import { Dimensions } from 'react-native';
 import Topbar from './Topbar';
@@ -31,7 +32,9 @@ export default class Header extends React.Component {
         }           
         return (
             <ImageBackground style={styles.hero} source={image}>
+                {this.props.needBar == true && (
                 <Topbar color="white" isText={false} navigation={this.props.navigation} backgroundColor="transparent" />
+                )}
                 <Text style={styles.text}>{this.props.title}</Text>
             </ImageBackground>
         );

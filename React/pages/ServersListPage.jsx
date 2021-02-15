@@ -8,6 +8,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { connect } from "react-redux";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Topbar from '../components/Topbar.jsx';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -156,7 +157,7 @@ const ServersListPage = (props) => {
               {servers.map((servers) => (
               <View style={styles.infoServer} key={servers.id}>
                 <View style={styles.banniere}>
-                  <TouchableOpacity onPress={() => navigation.navigate("ServersPage", {
+                  <TouchableOpacity onPress={() => navigation.navigate("ServersListPage", {
                     screen: "ServerInfoPage",
                     params: { serverId: servers.id },})}>
                     <Image source={{uri: 'http://nicolas-camilloni.students-laplateforme.io/assets/miniature_server/'+servers.miniature+'?time=' + new Date() }} style={{height: '100%', borderTopRightRadius: 10, borderTopLeftRadius: 10}}/>

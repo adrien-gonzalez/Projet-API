@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, 
 import Svg, { Path, Rect} from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
-
+import Topbar from '../components/Topbar';
 
 const ServerInfoPage = (props) => {
 
@@ -12,6 +12,7 @@ const ServerInfoPage = (props) => {
     const [feedBackUser, setFeedBackUser] = useState(0);
     const [dataServer, setDataServer] = useState(0);
     const [response, setResponse] = useState([]);
+
 
     var getElement = (numberStarId) => e => { 
         setFeedBackUser(numberStarId+1)
@@ -130,6 +131,7 @@ const ServerInfoPage = (props) => {
         <ScrollView style={styles.contain}>
             <View style={styles.server}>
                 <View style={styles.svgHeader}>
+                    <Topbar navigation={navigation} color="black" title="Infos du serveur" isText={true} backgroundColor="white" />
                     <ImageBackground source={require("../assets/Minecraft_infoServer.png")} style={styles.image}>
                         <Svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
                             <Rect width="100%" height="100%" fill="black" opacity="0.43"/>
@@ -141,7 +143,7 @@ const ServerInfoPage = (props) => {
                                 {numberStar(note).map((numberStar, key) => (
                                     <Text key={key}>{numberStar.svg}</Text> 
                                     
-                                ))} 
+                                    ))} 
                             </View> 
                         </View>
                     </ImageBackground>
