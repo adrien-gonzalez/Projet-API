@@ -19,7 +19,7 @@ const SelectGamePage = (props) => {
 
     const combinedFunctions = (id, gamecolor) => {
         _updateSelectedGame(id, gamecolor);
-        navigation.navigate("ServersListPage");
+        navigation.navigate("ServersPage");
     }
 
     const _updateSelectedGame = (id, gamecolor) => {

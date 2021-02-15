@@ -22,7 +22,6 @@ export default function ParamStack() {
       <Stack.Screen headerMode="none" name="AddServerPage" component={AddServerPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="UserServerPage" component={UserServerPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="UpdateServerPage" component={UpdateServerPage} options={{ headerShown: false }}/>
-      <Stack.Screen headerMode="none" name="ServerInfoPage" component={ServerInfoPage} options={{ headerShown: false }}/>
       {/* Route connexion/inscription */}
       <Stack.Screen headerMode="none" name="ConnectPage" component={ConnectPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="RegisterPage" component={RegisterPage} options={{ headerShown: false }}/>

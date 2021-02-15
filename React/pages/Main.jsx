@@ -24,6 +24,7 @@ import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import axios from "axios";
 import ResetStack from '../routes/ResetStack.js';
+import ServerStack from '../routes/ServerStack.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -244,7 +245,7 @@ const Main = (props) => {
             <StatusBar translucent backgroundColor="transparent" />
             <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
                 <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
-                <Tab.Screen name="ServersListPage" component={props.selectedGame.id != 0 ? ServersListPage : SelectGamePage } options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
+                <Tab.Screen name="ServersPage" component={props.selectedGame.id != 0 ? ServerStack : SelectGamePage } options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
                 <Tab.Screen name="SelectGamePage" component={SelectGamePage} options={{ tabBarButton: (props) => <TabGame page='SelectGamePage' icon='home' />}} />
                 <Tab.Screen name="AddServerPage" component={props.auth.isLogged ? AddServerPage : ParamStack } options={{ tabBarButton: (props) => <TabComponent page='AddServerPage' icon='plus' />}} />
                 <Tab.Screen name="ProfilePage" component={ParamStack} options={props.auth.isLogged ?{ tabBarButton: (props) => <TabComponent accountTab={true} page='ProfilePage' icon='user-circle' />} : { tabBarButton: (props) => <TabComponent page='ProfilePage' icon='user-circle' />}} />
