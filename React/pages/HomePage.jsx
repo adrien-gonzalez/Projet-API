@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, ImageBackground, Image, StyleSheet, Platform } from 'react-native';
+import Bouton from '../components/bouton';
 import GamesAPI from "../services/gamesAPI";
 import { Dimensions } from 'react-native';
-import { HomeCarousel } from '../components/HomeCarousel';
+import { useNavigation } from "@react-navigation/native";
+import HomeCarousel from '../components/HomeCarousel';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { connect } from "react-redux";
 
@@ -10,6 +12,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const HomePage = (props) => {
+
+  const navigation = useNavigation();
 
   const _updateIsLogged = (id, gamecolor) => {
     const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
@@ -87,7 +91,7 @@ const HomePage = (props) => {
               >
                 <Image style={{width: '90%'}} resizeMode='contain' source={appLogo} />
                 <Text style={styles.textHero}>Les meilleurs serveurs <Text style={{color: appColor}}>francophones</Text> répertoriés ici</Text>
-                <HomeCarousel />
+                <HomeCarousel navigation={navigation} />
               </ImageBackground>
               <View style={styles.containerForGamers}>
                 <Ionicons name="md-game-controller-outline" size={80} color={appColor} />
@@ -102,6 +106,9 @@ const HomePage = (props) => {
                   <Image style={{position: 'absolute', top: '72%', left: 57*windowWidth/100}} source={require('../assets/ladder-ark.png')} />
                   <Image style={{position: 'absolute', top: '14%', left: 64*windowWidth/100}} source={require('../assets/ladder-dofus.png')} />
                   <Image style={styles.laderstep} source={LightPath} />
+                </View>
+                <View style={{marginTop: 100}}>
+                  <Bouton title="Liste des serveurs" onPress={() => navigation.navigate("ServersListPage")} />
                 </View>
               </View>
 
@@ -119,6 +126,9 @@ const HomePage = (props) => {
                   <Image style={{position: 'absolute', top: '72%', left: -26*windowWidth/100}} source={require('../assets/ladder-discord.png')} />
                   <Image style={{position: 'absolute', top: '14%', left: -15*windowWidth/100}} source={require('../assets/ladder-arma.png')} />
                   <Image style={styles.laderstep} source={DarkPath} />
+                </View>
+                <View style={{marginTop: 140}}>
+                  <Bouton title="Ajouter un serveur" onPress={() => navigation.navigate("AddServerPage")} />
                 </View>
               </View>
           </ScrollView>
@@ -170,7 +180,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 40,
-      paddingBottom: 100,
+      paddingBottom: 60,
     },
     containerForCreators: {
       // minHeight: 150*windowHeight/100,
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       alignItems: 'center',
       paddingTop: 40,
-      paddingBottom: 240,
+      paddingBottom: 160,
     },
     underIconText: {
       fontSize: Platform.OS == 'ios' ? 24 : 22,

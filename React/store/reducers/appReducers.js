@@ -1,4 +1,4 @@
-const initialState = { auth: {isLogged: false, pp: ""}, selectedGame: {id: 0, gamecolor: "#00BCFF"}, selectedServer: {id: 0} }
+const initialState = { auth: {isLogged: false, pp: ""}, selectedGame: {id: 0, gamecolor: "#00BCFF"}, apparence: {dark: false}, selectedServer: {id: 0} }
 
 function appState(state = initialState, action) {
     let nextState;
@@ -24,6 +24,13 @@ function appState(state = initialState, action) {
                 }
                 // console.log("next", nextState);
                 return nextState || state
+        case 'UPDATE_APPARENCE':
+            // console.log("state", state);
+            nextState = {
+                ...state, apparence: (action.value)
+            }
+            // console.log("next", nextState);
+            return nextState || state
     default:
     return state
   }

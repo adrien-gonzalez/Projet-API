@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import { View, Text, Image, StyleSheet, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform, TouchableOpacity  } from 'react-native';
 import { Dimensions } from 'react-native';
 import GamesAPI from '../services/gamesAPI';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export class HomeCarousel extends React.Component {
+class HomeCarousel extends React.Component {
     
     constructor(props){
         
@@ -16,7 +17,16 @@ export class HomeCarousel extends React.Component {
             activeIndex: 0,
             carouselItems: []
         }
-        // console.log(this.state.carouselItems);
+    }
+
+    combinedFunctions = (id, gamecolor) => {
+        this._updateSelectedGame(id, gamecolor);
+        this.props.navigation.navigate("ServersListPage");
+    }
+
+    _updateSelectedGame = (id, gamecolor) => {
+        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
+        this.props.dispatch(action)
     }
 
     componentDidMount(){
@@ -29,6 +39,7 @@ export class HomeCarousel extends React.Component {
                 data.map((data) => {
                     dataObject.push(
                         {
+                            id: data.id,
                             title: data.name,
                             image: data.image,
                             color: data.color,
@@ -36,9 +47,9 @@ export class HomeCarousel extends React.Component {
                         }
                     )
                 })
-                console.log(data);
+                // console.log(data);
                 this.setState({carouselItems: dataObject})
-                console.log(this.state.carouselItems);
+                // console.log(this.state.carouselItems);
             } catch (error) {
                 console.log(error);
                 console.log("nope");
@@ -49,14 +60,18 @@ export class HomeCarousel extends React.Component {
     
     _renderItem = ({item, index}) => {
         return (
-            <View style={styles.carouselItemContainer}>
+            <TouchableOpacity style={{height: '100%', width: '100%'}} onPress=
+                {
+                    () => this.combinedFunctions(item.id, item.color)
+                }
+            style={styles.carouselItemContainer}>
                 <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'TwCent', textTransform: 'uppercase', letterSpacing: 4, color: item.color}}>{item.title}</Text>
                 <Image style={styles.imageCarouselItem} source={{uri: `https://nicolas-camilloni.students-laplateforme.io/assets/${item.image}`}} />
                 <View style={{flexDirection: 'row'}}>
                     <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'HomepageBaukasten', color: item.color}}>{item.servers}</Text>
                     <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'HomepageBaukasten', color: 'white'}}> serveur{item.servers > 1 ? "s" : ""}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 
@@ -82,6 +97,15 @@ export class HomeCarousel extends React.Component {
     }
 
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+}
+
+export default connect(mapDispatchToProps)(HomeCarousel);
+
 const styles = StyleSheet.create({
     carouselItemContainer: {
         height: '100%',

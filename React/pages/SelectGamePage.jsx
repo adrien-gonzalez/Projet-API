@@ -28,13 +28,13 @@ const SelectGamePage = (props) => {
     }
     
     const fetchGames = async () => {
-    try {
-        const data = await GamesAPI.findAll();
-        setGames(data);
-    } catch (error) {
-        console.log(error);
-        console.log("nope");
-    }
+        try {
+            const data = await GamesAPI.findAll();
+            setGames(data);
+        } catch (error) {
+            console.log(error);
+            console.log("nope");
+        }
     };
 
     useEffect(() => {

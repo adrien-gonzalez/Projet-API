@@ -59,14 +59,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
   },
-  button: {
-    width: 60*windowWidth/100,
-    height: 7*windowHeight/100,
-    justifyContent: 'center',
-    alignItems: "center",
-    borderRadius: 50,
-    backgroundColor: "#00bcff",
-  },
   buttonText: {
     textAlign: "center",
     color: "white",
