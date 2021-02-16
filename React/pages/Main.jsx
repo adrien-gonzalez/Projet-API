@@ -161,7 +161,27 @@ const Main = (props) => {
 
     }
 
-    // // CHECK SI L'UTILISATEUR EST CO AU CHARGEMENT DE L'APP
+    const _updateApparence = (value) => {
+        const action = { type: "UPDATE_APPARENCE", value: { dark: value } };
+        props.dispatch(action);
+    }
+
+    // CHECK THEME PREFERENCE
+
+    const checkTheme = async () => {
+        const theme = await SecureStore.getItemAsync("theme");
+
+        if (theme !== null) {
+            theme == "true" ? _updateApparence(true) : _updateApparence(false);
+        }
+        else {
+            SecureStore.setItemAsync("theme", "false");
+            _updateApparence(false);
+        }
+
+    }
+
+    // CHECK SI L'UTILISATEUR EST CO AU CHARGEMENT DE L'APP
 
     const checkLoginState = async () => {
         // retrieve the value of the token
@@ -231,6 +251,7 @@ const Main = (props) => {
   
     useEffect(() => {
         checkLoginState();
+        checkTheme();
     });
 
     // FIN DU CHECK

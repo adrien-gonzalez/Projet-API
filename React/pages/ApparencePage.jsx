@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, Switch } from 'react-native';
 import { Dimensions } from 'react-native';
-import FormsHero from '../components/FormsHero';
-import InputText from '../components/TextInput';
-import Bouton from '../components/bouton';
-import Carousel from 'react-native-snap-carousel';
-import GamesAPI from "../services/gamesAPI";
-import serverAPI from '../services/serverAPI.js'
-import { FontAwesome } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { Formik } from "formik";
 import Topbar from '../components/Topbar';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const ApparencePage = ({route, navigation}) => {
+const ApparencePage = (props) => {
+
+    const navigation = useNavigation();
+
+    console.log("salutcmoi", props);
 
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -27,11 +21,17 @@ const ApparencePage = ({route, navigation}) => {
         await SecureStore.setItemAsync(key, value);
     }
 
+    const _updateApparence = (value) => {
+        const action = { type: "UPDATE_APPARENCE", value: { dark: value } };
+        props.dispatch(action);
+    }
+
     const combinedFunctionEnable = (value) => {
         var newValue = "";
-        value === true ? newValue = "false" : newValue = "true"
+        value === true ? newValue = "false" : newValue = "true";
         save("theme", newValue);
-        resetNav();
+        _updateApparence(!value);
+        // resetNav();
     }
 
     const getTheme = async () => {
@@ -66,14 +66,31 @@ const ApparencePage = ({route, navigation}) => {
     // console.log(isEnabled);
     // console.log('====================================');
     return(
-        <ScrollView style={styles.container}>
-            <Topbar color="#262626" title="Thème" isText={true} navigation={navigation} backgroundColor="white" />
-            <View style={styles.themeContainer}>
-                <Text style={styles.themeText}>Thème sombre</Text>
+        <ScrollView style={{backgroundColor: props.apparence.dark ? "#0E0026" : '#F1F1F1'}}>
+            <Topbar color={props.apparence.dark ? "white" : "#262626"} title="Thème" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? "black" : "white"} />
+            <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                height: 8*windowHeight/100,
+                borderBottomWidth: 1,
+                borderBottomColor: props.apparence.dark ? '#190042' : 'grey',
+                backgroundColor: '#fafafa',
+                paddingLeft: 40,
+                paddingRight: 40,
+                backgroundColor: props.apparence.dark ? '#17003E' : '#fafafa',
+                
+            }}>
+                <Text style={{
+                    fontFamily: 'TwCent',
+                    fontSize: 20,
+                    color: props.apparence.dark ? 'white' : '#262626',
+                }}>Thème sombre</Text>
                 <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
+                    trackColor={{ false: props.apparence.dark ? '#3e3e3e' : '#ffffff', true: props.apparence.dark ? '#3e3e3e' : '#ffffff' }}
+                    thumbColor={isEnabled ? props.selectedGame.gamecolor : '#f4f3f4'}
+                    ios_backgroundColor='#3e3e3e'
                     onValueChange={() => {
                         combinedFunctionEnable(isEnabled)
                     }}
@@ -84,28 +101,16 @@ const ApparencePage = ({route, navigation}) => {
     )
 
 }
-export default ApparencePage
 
+const mapStateToProps = ({ selectedGame, apparence }) => ({
+    selectedGame,
+    apparence
+});
 
-const styles = StyleSheet.create({
-
-    container: {
-        backgroundColor: '#F1F1F1'
-    },
-    themeContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: 8*windowHeight/100,
-        borderBottomWidth: 1,
-        borderBottomColor: 'grey',
-        backgroundColor: '#fafafa',
-        paddingLeft: 40,
-        paddingRight: 40,
-    },
-    themeText: {
-        fontFamily: 'TwCent',
-        fontSize: 20,
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
     }
-})
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ApparencePage)
