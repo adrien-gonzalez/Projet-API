@@ -6,10 +6,8 @@ import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
 import { connect } from "react-redux";
 import Loading from '../components/loading'
-
 import { useNavigation } from '@react-navigation/native';
-
-
+import Topbar from '../components/Topbar';
 
 const ServerInfoPage = (props) => {
 
@@ -21,7 +19,7 @@ const ServerInfoPage = (props) => {
     const [load, setLoad] = useState(false);
 
 
-     const [server, setServer] = useState([]);
+    const [server, setServer] = useState([]);
     const fetchServers = async () => {
         try {
         const data = await serverAPI.findServerByID(props.selectedServer.id);
@@ -169,6 +167,7 @@ const ServerInfoPage = (props) => {
             <ScrollView style={styles.contain}>
                 <View style={styles.server}>
                     <View style={styles.svgHeader}>
+                        <Topbar navigation={navigation} color="black" title="Infos du serveur" isText={true} backgroundColor="white" />
                         <ImageBackground source={backgroundImage} style={styles.image}>
                             <Image source={require('../assets/fond-noir.png')} style={{opacity: 0.43,width:"100%", height:"100%"}}/>
                             <View style={styles.header}>
@@ -360,7 +359,7 @@ const styles = StyleSheet.create({
     infoServer: {
         width: '100%',
         minHeight: 150,
-        marginTop: -60
+        // marginTop: -60
     },
     titleInfo: {
         marginTop: 20,

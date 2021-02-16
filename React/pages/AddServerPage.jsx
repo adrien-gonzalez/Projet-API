@@ -14,6 +14,8 @@ import { Formik } from "formik";
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
 
+import { useRef } from "react";
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,7 +24,10 @@ const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.25);
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
+
 const AddServerPage = ({navigation}) => {
+
+    const scrollRef = useRef();
     
     const [idUser, setId] = useState([]);
 
@@ -44,6 +49,8 @@ const AddServerPage = ({navigation}) => {
         setNameError('')
         setDescriptionError('')
         setMiniatureError('')
+
+        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
     
         if(values.nameServer == "") {
             setNameError("Veuillez renseigner un nom de serveur")
@@ -176,7 +183,7 @@ console.log(nameError)
                     <FormsHero title="Ajouter un serveur" />
                 </View>
 
-                <ScrollView style={{height: '60%'}}>
+                <ScrollView ref={scrollRef} style={{height: '60%'}}>
                 <Text style={styles.serverType}>Type de serveur</Text>
                 <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                         <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
@@ -266,10 +273,10 @@ console.log(nameError)
         return(
             <View style={styles.createServerPageContainer}>
                 <View style={styles.headerContainer}>
-                    <FormsHero title="Ajouter un serveur" />
+                    <FormsHero title="Ajouter un serveur" needBar={false}/>
                 </View>
 
-                <ScrollView style={{height: '60%'}}>
+                <ScrollView ref={scrollRef} style={{height: '60%'}}>
                 <Text style={styles.serverType}>Type de serveur</Text>
                 <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                         <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
