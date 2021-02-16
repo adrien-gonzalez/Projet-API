@@ -12,7 +12,14 @@ function findAll() {
     .then((response) => response.data)
 }
 
+function findAllForCarousel() {
+    return axios
+    .get("https://nicolas-camilloni.students-laplateforme.io/api/games?carousel")
+    .then((response) => response.data)
+}
+
 export default {
     findPopular,
     findAll,
+    findAllForCarousel
 };

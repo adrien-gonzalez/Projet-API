@@ -4,6 +4,7 @@ import ConnectPage from "../pages/ConnectPage";
 import RegisterPage from "../pages/RegisterPage";
 import ResetMailPage from "../pages/ResetMailPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import ApparencePage from "../pages/ApparencePage";
 
 const Stack = createStackNavigator();
 

@@ -25,17 +25,16 @@ const SelectGamePage = (props) => {
     const _updateSelectedGame = (id, gamecolor) => {
         const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
         props.dispatch(action)
-        // console.log(id)
     }
     
     const fetchGames = async () => {
-    try {
-        const data = await GamesAPI.findAll();
-        setGames(data);
-    } catch (error) {
-        console.log(error);
-        console.log("nope");
-    }
+        try {
+            const data = await GamesAPI.findAll();
+            setGames(data);
+        } catch (error) {
+            console.log(error);
+            console.log("nope");
+        }
     };
 
     useEffect(() => {

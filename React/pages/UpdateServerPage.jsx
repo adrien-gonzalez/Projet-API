@@ -30,6 +30,7 @@ const UpdateServerPage = (props) => {
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
 
+   
     const handleOnSubmit = async (values, actions) => {
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
 
@@ -62,6 +63,7 @@ const UpdateServerPage = (props) => {
         formData.append("discord", values.discord);
         formData.append("gameId", gameId);
 
+
         try {
             const data = await serverAPI.updateServer(formData, serverId);
            
@@ -69,7 +71,9 @@ const UpdateServerPage = (props) => {
             } else {
                 setResponse(data);
                 actions.resetForm();
-                navigation.goBack();
+                navigation.navigate('ProfilePage', {
+                    screen: 'UserServerPage',
+                });
             }
           } catch (error) {
                 setResponse(error);
@@ -99,9 +103,10 @@ const UpdateServerPage = (props) => {
     };
 
     const [games, setGames] = useState([]);
+    console.log(games)
     const fetchGames = async () => {
         try {
-            const data = await GamesAPI.findAll();
+            const data = await GamesAPI.findAllForCarousel();
             setGames(data);
         } catch (error) {
             console.log(error);
@@ -424,5 +429,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
       },
 });
+
 
 export default UpdateServerPage;
