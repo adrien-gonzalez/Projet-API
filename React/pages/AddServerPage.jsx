@@ -132,7 +132,7 @@ console.log(nameError)
     const [games, setGames] = useState([]);
     const fetchGames = async () => {
     try {
-        const data = await GamesAPI.findAll();
+        const data = await GamesAPI.findAllForCarousel();
         setGames(data);
     } catch (error) {
         console.log(error);

@@ -10,7 +10,6 @@ import serverAPI from '../services/serverAPI.js'
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
-import { connect } from "react-redux";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -31,19 +30,7 @@ const UpdateServerPage = (props) => {
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
 
-    const combinedFunctions = () => {
-        _updateSelectedGame();
-        navigation.navigate("ProfilePage", {
-          screen: "UserServerPage",
-        })
-    }
-    
-    const _updateSelectedGame = () => {
-        const action = { type: "UPDATE_LIST_SERVER", value: {isUpdated: true} }
-        props.dispatch(action)
-    }
-
-
+   
     const handleOnSubmit = async (values, actions) => {
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
 
@@ -84,10 +71,9 @@ const UpdateServerPage = (props) => {
             } else {
                 setResponse(data);
                 actions.resetForm();
-                combinedFunctions();
-                // navigation.navigate('ProfilePage', {
-                //     screen: 'UserServerPage',
-                //  });
+                navigation.navigate('ProfilePage', {
+                    screen: 'UserServerPage',
+                });
             }
           } catch (error) {
                 setResponse(error);
@@ -117,9 +103,10 @@ const UpdateServerPage = (props) => {
     };
 
     const [games, setGames] = useState([]);
+    console.log(games)
     const fetchGames = async () => {
         try {
-            const data = await GamesAPI.findAll();
+            const data = await GamesAPI.findAllForCarousel();
             setGames(data);
         } catch (error) {
             console.log(error);
@@ -443,11 +430,5 @@ const styles = StyleSheet.create({
       },
 });
 
-// STORE SELECTED SERVER TO REDUC
-const mapDispatchToProps = (dispatch) => {
-    return {
-      dispatch: (action) => { dispatch(action) }
-    }
-  }
 
-export default connect(mapDispatchToProps)(UpdateServerPage);
+export default UpdateServerPage;

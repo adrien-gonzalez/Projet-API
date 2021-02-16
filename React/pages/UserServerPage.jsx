@@ -13,7 +13,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Formik } from "formik";
 import Topbar from '../components/Topbar';
-import { connect } from "react-redux";
+import Loading from '../components/loading'
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -26,11 +26,14 @@ const UserServerPage = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [response, setResponse] = useState([]);
     const [idServer, setIdServer] = useState([]);
+    const [load, setLoad] = useState(false);
 
+   
     const fetchServers = async () => {
         try {
             const data = await serverAPI.findServerByUser(idUser);
             setUserServer(data)
+            setLoad(true)
         } catch (error) {
             console.log(error);
             console.log("nope");
@@ -42,21 +45,6 @@ const UserServerPage = (props) => {
         }, []
     );
 
- 
-    const combinedFunctions = () => {
-        _updateSelectedGame();
-        fetchServers()
-    }
-    
-    const _updateSelectedGame = () => {
-        const action = { type: "UPDATE_LIST_SERVER", value: {isUpdated: false} }
-        props.dispatch(action)
-    }
-
-    if (props.myServer.isUpdated == true) {
-        combinedFunctions()
-    }
-    
     const handleOnSubmitSupp = async (values, actions) => {
     
         const donnees = new URLSearchParams();
@@ -83,7 +71,7 @@ const UserServerPage = (props) => {
         if(userServer.length > 0) {
             return (
                 <View style={styles.listMyserver}>
-                    {userServer.map((userServer, key) => {
+                    {userServer.map((userServer) => {
                         return (
                             <View key={userServer.id} style={{ 
                                     marginBottom: 68, 
@@ -162,95 +150,89 @@ const UserServerPage = (props) => {
         }
     }
 
-    return(
-        <ScrollView style={styles.container}>
-            <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
-                {myServer(userServer)}
-            <Modal animationType="slide" transparent={true} visible={modalVisible}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>Supprimer le serveur</Text>
-                        <Text style={styles.modalContent}>
-                        {" "}
-                        Etes-vous sûr(e) de vouloir supprimer votre serveur ?{" "}
-                        </Text>
-                        <Text style={styles.modalInfos}>
-                        {" "}
-                        Cette action supprimera immédiatement votre serveur et
-                        vous ne pourrez plus revenir en arrière.{" "}
-                        </Text>
-                            <Formik
-                                enableReinitialize
-                                initialValues={{
-                                    password: "",
-                                }}
-                                onSubmit={handleOnSubmitSupp}
-                                >
-                                {(formikprops) => (
-                                <View style={{ width: "100%", alignItems: "center" }}>
-                                <TextInput
-                                    style={{
-                                    height: 40,
-                                    borderColor: "white",
-                                    borderBottomColor: "grey",
-                                    borderWidth: 1,
-                                    width: "80%",
-                                    fontSize: 18,
-                                    marginBottom: 15,
+    if(load == true){
+        return(
+            <ScrollView style={styles.container}>
+                <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
+                    {myServer(userServer)}
+                <Modal animationType="slide" transparent={true} visible={modalVisible}>
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalTitle}>Supprimer le serveur</Text>
+                            <Text style={styles.modalContent}>
+                            {" "}
+                            Etes-vous sûr(e) de vouloir supprimer votre serveur ?{" "}
+                            </Text>
+                            <Text style={styles.modalInfos}>
+                            {" "}
+                            Cette action supprimera immédiatement votre serveur et
+                            vous ne pourrez plus revenir en arrière.{" "}
+                            </Text>
+                                <Formik
+                                    enableReinitialize
+                                    initialValues={{
+                                        password: "",
                                     }}
-                                    secureTextEntry={true}
-                                    placeholder="Mot de passe"
-                                    onChangeText={formikprops.handleChange("password")}
-                                    value={formikprops.values.password}
-                                />
-                                <Text style={styles.errors}>{response}</Text>
-                                <View style={styles.fixToText}>
-                                <TouchableOpacity
-                                    style={styles.boutonRight}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                        setResponse();
-                                    }}
+                                    onSubmit={handleOnSubmitSupp}
                                     >
-                                    <Text style={styles.buttonTextLeft}>Annuler</Text>
-                                    </TouchableOpacity>
+                                    {(formikprops) => (
+                                    <View style={{ width: "100%", alignItems: "center" }}>
+                                    <TextInput
+                                        style={{
+                                        height: 40,
+                                        borderColor: "white",
+                                        borderBottomColor: "grey",
+                                        borderWidth: 1,
+                                        width: "80%",
+                                        fontSize: 18,
+                                        marginBottom: 15,
+                                        }}
+                                        secureTextEntry={true}
+                                        placeholder="Mot de passe"
+                                        onChangeText={formikprops.handleChange("password")}
+                                        value={formikprops.values.password}
+                                    />
+                                    <Text style={styles.errors}>{response}</Text>
+                                    <View style={styles.fixToText}>
                                     <TouchableOpacity
-                                    style={styles.boutonRight}
-                                    onPress={formikprops.handleSubmit}
-                                    >
-                                    <Text style={styles.buttonTextRight}>Supprimer</Text>
-                                </TouchableOpacity>
+                                        style={styles.boutonRight}
+                                        onPress={() => {
+                                            setModalVisible(!modalVisible);
+                                            setResponse();
+                                        }}
+                                        >
+                                        <Text style={styles.buttonTextLeft}>Annuler</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                        style={styles.boutonRight}
+                                        onPress={formikprops.handleSubmit}
+                                        >
+                                        <Text style={styles.buttonTextRight}>Supprimer</Text>
+                                    </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
-                        )}
-                        </Formik>
+                            )}
+                            </Formik>
+                        </View>
                     </View>
-                </View>
-            </Modal>
-
-        </ScrollView>
-    )
-}
-
-// RECUP DU STORE REDUX
-const mapStateToProps = ({ myServer }) => ({
-    myServer
-});
-
-// STORE SELECTED SERVER TO REDUC
-const mapDispatchToProps = (dispatch) => {
-    return {
-      dispatch: (action) => { dispatch(action) }
+                </Modal>
+            </ScrollView>
+        )
+    } else {
+        return(
+            <View>
+                <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
+                <Loading/>
+            </View>
+        )
     }
 }
-  
-export default connect(mapStateToProps)(UserServerPage);
-  
-  
 
-
+  
+export default UserServerPage;
+  
+  
 const styles = StyleSheet.create({
-
     container: {
         backgroundColor: '#F1F1F1'
     },
