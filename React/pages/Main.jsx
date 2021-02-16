@@ -259,7 +259,7 @@ const Main = (props) => {
 // RECUP DU STORE REDUX
 const mapStateToProps = ({ selectedGame, auth }) => ({
     selectedGame,
-    auth
+    auth,
 });
 
 // DISPATCH ACTIONS

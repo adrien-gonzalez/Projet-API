@@ -25,7 +25,6 @@ const SelectGamePage = (props) => {
     const _updateSelectedGame = (id, gamecolor) => {
         const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
         props.dispatch(action)
-        // console.log(id)
     }
     
     const fetchGames = async () => {
