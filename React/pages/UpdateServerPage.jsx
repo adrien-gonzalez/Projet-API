@@ -10,6 +10,7 @@ import serverAPI from '../services/serverAPI.js'
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
+import { connect } from "react-redux";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -78,6 +79,15 @@ const UpdateServerPage = (props) => {
           } catch (error) {
                 setResponse(error);
           }
+
+            if (props.serversRedux.info != null) {
+                props.serversRedux.info.map((s) => {
+                    if(serverId == s.id){
+                        const action = { type: "UPDATE_SERVERS", value: {info: props.serversRedux.info, isUpdated: true} }
+                        props.dispatch(action)
+                    }
+                });
+            }
     }
 
     let openImagePickerAsync = async () => {
@@ -379,6 +389,20 @@ const UpdateServerPage = (props) => {
     }
 }
 
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ serversRedux }) => ({
+    serversRedux
+});
+
+// STORE SELECTED SERVER TO REDUC
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+  }
+  
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateServerPage);
+
 const styles = StyleSheet.create({
     headerContainer: {
         height: '40%',
@@ -430,5 +454,3 @@ const styles = StyleSheet.create({
       },
 });
 
-
-export default UpdateServerPage;

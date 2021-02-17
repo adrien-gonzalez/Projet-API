@@ -36,20 +36,29 @@ const ServersListPage = (props) => {
   const fetchServers = async () => {
     try {
       const data = await serverAPI.findServerByGame(props.selectedGame.id);
-      setServer(data)
-      setLoad(true)
+      // setServer(data)
+
+      const action = { type: "UPDATE_SERVERS", value: {info: data, isUpdated: false} }
+      props.dispatch(action)
+
       data.map((d) => {
         setGame(d.nameGame);
       });
+      setLoad(true)
 
     } catch (error) {
       console.log(error);
     }
   };
   
+
+
   useEffect(() => {
-    fetchServers();
-  }, [props.selectedGame.id]);
+      fetchServers();
+  }, [props.selectedGame.id, props.serversRedux.isUpdated]);
+
+  console.log(props.serversRedux.info)
+  
 
   const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
     switch (appImages) {
@@ -202,15 +211,15 @@ const ServersListPage = (props) => {
                     <Circle cx="50%" cy="50%" r="65" fill="#fff" opacity="0.50"/>
                     <Img x="25" y="25"  width='94' height='94' href={appLogo}/>                        
                 </Svg>
-                {numberServer(servers)} 
+                {numberServer(props.serversRedux.info)} 
             </ImageBackground>
           </View>
           <View style={styles.topServer}>
             <MaterialIcons name="leaderboard" size={24} color={props.selectedGame.gamecolor} />
-              {topServer(servers)}
+              {topServer(props.serversRedux.info)}
             <MaterialIcons name="leaderboard" size={24} color={props.selectedGame.gamecolor} />
           </View>
-            {listServer(servers, game)}
+            {listServer(props.serversRedux.info, game)}
       </ScrollView>    
     );
   } else {
@@ -223,8 +232,8 @@ const ServersListPage = (props) => {
 }
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedGame }) => ({
-  selectedGame
+const mapStateToProps = ({ selectedGame, serversRedux }) => ({
+  selectedGame, serversRedux
 });
 
 // STORE SELECTED SERVER TO REDUC

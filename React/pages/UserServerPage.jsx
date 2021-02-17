@@ -14,6 +14,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Formik } from "formik";
 import Topbar from '../components/Topbar';
 import Loading from '../components/loading'
+import { connect } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -41,11 +42,11 @@ const UserServerPage = (props) => {
     };
 
     useEffect(() => {
-        const focus = navigation.addListener('focus', () => {
+        // const focus = navigation.addListener('focus', () => {
             fetchServers();
-          });                                
-          return focus;
-        }, []
+        //   });                                
+        //   return focus;
+        }, [route]
     );
 
     const handleOnSubmitSupp = async (values, actions) => {
@@ -67,6 +68,15 @@ const UserServerPage = (props) => {
             }
         } catch (error) {
                 setResponse(error);
+            }
+
+            if (props.serversRedux.info != null) {
+                props.serversRedux.info.map((s) => {
+                    if(serverId == s.id){
+                        const action = { type: "UPDATE_SERVERS", value: {info: props.serversRedux.info, isUpdated: true} }
+                        props.dispatch(action)
+                    }
+                });
             }
         };
 
@@ -231,8 +241,19 @@ const UserServerPage = (props) => {
     }
 }
 
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ serversRedux }) => ({
+    serversRedux
+});
+
+// STORE SELECTED SERVER TO REDUC
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+  }
   
-export default UserServerPage;
+export default connect(mapStateToProps, mapDispatchToProps)(UserServerPage);
   
   
 const styles = StyleSheet.create({
