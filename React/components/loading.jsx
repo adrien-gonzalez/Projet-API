@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ActivityIndicator, Dimensions} from "react-nati
 import { connect } from "react-redux";
 
 const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const Loading = (props) => {
     const { route, navigation } = props
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
     loadingPage: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: windowHeight - 20*windowHeight/100
+        width: windowWidth,
+        height: windowHeight - 20*windowHeight/100,
     }
 })

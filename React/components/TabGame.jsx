@@ -51,7 +51,7 @@ const TabGame = (props) => {
                 height: windowWidth*25/100,
                 borderRadius: 2000,
                 borderWidth: 6,
-                borderColor: 'white',
+                borderColor: props.apparence.dark ? '242048' : 'white',
                 left: (windowWidth*50/100)-(windowWidth*25/100)/2,
                 width: windowWidth*25/100,
                 zIndex: 1000,
@@ -61,12 +61,12 @@ const TabGame = (props) => {
             }
             :
             {
-                backgroundColor: "whitesmoke", position: 'absolute',
+                backgroundColor: (props.apparence.dark ? '#160730' : "whitesmoke"), position: 'absolute',
                 top: -40,
                 height: windowWidth*25/100,
                 borderRadius: 2000,
                 borderWidth: 6,
-                borderColor: 'white',
+                borderColor: props.apparence.dark ? '#242048' : 'white',
                 left: (windowWidth*50/100)-(windowWidth*25/100)/2,
                 width: windowWidth*25/100,
                 zIndex: 1000,
@@ -83,8 +83,9 @@ const TabGame = (props) => {
     );
 }
 
-const mapStateToProps = ({ selectedGame }) => ({
-    selectedGame
+const mapStateToProps = ({ selectedGame, apparence }) => ({
+    selectedGame,
+    apparence,
 });
 
 export default connect(mapStateToProps)(TabGame);

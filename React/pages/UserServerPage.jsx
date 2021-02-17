@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, SafeAreaView, Platform, ImageBackground, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, SafeAreaView, Platform, ImageBackground, TouchableOpacity, Modal } from 'react-native';
 import { Dimensions } from 'react-native';
 import FormsHero from '../components/FormsHero';
-import InputText from '../components/TextInput';
+import TextInput from '../components/TextInput';
 import Bouton from '../components/bouton';
 import Carousel from 'react-native-snap-carousel';
 import GamesAPI from "../services/gamesAPI";
@@ -13,7 +13,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Formik } from "formik";
 import Topbar from '../components/Topbar';
-import Loading from '../components/loading'
+import Loading from '../components/loading';
+import { connect } from 'react-redux';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -41,12 +42,8 @@ const UserServerPage = (props) => {
     };
 
     useEffect(() => {
-        const focus = navigation.addListener('focus', () => {
-            fetchServers();
-          });                                
-          return focus;
-        }, []
-    );
+        fetchServers();
+    }, [])
 
     const handleOnSubmitSupp = async (values, actions) => {
     
@@ -92,8 +89,8 @@ const UserServerPage = (props) => {
                                     imageStyle={{resizeMode: 'cover', borderTopLeftRadius: 10, borderTopRightRadius: 10}}
                                     />
                                 </View>
-                                <View style={{width: '100%', alignItems:'center', justifyContent: 'center', height: '30%'}}>
-                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: 'black'}}>{userServer.name}</Text>
+                                <View style={{width: '100%', alignItems:'center', justifyContent: 'center', height: '30%', backgroundColor: props.apparence.dark ? '#242048' : 'white'}}>
+                                    <Text style={{fontSize: 22, fontWeight: 'bold', color: props.apparence.dark ? 'white' : 'black'}}>{userServer.name}</Text>
                                     <Text style={{fontSize: 14, color: userServer.color}}>{userServer.nameGame}</Text>
                                 </View>
                                 <View style={styles.infoServer}>
@@ -155,21 +152,52 @@ const UserServerPage = (props) => {
 
     if(load == true){
         return(
-            <ScrollView style={styles.container}>
-                <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
+            <ScrollView style={{
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
+                <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mes serveurs" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
                     {myServer(userServer)}
-                <Modal animationType="slide" transparent={true} visible={modalVisible}>
+                <Modal animationType="slide" transparent={true} visible={modalVisible} style={{
+                    borderRadius: 20,
+                }}>
                     <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalTitle}>Supprimer le serveur</Text>
-                            <Text style={styles.modalContent}>
-                            {" "}
-                            Etes-vous sûr(e) de vouloir supprimer votre serveur ?{" "}
+                        <View style={{
+                            borderRadius: 20,
+                            alignItems: "center",
+                            shadowColor: "#000",
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+                            elevation: 5,
+                            width: windowWidth - 50,
+                            backgroundColor: props.apparence.dark ? '#141229' : 'white',
+                        }}>
+                            <Text style={{
+                                marginBottom: 15,
+                                textAlign: "center",
+                                fontSize: 22,
+                                backgroundColor: props.apparence.dark ? '#242048' : '#F3F3F3',
+                                borderTopLeftRadius: 20,
+                                borderTopRightRadius: 20,
+                                width: "100%",
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                color: props.apparence.dark ? 'white' : '#262626',
+                            }}>Supprimer le serveur</Text>
+                            <Text style={{
+                                textAlign: "center",
+                                width: "90%",
+                                fontSize: 16,
+                                color: props.apparence.dark ? 'white' : 'black',
+                            }}>
+                            Etes-vous sûr(e) de vouloir supprimer votre serveur ?
                             </Text>
                             <Text style={styles.modalInfos}>
-                            {" "}
                             Cette action supprimera immédiatement votre serveur et
-                            vous ne pourrez plus revenir en arrière.{" "}
+                            vous ne pourrez plus revenir en arrière.
                             </Text>
                                 <Formik
                                     enableReinitialize
@@ -183,31 +211,50 @@ const UserServerPage = (props) => {
                                     <TextInput
                                         style={{
                                         height: 40,
-                                        borderColor: "white",
-                                        borderBottomColor: "grey",
-                                        borderWidth: 1,
-                                        width: "80%",
+                                        borderColor: props.apparence.dark ? '#242048' : 'white',
+                                        borderWidth: 2,
+                                        width: '80%',
                                         fontSize: 18,
                                         marginBottom: 15,
                                         }}
                                         secureTextEntry={true}
                                         placeholder="Mot de passe"
-                                        onChangeText={formikprops.handleChange("password")}
+                                        onChangeText={formikprops.handleChange('password')}
                                         value={formikprops.values.password}
+                                        icon='lock'
+                                        type='password'
+                                        error={response}
                                     />
-                                    <Text style={styles.errors}>{response}</Text>
                                     <View style={styles.fixToText}>
                                     <TouchableOpacity
-                                        style={styles.boutonRight}
+                                        style={{
+                                            width: "50%",
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                            borderBottomLeftRadius: 20,
+                                        }}
                                         onPress={() => {
                                             setModalVisible(!modalVisible);
                                             setResponse();
                                         }}
                                         >
-                                        <Text style={styles.buttonTextLeft}>Annuler</Text>
+                                        <Text style={{
+                                            textAlign: "center",
+                                            color: props.apparence.dark ? 'white' : 'black',
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            paddingLeft: 20,
+                                        }}>Annuler</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                        style={styles.boutonRight}
+                                        style={{
+                                            width: "50%",
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                            borderBottomRightRadius: 20,
+                                        }}
                                         onPress={formikprops.handleSubmit}
                                         >
                                         <Text style={styles.buttonTextRight}>Supprimer</Text>
@@ -223,22 +270,24 @@ const UserServerPage = (props) => {
         )
     } else {
         return(
-            <View>
-                <Topbar color="#262626" title="Mes serveurs" isText={true} navigation={navigation} backgroundColor="white" />
+            <ScrollView style={{
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
+                <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mes serveurs" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
                 <Loading/>
-            </View>
+            </ScrollView>
         )
     }
 }
 
+const mapStateToProps = ({ apparence }) => ({
+    apparence,
+});
   
-export default UserServerPage;
+export default connect(mapStateToProps)(UserServerPage);
   
   
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#F1F1F1'
-    },
     namePage: {
         backgroundColor: 'white',
         height: 90,
@@ -273,24 +322,11 @@ const styles = StyleSheet.create({
         fontSize: 12
     },
     centeredView: {
+        borderRadius: 20,
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(0, 0, 0, 0.8)",
-    },
-    modalView: {
-        backgroundColor: "white",
-        borderRadius: 20,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        width: windowWidth - 50,
     },
     modalTitle: {
         borderTopLeftRadius: 20,
@@ -324,29 +360,12 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 20,
         width: "100%",
     },
-    buttonTextLeft: {
-        textAlign: "center",
-        color: "black",
-        fontSize: 20,
-        fontWeight: "bold",
-        paddingLeft: 20,
-      },
     buttonTextRight: {
         textAlign: "center",
-        color: "red",
+        color: "coral",
         fontSize: 20,
         fontWeight: "bold",
         paddingRight: 20,
-    },
-    boutonRight: {
-        width: "50%",
-        paddingTop: 10,
-        paddingBottom: 10,
-      },
-    boutonLeft: {
-        width: "50%",
-        paddingTop: 10,
-        paddingBottom: 10,
     },
     errors: {
         color: "red",

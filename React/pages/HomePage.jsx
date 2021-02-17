@@ -93,15 +93,32 @@ const HomePage = (props) => {
                 <Text style={styles.textHero}>Les meilleurs serveurs <Text style={{color: appColor}}>francophones</Text> répertoriés ici</Text>
                 <HomeCarousel navigation={navigation} />
               </ImageBackground>
-              <View style={styles.containerForGamers}>
+              <View style={{
+                width: windowWidth,
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+                flexDirection: 'column',
+                alignItems: 'center',
+                paddingTop: 40,
+                paddingBottom: 60,
+              }}>
                 <Ionicons name="md-game-controller-outline" size={80} color={appColor} />
-                <Text style={styles.underIconText}>Pour les gamers</Text>
-                <Text style={styles.underIconDescText}>Découvrez les <Text style={{color: appColor}}>meilleurs</Text> serveurs{"\n"}de jeux <Text style={{color: appColor}}>francophones</Text></Text>
+                <Text style={{
+                  fontSize: Platform.OS == 'ios' ? 24 : 22,
+                  fontFamily: 'HomepageBaukasten',
+                  color: props.apparence.dark ? 'white' : '#262626',
+                }}>Pour les gamers</Text>
+                <Text style={{
+                  fontSize: Platform.OS == 'ios' ? 20 : 18,
+                  fontFamily: 'HomepageBaukasten',
+                  color: props.apparence.dark ? 'white' : '#262626',
+                  textAlign: 'center',
+                  marginTop: 24,
+                }}>Découvrez les <Text style={{color: appColor}}>meilleurs</Text> serveurs{"\n"}de jeux <Text style={{color: appColor}}>francophones</Text></Text>
                 <View style={{postion: 'absolute', width: windowWidth, alignItems: 'center'}}>
-                  <Text style={{position: 'absolute', top: '12%', left: 45*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15,}}>Sélectionnez un jeu</Text>
-                  <Text style={{position: 'absolute', top: '36%', left: 14*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15, textAlign: 'right'}}>Trouvez le serveur{"\n"}de vos rêves</Text>
-                  <Text style={{position: 'absolute', top: '59%', left: 52*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 15 : 13, textAlign: 'left'}}>Votez pour lui et faites{"\n"}le gagner en popularité</Text>
-                  <Text style={{position: 'absolute', top: '90%', left: 14*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15, textAlign: 'right'}}>Gagnez des{"\n"}récompenses</Text>
+                  <Text style={{position: 'absolute', top: '12%', left: 45*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15, color: props.apparence.dark ? 'white': 'black',}}>Sélectionnez un jeu</Text>
+                  <Text style={{position: 'absolute', top: '36%', left: 14*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15, textAlign: 'right', color: props.apparence.dark ? 'white': 'black',}}>Trouvez le serveur{"\n"}de vos rêves</Text>
+                  <Text style={{position: 'absolute', top: '59%', left: 52*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 15 : 13, textAlign: 'left', color: props.apparence.dark ? 'white': 'black',}}>Votez pour lui et faites{"\n"}le gagner en popularité</Text>
+                  <Text style={{position: 'absolute', top: '90%', left: 14*windowWidth/100, fontFamily: 'HomepageBaukasten', fontSize: Platform.OS == 'ios' ? 17 : 15, textAlign: 'right', color: props.apparence.dark ? 'white': 'black',}}>Gagnez des{"\n"}récompenses</Text>
                   <Image style={{position: 'absolute', top: '44%', left: -14*windowWidth/100}} source={require('../assets/ladder-minecraft.png')} />
                   <Image style={{position: 'absolute', top: '72%', left: 57*windowWidth/100}} source={require('../assets/ladder-ark.png')} />
                   <Image style={{position: 'absolute', top: '14%', left: 64*windowWidth/100}} source={require('../assets/ladder-dofus.png')} />
@@ -113,7 +130,14 @@ const HomePage = (props) => {
               </View>
 
               {/* FOR CREATORS */}
-              <View style={styles.containerForCreators}>
+              <View style={{
+                width: windowWidth,
+                backgroundColor: props.apparence.dark ? '#2A2657' : '#262626',
+                flexDirection: 'column',
+                alignItems: 'center',
+                paddingTop: 40,
+                paddingBottom: 160,
+              }}>
                 <Feather name="hard-drive" size={80} color={appColor} />
                 <Text style={styles.underIconTextCreators}>Pour les créateurs</Text>
                 <Text style={styles.underIconDescTextCreators}>Ajoutez <Text style={{color: appColor}}>simplement</Text> votre serveur{"\n"}et faites le monter en <Text style={{color: appColor}}>popularité</Text></Text>
@@ -137,8 +161,8 @@ const HomePage = (props) => {
 }
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedGame, auth }) => ({
-  selectedGame, auth
+const mapStateToProps = ({ selectedGame, auth, apparence }) => ({
+  selectedGame, auth, apparence,
 });
 
 export default connect(mapStateToProps)(HomePage);
@@ -172,36 +196,6 @@ const styles = StyleSheet.create({
     },
     gameColor: {
       color: "#00bcff",
-    },
-    containerForGamers: {
-      // minHeight: 150*windowHeight/100,
-      width: windowWidth,
-      backgroundColor: '#F1F1F1',
-      flexDirection: 'column',
-      alignItems: 'center',
-      paddingTop: 40,
-      paddingBottom: 60,
-    },
-    containerForCreators: {
-      // minHeight: 150*windowHeight/100,
-      width: windowWidth,
-      backgroundColor: '#262626',
-      flexDirection: 'column',
-      alignItems: 'center',
-      paddingTop: 40,
-      paddingBottom: 160,
-    },
-    underIconText: {
-      fontSize: Platform.OS == 'ios' ? 24 : 22,
-      fontFamily: 'HomepageBaukasten',
-      color: '#262626',
-    },
-    underIconDescText: {
-      fontSize: Platform.OS == 'ios' ? 20 : 18,
-      fontFamily: 'HomepageBaukasten',
-      color: '#262626',
-      textAlign: 'center',
-      marginTop: 24,
     },
     underIconTextCreators: {
       fontSize: Platform.OS == 'ios' ? 24 : 22,

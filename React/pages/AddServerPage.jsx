@@ -6,13 +6,13 @@ import InputText from '../components/TextInput';
 import Bouton from '../components/bouton';
 import Carousel from 'react-native-snap-carousel';
 import GamesAPI from "../services/gamesAPI";
-import userAPI from '../services/userAPI.js'
-import serverAPI from '../services/serverAPI.js'
+import serverAPI from '../services/serverAPI.js';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
+import { connect } from 'react-redux';
 
 import { useRef } from "react";
 
@@ -25,7 +25,9 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.25);
 const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
 
-const AddServerPage = ({navigation}) => {
+const AddServerPage = (props) => {
+
+    const navigation = props.navigation;
 
     const scrollRef = useRef();
     
@@ -178,13 +180,26 @@ console.log(nameError)
             keyboardVerticalOffset={0}
             behavior={"position"}
           >
-            <View style={styles.createServerPageContainer}>
+            <View style={{
+                minHeight: '100%',
+                width: '100%',
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
                 <View style={styles.headerContainer}>
                     <FormsHero title="Ajouter un serveur" />
                 </View>
 
                 <ScrollView ref={scrollRef} style={{height: '60%'}}>
-                <Text style={styles.serverType}>Type de serveur</Text>
+                <Text style={{
+                    textAlign: 'center',
+                    fontSize: Platform.OS === 'ios' ? 18: 15, 
+                    marginBottom: 10, 
+                    color: props.apparence.dark ? 'white' : '#545453',
+                    fontFamily: 'TwCent',
+                    textTransform: 'uppercase',
+                    letterSpacing: 2.5,
+                    opacity: props.apparence.dark ? 1 : 0.65,
+                }}>Type de serveur</Text>
                 <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                         <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
                             <Carousel
@@ -255,9 +270,22 @@ console.log(nameError)
                                 onChangeText={formikprops.handleChange("discord")}
                                 value={formikprops.values.discord} 
                             />
-                            <TouchableOpacity onPress={openImagePickerAsync} style={styles.input}>
+                            <TouchableOpacity onPress={openImagePickerAsync} style={{
+                                borderRadius: 20,
+                                height: 14*windowWidth/100,
+                                // padding : 34,
+                                paddingLeft: 18,
+                                paddingRight: 18,
+                                width: 80*windowWidth/100,
+                                backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                                // paddingBottom: 34,
+                                marginBottom: 34
+                            }}>
                                 <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                                <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                                <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
                                 {image(selectedImage)}
                             </TouchableOpacity>
                             <Text style={styles.error}>{miniatureError}</Text>
@@ -271,13 +299,26 @@ console.log(nameError)
         );
     } else {
         return(
-            <View style={styles.createServerPageContainer}>
+            <View style={{
+                minHeight: '100%',
+                width: '100%',
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
                 <View style={styles.headerContainer}>
                     <FormsHero title="Ajouter un serveur" needBar={false}/>
                 </View>
 
                 <ScrollView ref={scrollRef} style={{height: '60%'}}>
-                <Text style={styles.serverType}>Type de serveur</Text>
+                <Text style={{
+                    textAlign: 'center',
+                    fontSize: Platform.OS === 'ios' ? 18: 15, 
+                    marginBottom: 10, 
+                    color: props.apparence.dark ? 'white' : '#545453',
+                    fontFamily: 'TwCent',
+                    textTransform: 'uppercase',
+                    letterSpacing: 2.5,
+                    opacity: props.apparence.dark ? 1 : 0.65,
+                }}>Type de serveur</Text>
                 <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                         <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
                             <Carousel
@@ -348,9 +389,22 @@ console.log(nameError)
                                 onChangeText={formikprops.handleChange("discord")}
                                 value={formikprops.values.discord} 
                             />
-                            <TouchableOpacity onPress={openImagePickerAsync} style={styles.input}>
+                            <TouchableOpacity onPress={openImagePickerAsync} style={{
+                                borderRadius: 20,
+                                height: 14*windowWidth/100,
+                                // padding : 34,
+                                paddingLeft: 18,
+                                paddingRight: 18,
+                                width: 80*windowWidth/100,
+                                backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                                // paddingBottom: 34,
+                                marginBottom: 34
+                            }}>
                                 <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                                <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                                <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
                                 {image(selectedImage)}
                             </TouchableOpacity>
                             <Text style={styles.error}>{miniatureError}</Text>
@@ -368,27 +422,12 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: '40%',
     },
-    createServerPageContainer: {
-        minHeight: '100%',
-        width: '100%',
-        backgroundColor: '#F1F1F1',
-    },
     formContainer: {
         paddingTop: '6%',
         width: windowWidth,
         height: '100%',
         alignItems: 'center',
         paddingBottom: '14%'
-    },
-    serverType: {
-        textAlign: 'center', 
-        fontSize: Platform.OS === 'ios' ? 18: 15, 
-        marginBottom: 10, 
-        color: '#545453',
-        fontFamily: 'TwCent',
-        textTransform: 'uppercase',
-        letterSpacing: 2.5,
-        opacity: 0.65
     },
     imageServer: {
         width:  50,
@@ -400,20 +439,6 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         borderRadius: 10
     },
-    input: {
-        borderRadius: 20,
-        height: 14*windowWidth/100,
-        padding : 34,
-        paddingLeft: 18,
-        width: 80*windowWidth/100,
-        backgroundColor:"white",
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingBottom: 34,
-        marginBottom: 34
-
-      },
       error: {
         color: "red",
         textAlign: "center",
@@ -423,4 +448,8 @@ const styles = StyleSheet.create({
       },
 });
 
-export default AddServerPage;
+const mapStateToProps = ({ selectedGame, apparence }) => ({
+    selectedGame, apparence,
+  });
+
+export default connect(mapStateToProps)(AddServerPage);
