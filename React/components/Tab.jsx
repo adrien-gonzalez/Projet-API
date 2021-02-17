@@ -10,8 +10,6 @@ const windowWidth = Dimensions.get('window').width;
 
 
 function Tab(props) {
-
-    // console.log("youhou", props);
     
     const isFocused = useIsFocused();
     const navigation = useNavigation();
@@ -21,7 +19,7 @@ function Tab(props) {
         var colorBorder = props.selectedGame.gamecolor;
     }
     else {
-        var color = "#262626";
+        var color = props.apparence.dark ? 'white' : "#262626";
         var colorBorder = "whitesmoke";
     }
     
@@ -59,9 +57,10 @@ function Tab(props) {
     );
 }
 
-const mapStateToProps = ({ selectedGame, auth }) => ({
+const mapStateToProps = ({ selectedGame, auth, apparence }) => ({
     selectedGame,
-    auth
+    auth,
+    apparence,
 });
 
 export default connect(mapStateToProps)(Tab);

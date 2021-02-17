@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Loading from '../components/loading'
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Topbar from '../components/Topbar.jsx';
 
 const windowWidth = Dimensions.get("window").width;
@@ -119,14 +119,32 @@ const ServersListPage = (props) => {
     if(servers.length > 1) {
       return(
         <View style={styles.leaderBoard}>
-          <Text style={styles.title}>Classement des <Text style={{color: props.selectedGame.gamecolor}}>{servers.length}</Text></Text>
-          <Text style={styles.title}>serveurs <Text style={{color: props.selectedGame.gamecolor}}>{game}</Text></Text>
+          <Text style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            textAlign: 'center',
+            color: props.apparence.dark ? 'white' : 'black',
+          }}>Classement des <Text style={{color: props.selectedGame.gamecolor}}>{servers.length}</Text></Text>
+          <Text style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            textAlign: 'center',
+            color: props.apparence.dark ? 'white' : 'black',
+          }}>serveurs <Text style={{color: props.selectedGame.gamecolor}}>{game}</Text></Text>
         </View>
       )
     } else {
       return(
         <View style={styles.leaderBoard}>
-          <Text style={styles.title}>Classement</Text>
+          <Text style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            textAlign: 'center',
+            color: props.apparence.dark ? 'white' : 'black',
+          }}>Classement</Text>
         </View>
       )
     }
@@ -188,8 +206,9 @@ const ServersListPage = (props) => {
         )
       } else {
         return (
-          <View style={{width: '100%', alignItems: 'center', marginTop: 80}}>
-            <Text style={{color: 'black', fontSize: 18}}>Aucun serveur pour le moment</Text>
+        
+        <View style={{width: '100%', alignItems: 'center', marginTop: 80, backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',}}>
+            <Text style={{color: props.apparence.dark ? 'white' : 'black', fontSize: 18}}>Aucun serveur pour le moment</Text>
           </View>
         )
       }
@@ -198,7 +217,11 @@ const ServersListPage = (props) => {
   
   if(load == true){
     return (
-      <ScrollView style={styles.contain}>
+      <ScrollView style={{
+        minHeight: '100%',
+        width: '100%',
+        backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+      }}>
           <View style={styles.svgHeader}>
             <ImageBackground source={backgroundImage} style={styles.image}>
                 <Svg xmlns="http://www.w3.org/2000/svg" width={40*windowWidth/100} height={40*windowWidth/100} viewBox="0 0 146 146">
@@ -230,8 +253,8 @@ const ServersListPage = (props) => {
 }
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedGame, serversRedux }) => ({
-  selectedGame, serversRedux
+const mapStateToProps = ({ selectedGame, apparence, serversRedux, }) => ({
+  selectedGame, apparence, serversRedux,
 });
 
 // STORE SELECTED SERVER TO REDUC
@@ -245,11 +268,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ServersListPage);
 
 
 const styles = StyleSheet.create({
-  contain: {
-    minHeight: '100%',
-    width: '100%',
-    backgroundColor: '#F1F1F1',
-  },
   colorWhite: {
     color: 'white',
   },
@@ -264,12 +282,6 @@ const styles = StyleSheet.create({
   leaderBoard: {
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    textAlign: 'center',
   },
   listServer: {
     padding: 30,

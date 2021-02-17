@@ -66,20 +66,17 @@ const ApparencePage = (props) => {
     // console.log(isEnabled);
     // console.log('====================================');
     return(
-        <ScrollView style={{backgroundColor: props.apparence.dark ? "#0E0026" : '#F1F1F1'}}>
-            <Topbar color={props.apparence.dark ? "white" : "#262626"} title="Thème" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? "black" : "white"} />
+        <ScrollView style={{backgroundColor: props.apparence.dark ? "#141229" : '#F1F1F1'}}>
+            <Topbar color={props.apparence.dark ? "white" : "#262626"} title="Thème" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? "#080015" : "white"} />
             <View style={{
                 flex: 1,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 height: 8*windowHeight/100,
-                borderBottomWidth: 1,
-                borderBottomColor: props.apparence.dark ? '#190042' : 'grey',
-                backgroundColor: '#fafafa',
                 paddingLeft: 40,
                 paddingRight: 40,
-                backgroundColor: props.apparence.dark ? '#17003E' : '#fafafa',
+                backgroundColor: props.apparence.dark ? '#242048' : '#eaeaea',
                 
             }}>
                 <Text style={{

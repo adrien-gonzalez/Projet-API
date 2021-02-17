@@ -10,6 +10,7 @@ import Topbar from "../components/Topbar";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { connect } from "react-redux";
+import Bouton from "../components/bouton";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -36,7 +37,14 @@ const ParamsPage = (props) => {
     if (props.auth.isLogged === true) {
       return (
         <View style={styles.container_BlocParams}>
-          <Text style={styles.titleParams}>Paramètres utilisateur</Text>
+          <Text style={{
+            justifyContent: "flex-start",
+            fontSize: 22,
+            fontWeight: "bold",
+            color: props.selectedGame.gamecolor,
+            width: windowWidth - 75,
+            marginTop: 34,
+          }}>Paramètres utilisateur</Text>
           <CatParams
             cat="Mes informations perso."
             iconStart="user-alt"
@@ -64,7 +72,14 @@ const ParamsPage = (props) => {
     } else {
       return (
         <View style={styles.container_BlocParams}>
-          <Text style={styles.titleParams}>Paramètres utilisateur</Text>
+          <Text style={{
+            justifyContent: "flex-start",
+            fontSize: 22,
+            fontWeight: "bold",
+            color: props.selectedGame.gamecolor,
+            width: windowWidth - 75,
+            marginTop: 24,
+          }}>Paramètres utilisateur</Text>
           <CatParams
             cat="Se connecter"
             iconStart="user-alt"
@@ -91,12 +106,27 @@ const ParamsPage = (props) => {
   }
 
   return (
-    <ScrollView stickyHeaderIndices={[0]} style={{ height: "20%" }}>
-    <Topbar color="#262626" title="Paramètres" isText={true} navigation={navigation} backgroundColor="white" />
-      <View style={styles.container}>
+    <ScrollView stickyHeaderIndices={[0]} style={{
+      // marginBottom: 40,
+    }}>
+    <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Paramètres" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
+      <View style={{
+        flex: 1,
+        alignItems: 'center',
+        minHeight: 100*windowHeight/100,
+        // justifyContent: 'space-evenly',
+        backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+      }}>
         {ParamUser()}
         <View style={styles.container_BlocParams}>
-          <Text style={styles.titleParams}>Paramètres de l'application</Text>
+          <Text style={{
+            justifyContent: "flex-start",
+            fontSize: 22,
+            fontWeight: "bold",
+            color: props.selectedGame.gamecolor,
+            width: windowWidth - 75,
+            marginTop: 24,
+          }}>Paramètres de l'application</Text>
           <CatParams
             cat="Notifications"
             iconStart="bell"
@@ -114,7 +144,14 @@ const ParamsPage = (props) => {
           />
         </View>
         <View style={styles.container_BlocParams}>
-          <Text style={styles.titleParams}>Infos supplémentaires</Text>
+          <Text style={{
+            justifyContent: "flex-start",
+            fontSize: 22,
+            fontWeight: "bold",
+            color: props.selectedGame.gamecolor,
+            width: windowWidth - 75,
+            marginTop: 24,
+          }}>Infos supplémentaires</Text>
           <CatParams
             cat="Confidentialités & Securité"
             iconStart="lock"
@@ -126,17 +163,24 @@ const ParamsPage = (props) => {
             iconEnd="keyboard-arrow-right"
           />
           {props.auth.isLogged && (
-            <TouchableOpacity
-              onPress={() => {
-                SecureStore.deleteItemAsync("token");
-                SecureStore.deleteItemAsync("refreshtoken");
-                delete axios.defaults.headers["Authorization"];
-                _updateIsLogged(false);
-                navigation.navigate("HomePage");
-              }}
-            >
-              <Text style={styles.deco}>Deconnexion</Text>
-            </TouchableOpacity>
+            <Bouton title="Déconnexion" last={true} onPress={() => {
+              SecureStore.deleteItemAsync("token");
+              SecureStore.deleteItemAsync("refreshtoken");
+              delete axios.defaults.headers["Authorization"];
+              _updateIsLogged(false);
+              navigation.navigate("HomePage");
+            }} />
+            // <TouchableOpacity
+            // onPress={() => {
+            //   SecureStore.deleteItemAsync("token");
+            //   SecureStore.deleteItemAsync("refreshtoken");
+            //   delete axios.defaults.headers["Authorization"];
+            //   _updateIsLogged(false);
+            //   navigation.navigate("HomePage");
+            // }}
+            // >
+            //   <Text style={styles.deco}>Deconnexion</Text>
+            // </TouchableOpacity>
           )}
         </View>
       </View>
@@ -144,14 +188,24 @@ const ParamsPage = (props) => {
   );
 };
 
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ auth, apparence, selectedGame }) => ({
+  auth,
+  apparence,
+  selectedGame,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatch: (action) => {
+      dispatch(action);
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ParamsPage);
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    minHeight: windowHeight,
-    justifyContent: "space-evenly",
-    backgroundColor: "#F1F1F1",
-  },
   container_top: {
     flex: 0.075,
     alignItems: "center",
@@ -162,13 +216,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: windowWidth - 75,
     flex: 0.2,
-  },
-  titleParams: {
-    justifyContent: "flex-start",
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#66A5F9",
-    width: windowWidth - 75,
+    // height: '',
   },
   title: {
     textAlign: "center",
@@ -185,19 +233,5 @@ const styles = StyleSheet.create({
   },
 });
 
-// RECUP DU STORE REDUX
-const mapStateToProps = ({ auth }) => ({
-  auth,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: (action) => {
-      dispatch(action);
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ParamsPage);
 
 // export default ParamsPage;

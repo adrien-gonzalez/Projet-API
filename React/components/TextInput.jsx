@@ -35,7 +35,8 @@ const InputText = (props) => {
           iconWidth={40}
           inputPadding={16}
           secureTextEntry={hidePass ? true : false}
-          style={{ borderRadius: 20 }}
+          style={{ borderRadius: 20, backgroundColor: props.apparence.dark ? '#242048' : 'white'}}
+          labelStyle={{color: props.apparence.dark ? 'white' : 'grey'}}
           value={props.value}
           onChangeText={props.onChangeText}
           value={props.value}
@@ -61,7 +62,8 @@ const InputText = (props) => {
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
-          style={{ borderRadius: 20 }}
+          style={{ borderRadius: 20, backgroundColor: props.apparence.dark ? '#242048' : 'white'}}
+          labelStyle={{color: props.apparence.dark ? 'white' : 'grey'}}
           onChangeText={props.onChangeText}
           value={props.value}
           height={props.height}
@@ -75,24 +77,14 @@ const InputText = (props) => {
   }
 };
 
-const mapStateToProps = ({ selectedGame }) => ({
+const mapStateToProps = ({ selectedGame, apparence }) => ({
   selectedGame,
+  apparence,
 });
 
 export default connect(mapStateToProps)(InputText);
 
 const styles = StyleSheet.create({
-  input: {
-    borderWidth: 2,
-    borderColor: "#C1C1C1",
-    borderRadius: 20,
-    height: (14 * windowWidth) / 100,
-    paddingLeft: 18,
-    width: (80 * windowWidth) / 100,
-    backgroundColor: "white",
-    marginBottom: 28,
-    fontSize: Platform.OS === "ios" ? 18 : 14,
-  },
   errors: {
     color: "salmon",
     textAlign: "center",

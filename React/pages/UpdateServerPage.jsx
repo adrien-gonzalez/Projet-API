@@ -10,7 +10,8 @@ import serverAPI from '../services/serverAPI.js'
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { Formik } from "formik";
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
+import Topbar from '../components/Topbar';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -201,13 +202,26 @@ const UpdateServerPage = (props) => {
             keyboardVerticalOffset={0}
             behavior={"position"}
           >
-            <View style={styles.createServerPageContainer}>
+            <View style={{
+                minHeight: '100%',
+                width: '100%',
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
                 <View style={styles.headerContainer}>
-                    <FormsHero navigation={navigation} title="Modifier un serveur" backArrow={true} />
+                    <FormsHero navigation={navigation} title="Modifier un serveur" backArrow={true} needBar={true} />
                 </View>
 
                 <ScrollView style={{height: '60%'}}>
-                <Text style={styles.serverType}>Type de serveur</Text>
+                <Text style={{
+                    textAlign: 'center', 
+                    fontSize: Platform.OS === 'ios' ? 18: 15, 
+                    marginBottom: 10, 
+                    color: props.apparence.dark ? 'white' : '#545453',
+                    fontFamily: 'TwCent',
+                    textTransform: 'uppercase',
+                    letterSpacing: 2.5,
+                    opacity: props.apparence.dark ? 1 : 0.65,
+                }}>Type de serveur</Text>
                 <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                         <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
                             <Carousel
@@ -280,9 +294,20 @@ const UpdateServerPage = (props) => {
                                 onChangeText={formikprops.handleChange("discord")}
                                 value={formikprops.values.discord} 
                             />
-                            <TouchableOpacity onPress={openImagePickerAsync} style={styles.input}>
+                            <TouchableOpacity onPress={openImagePickerAsync} style={{
+                                borderRadius: 20,
+                                height: 14*windowWidth/100,
+                                paddingLeft: 18,
+                                paddingRight: 18,
+                                width: 80*windowWidth/100,
+                                backgroundColor: props.apparence.dark ? '#190042' : 'white',
+                                marginBottom: 34,
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexDirection: 'row',
+                            }}>
                                 <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                                <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                                <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
                                 {image(selectedImage)}
                             </TouchableOpacity>
                             <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
@@ -295,13 +320,26 @@ const UpdateServerPage = (props) => {
         )
     } else {
         return (
-            <View style={styles.createServerPageContainer}>
+            <View style={{
+                minHeight: '100%',
+                width: '100%',
+                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+            }}>
             <View style={styles.headerContainer}>
-                <FormsHero navigation={navigation} title="Modifier un serveur" backArrow={true} />
+                <FormsHero navigation={navigation} title="Modifier un serveur" backArrow={true} needBar={true} />
             </View>
 
             <ScrollView style={{height: '60%'}}>
-            <Text style={styles.serverType}>Type de serveur</Text>
+            <Text style={{
+                textAlign: 'center', 
+                fontSize: Platform.OS === 'ios' ? 18: 15, 
+                marginBottom: 10, 
+                color: props.apparence.dark ? 'white' : '#545453',
+                fontFamily: 'TwCent',
+                textTransform: 'uppercase',
+                letterSpacing: 2.5,
+                opacity: props.apparence.dark ? 1 : 0.65,
+            }}>Type de serveur</Text>
             <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
                     <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
                         <Carousel
@@ -374,9 +412,20 @@ const UpdateServerPage = (props) => {
                             onChangeText={formikprops.handleChange("discord")}
                             value={formikprops.values.discord} 
                         />
-                        <TouchableOpacity onPress={openImagePickerAsync} style={styles.input}>
+                        <TouchableOpacity onPress={openImagePickerAsync} style={{
+                            borderRadius: 20,
+                            height: 14*windowWidth/100,
+                            paddingLeft: 18,
+                            paddingRight: 18,
+                            width: 80*windowWidth/100,
+                            backgroundColor: props.apparence.dark ? '#190042' : 'white',
+                            marginBottom: 34,
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                        }}>
                             <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                            <Text style={{fontSize: 16 ,color: '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                            <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
                             {image(selectedImage)}
                         </TouchableOpacity>
                         <Bouton onPress={formikprops.handleSubmit} title="Modifier" />
@@ -389,28 +438,26 @@ const UpdateServerPage = (props) => {
     }
 }
 
-// RECUP DU STORE REDUX
-const mapStateToProps = ({ serversRedux }) => ({
-    serversRedux
-});
-
-// STORE SELECTED SERVER TO REDUC
+// STORE SELECTED SERVER TO REDUX
 const mapDispatchToProps = (dispatch) => {
     return {
-      dispatch: (action) => { dispatch(action) }
+        dispatch: (action) => { dispatch(action) }
     }
-  }
-  
+}
+
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ selectedServer, selectedGame, apparence, serversRedux, }) => ({
+    selectedServer,
+    selectedGame,
+    apparence,
+    serversRedux,
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateServerPage);
 
 const styles = StyleSheet.create({
     headerContainer: {
         height: '40%',
-    },
-    createServerPageContainer: {
-        minHeight: '100%',
-        width: '100%',
-        backgroundColor: '#F1F1F1',
     },
     formContainer: {
         paddingTop: '6%',
@@ -418,16 +465,6 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
         paddingBottom: '14%'
-    },
-    serverType: {
-        textAlign: 'center', 
-        fontSize: Platform.OS === 'ios' ? 18: 15, 
-        marginBottom: 10, 
-        color: '#545453',
-        fontFamily: 'TwCent',
-        textTransform: 'uppercase',
-        letterSpacing: 2.5,
-        opacity: 0.65
     },
     imageServer: {
         width:  50,
@@ -439,18 +476,5 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         borderRadius: 10
     },
-    input: {
-        borderRadius: 20,
-        height: 14*windowWidth/100,
-        padding : 34,
-        paddingLeft: 18,
-        width: 80*windowWidth/100,
-        backgroundColor:"white",
-        paddingBottom: 34,
-        marginBottom: 34,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row'
-      },
 });
 

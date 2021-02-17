@@ -17,7 +17,10 @@ const windowHeight = Dimensions.get("window").height;
 const Bouton = (props) => {
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      alignItems: "center",
+      marginTop: props.last && 54,
+    }}>
       <TouchableOpacity
         style={
           props.selectedGame.gamecolor ?
@@ -56,9 +59,6 @@ const mapStateToProps = ({ selectedGame }) => ({
 export default connect(mapStateToProps)(Bouton);
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-  },
   buttonText: {
     textAlign: "center",
     color: "white",

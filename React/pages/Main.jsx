@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -28,6 +28,29 @@ import ServerStack from '../routes/ServerStack.js';
 
 
 const Tab = createBottomTabNavigator();
+
+const NavTheme = {
+    dark: false,
+    colors: {
+      primary: 'rgb(255, 45, 85)',
+      background: 'rgb(242, 242, 242)',
+      card: 'rgb(255, 255, 255)',
+      text: 'rgb(28, 28, 30)',
+      border: 'rgb(242, 242, 242)',
+      notification: 'rgb(255, 69, 58)',
+    },
+};
+const DarkNavTheme = {
+    dark: false,
+    colors: {
+      primary: 'black',
+      background: 'rgb(242, 242, 242)',
+      card: '#080015',
+      text: 'rgb(28, 28, 30)',
+      border: '#160730',
+      notification: 'rgb(255, 69, 58)',
+    },
+};
 
 const Main = (props) => {
 
@@ -164,7 +187,9 @@ const Main = (props) => {
 
     const _updateApparence = (value) => {
         const action = { type: "UPDATE_APPARENCE", value: { dark: value } };
-        props.dispatch(action);
+        if ( props.apparence.dark != value ) {
+            props.dispatch(action);
+        }
     }
 
     // CHECK THEME PREFERENCE
@@ -173,9 +198,15 @@ const Main = (props) => {
         const theme = await SecureStore.getItemAsync("theme");
 
         if (theme !== null) {
+            console.log('====================================');
+            console.log('test44');
+            console.log('====================================');
             theme == "true" ? _updateApparence(true) : _updateApparence(false);
         }
         else {
+            console.log('====================================');
+            console.log('test55');
+            console.log('====================================');
             SecureStore.setItemAsync("theme", "false");
             _updateApparence(false);
         }
@@ -262,8 +293,8 @@ const Main = (props) => {
 
 
     return (
-        <NavigationContainer>
-            <StatusBar translucent backgroundColor="transparent" />
+        <NavigationContainer theme={props.apparence.dark ? DarkNavTheme : NavTheme}>
+            <StatusBar translucent backgroundColor='transparent' barStyle={props.apparence.dark ? 'light-content' : 'dark-content'} />
             <Tab.Navigator tabBarOptions={{ style: {height: Platform.OS === "ios" ?  80 : 60} }}>
                 <Tab.Screen name="HomePage" component={HomePage} options={{ tabBarButton: (props) => <TabComponent page='HomePage' icon='home' />}}/>
                 <Tab.Screen name="ServersListPage" component={props.selectedGame.id != 0 ? ServerStack : SelectGamePage } options={{ tabBarButton: (props) => <TabComponent page='ServersListPage' icon='list' />}} />
@@ -278,9 +309,10 @@ const Main = (props) => {
 
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedGame, auth }) => ({
+const mapStateToProps = ({ selectedGame, auth, apparence }) => ({
     selectedGame,
     auth,
+    apparence
 });
 
 // DISPATCH ACTIONS

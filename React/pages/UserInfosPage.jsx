@@ -322,8 +322,9 @@ const UserInfosPage = (props) => {
   );
 };
 
-const mapStateToProps = ({ selectedGame }) => ({
+const mapStateToProps = ({ selectedGame, apparence, }) => ({
   selectedGame,
+  apparence,
 });
 
 export default connect(mapStateToProps)(UserInfosPage);
