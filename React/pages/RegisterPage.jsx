@@ -161,7 +161,7 @@ const RegisterPage = ({ navigation }) => {
     return (
       <View style={styles.connectPageContainer}>
         <View style={styles.headerContainer}>
-          <FormsHero navigation={navigation} title="Inscription" />
+          <FormsHero needBar={true} navigation={navigation} title="Inscription" />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik
