@@ -11,7 +11,7 @@ const windowWidth = Dimensions.get('window').width;
 
 function Tab(props) {
 
-    console.log("youhou", props);
+    // console.log("youhou", props);
     
     const isFocused = useIsFocused();
     const navigation = useNavigation();

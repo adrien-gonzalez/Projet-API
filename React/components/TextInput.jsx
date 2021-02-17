@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{ useState } from "react";
 import {
   StyleSheet,
   Platform,
@@ -6,6 +6,7 @@ import {
   View,
   Dimensions,
   Text,
+  TouchableOpacity
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Fumi } from "react-native-textinput-effects";
@@ -15,9 +16,12 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const InputText = (props) => {
+
+  const [hidePass, setHidePass] = useState(true);
+
   if (props.type == "password") {
     return (
-      <View style={{ width: "80%", paddingBottom: 34 }}>
+      <View style={{ width: "80%", paddingBottom: 34, position:"relative"}}>
         <Fumi
           label={props.placeholder}
           iconClass={FontAwesome5}
@@ -30,12 +34,15 @@ const InputText = (props) => {
           iconSize={20}
           iconWidth={40}
           inputPadding={16}
-          secureTextEntry={true}
+          secureTextEntry={hidePass ? true : false}
           style={{ borderRadius: 20 }}
           value={props.value}
           onChangeText={props.onChangeText}
           value={props.value}
         />
+        <TouchableOpacity onPress={() => setHidePass(!hidePass)} style={{position:"absolute", top:22, left:250}}>
+        <FontAwesome5 name={hidePass ? "eye-slash" : "eye"} size={24} color="#808080" />
+        </TouchableOpacity>
         <Text style={styles.errors}>{props.error}</Text>
       </View>
     );

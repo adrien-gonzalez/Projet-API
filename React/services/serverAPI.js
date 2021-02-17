@@ -1,8 +1,8 @@
 import axios from "axios";
 
-
 // All servers informations by game
 function findServerByGame(id) {
+    console.log('axios',id);
     return axios
     .get("http://nicolas-camilloni.students-laplateforme.io/api/servers?game="+id)
     .then((response) => response.data)

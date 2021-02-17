@@ -79,7 +79,7 @@ const HomePage = (props) => {
     fetchGames();
   }, []);
   
-  console.log(props);
+  // console.log('homePAge',props);
 
   // VUE
   return (

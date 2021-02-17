@@ -141,7 +141,7 @@ const Main = (props) => {
         
         const fetchInfosUser = async (idUser) => {
             const data = await userAPI.checkUser(idUser);
-            console.log(data);
+            // console.log(data);
             data.map((d) => {
                 const action = { type: "UPDATE_ISLOGGED", value: { isLogged: isLogged, pp: d.picture_profil} };
                 props.dispatch(action);
@@ -234,7 +234,7 @@ const Main = (props) => {
                             }
                             else {
                                 // console.log("--------------6---------------");
-                                console.log(response.data);
+                                // console.log(response.data);
                                 SecureStore.setItemAsync("token", response.data.token);
                                 SecureStore.setItemAsync("refreshtoken", response.data.refresh);
                                 axios.defaults.headers["Authorization"] = "Bearer " + response.data.token;

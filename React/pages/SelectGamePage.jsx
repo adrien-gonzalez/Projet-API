@@ -18,11 +18,14 @@ const SelectGamePage = (props) => {
     // console.log(games);
 
     const combinedFunctions = (id, gamecolor) => {
+        console.log('idgame', id)
         _updateSelectedGame(id, gamecolor);
         navigation.navigate("ServersListPage");
     }
 
     const _updateSelectedGame = (id, gamecolor) => {
+        console.log('idgame2', id)
+
         const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
         props.dispatch(action)
     }

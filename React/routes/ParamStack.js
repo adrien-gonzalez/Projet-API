@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 
 export default function ParamStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='ParamsPage'>
       <Stack.Screen headerMode="none" name="ParamsPage" component={ParamsPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="UserInfosPage" component={UserInfosPage} options={{ headerShown: false }}/>
       <Stack.Screen headerMode="none" name="ApparencePage" component={ApparencePage} options={{ headerShown: false }}/>

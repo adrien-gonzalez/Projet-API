@@ -34,6 +34,7 @@ const ServersListPage = (props) => {
   }
 
   const fetchServers = async () => {
+    console.log('propsJEUavant', props);
     try {
       const data = await serverAPI.findServerByGame(props.selectedGame.id);
       setServer(data)
@@ -41,17 +42,18 @@ const ServersListPage = (props) => {
       data.map((d) => {
         setGame(d.nameGame);
       });
-
+      console.log('propsJEU', props);
     } catch (error) {
       console.log(error);
     }
   };
   
   useEffect(() => {
-    fetchServers();
+    fetchServers(); 
   }, [props.selectedGame.id]);
 
   const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
+
     switch (appImages) {
       case "1":
           var appLogo = require('../assets/logos/minecraft-logo.png');
