@@ -78,8 +78,6 @@ const HomePage = (props) => {
   useEffect(() => {
     fetchGames();
   }, []);
-  
-  // console.log('homePAge',props);
 
   // VUE
   return (

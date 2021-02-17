@@ -15,7 +15,6 @@ const SelectGamePage = (props) => {
     
     const navigation = useNavigation();
     const [games, setGames] = useState([]);
-    // console.log(games);
 
     const combinedFunctions = (id, gamecolor) => {
         console.log('idgame', id)
@@ -24,8 +23,6 @@ const SelectGamePage = (props) => {
     }
 
     const _updateSelectedGame = (id, gamecolor) => {
-        console.log('idgame2', id)
-
         const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
         props.dispatch(action)
     }
@@ -80,7 +77,7 @@ const SelectGamePage = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      dispatch: (action) => { dispatch(action) }
+        dispatch: (action) => { dispatch(action) },
     }
 }
 
