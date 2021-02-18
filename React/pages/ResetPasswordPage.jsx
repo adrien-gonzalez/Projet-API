@@ -93,6 +93,7 @@ const ResetPassword = (props) => {
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
+              <Text style={styles.success}>Un mail vous a été envoyé, si ce n'est pas le cas veuillez réessayer !</Text>
               <View style={styles.container_input}>
                 <InputText
                   onChangeText={formikprops.handleChange("password")}
@@ -160,6 +161,13 @@ const styles = StyleSheet.create({
   container_input: {
     alignItems: "center",
     width: "100%",
+  },
+  success: {
+    color: "green",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 14,
+    paddingBottom:20,
   },
 });
 

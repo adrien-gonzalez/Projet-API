@@ -305,10 +305,10 @@ const UserInfosPage = (props) => {
       </Modal>
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
-        <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mon compte" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
+        <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mon compte" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'}/>
         {selectedImage !== null ?
             <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20}}>
-              <View >
+              <View>
                 <Image
                   source={{ uri: selectedImage.localUri }}
                   style={styles.pictureProfil}
@@ -319,7 +319,7 @@ const UserInfosPage = (props) => {
               </View>
             </TouchableOpacity>
         :
-            <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20}}>
+            <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20, marginTop: 20}}>
               <View>
                 <Image style={styles.pictureProfil}
                   source={{
@@ -335,7 +335,7 @@ const UserInfosPage = (props) => {
             </TouchableOpacity>
         }
       </View>
-      <ScrollView ref={scrollRef} style={{ height: "60%" }}>
+      <ScrollView ref={scrollRef} style={{ height: "60%"}}>
         <Formik
           enableReinitialize
           initialValues={{
@@ -348,6 +348,7 @@ const UserInfosPage = (props) => {
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
+              <Text style={styles.success}>{responsePut}</Text>
               <TextInput
                 placeholder="Nom d'utilisateur"
                 icon="user"
@@ -386,7 +387,6 @@ const UserInfosPage = (props) => {
                 onPress={formikprops.handleSubmit}
                 title="Modifier mon profil"
               />
-              <Text style={styles.success}>{responsePut}</Text>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(true);
@@ -416,16 +416,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F1F1",
   },
   headerContainer: {
-    height: "32%",
+    height: "38%",
     alignItems: "center",
     justifyContent: "space-between",
   },
   formContainer: {
-    paddingTop: "8%",
     width: windowWidth,
     height: "100%",
     alignItems: "center",
-    // paddingBottom: "14%",
   },
   title: {
     textAlign: "center",
@@ -542,8 +540,10 @@ const styles = StyleSheet.create({
   },
   success: {
     color: "green",
+    fontWeight: "bold",
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 14,
+    paddingBottom:20,
   },
   pictureProfil: {
     width: "100%",
