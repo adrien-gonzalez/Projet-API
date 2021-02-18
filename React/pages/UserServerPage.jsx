@@ -33,17 +33,30 @@ const UserServerPage = (props) => {
     const fetchServers = async () => {
         try {
             const data = await serverAPI.findServerByUser(idUser);
+
+
+            if (props.stateServer.newState != false) {
+                data.map((s) => {
+                    if(props.stateServer.id == s.id){
+                        const action = { type: "UPDATE_STATE_SERVER", value: {id: 0, newState: false} }
+                        props.dispatch(action)
+                    }
+                });
+            }
+
             setUserServer(data)
             setLoad(true)
         } catch (error) {
             console.log(error);
             console.log("nope");
         }
+
+
     };
 
     useEffect(() => {
-            fetchServers();
-        }, [route]
+            fetchServers(); 
+        }, [route, props.stateServer.newState]
     );
 
     const handleOnSubmitSupp = async (values, actions) => {
@@ -291,9 +304,10 @@ const UserServerPage = (props) => {
 }
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ serversRedux, apparence, }) => ({
+const mapStateToProps = ({ serversRedux, apparence, stateServer, }) => ({
     serversRedux,
     apparence,
+    stateServer,
 });
 
 // STORE SELECTED SERVER TO REDUX
@@ -301,7 +315,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
       dispatch: (action) => { dispatch(action) }
     }
-  }
+}
   
 export default connect(mapStateToProps, mapDispatchToProps)(UserServerPage);
   

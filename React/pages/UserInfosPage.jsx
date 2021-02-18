@@ -39,30 +39,7 @@ const UserInfosPage = (props) => {
   const [passwordError, setPasswordError] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(null);
-
   const scrollRef = useRef();
-  
-  let openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
-    }
-
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-    });
-
-    if (pickerResult.cancelled === true) {
-      return;
-    }
-
-    setSelectedImage({ localUri: pickerResult.uri, type: pickerResult.type });
-  };
 
   const fetchInfosUser = async () => {
     try {
@@ -83,6 +60,61 @@ const UserInfosPage = (props) => {
   useEffect(() => {
     fetchInfosUser();
   }, []);
+  
+  let openImagePickerAsync = async () => {
+
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    
+    setSelectedImage({ localUri: pickerResult.uri, type: pickerResult.type });
+    
+    const values = {login: infos.login, email: infos.email, old_password: "", password: ""}
+    const donnees = new FormData();
+    donnees.append("login", values.login);
+    donnees.append("email", values.email);
+    donnees.append("old_password", values.old_password);
+    donnees.append("password", values.password);
+
+      const imageBody = {
+        uri: pickerResult.uri,
+        name: pickerResult.uri,
+        type: "image/jpeg",
+      };
+      donnees.append("file", (imageBody));
+    try {
+      const data = await userAPI.updateUser(donnees);
+      if (typeof data == "object") {
+        data.map((d) => {
+          if(d.login_error) {setLoginError(d.login_error)}
+          if(d.email_error) {setEmailError(d.email_error)}
+          if(d.old_password_error) {setOldPasswordError(d.old_password_error) }
+          if(d.password_error) {setPasswordError(d.password_error)}
+          else if (d.login_success || d.email_success || d.password_success) {
+            setResponsePut("Informations modifiées");
+            const action = { type: "UPDATE_ISLOGGED", value: {isUpdated: true} }
+            props.dispatch(action)
+          }
+        });
+      }
+    } catch (error) {
+      setResponsePut(error);
+    }
+  };
 
   const handleOnSubmitSupp = async (values, actions) => {
     const donnees = new URLSearchParams();
@@ -147,6 +179,9 @@ const UserInfosPage = (props) => {
           if(d.password_error) {setPasswordError(d.password_error)}
           else if (d.login_success || d.email_success || d.password_success) {
             setResponsePut("Informations modifiées");
+
+            const action = { type: "UPDATE_ISLOGGED", value: {isUpdated: true} }
+            props.dispatch(action)
           }
         });
       }
@@ -154,10 +189,6 @@ const UserInfosPage = (props) => {
       setResponsePut(error);
     }
   };
-
-  function image(selectedImage) {
-    
-  }
 
   return (
     <View style={styles.connectPageContainer}>

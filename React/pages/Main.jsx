@@ -284,7 +284,8 @@ const Main = (props) => {
     useEffect(() => {
         checkLoginState();
         checkTheme();
-    });
+        }, [props.auth.isUpdated]
+    );
 
     // FIN DU CHECK
 

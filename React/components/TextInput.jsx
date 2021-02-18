@@ -41,7 +41,7 @@ const InputText = (props) => {
           onChangeText={props.onChangeText}
           value={props.value}
         />
-        <TouchableOpacity onPress={() => setHidePass(!hidePass)} style={{position:"absolute", top:22, left:250}}>
+        <TouchableOpacity onPress={() => setHidePass(!hidePass)} style={{position:"absolute", top:22, right:15}}>
         <FontAwesome5 name={hidePass ? "eye-slash" : "eye"} size={24} color="#808080" />
         </TouchableOpacity>
         <Text style={styles.errors}>{props.error}</Text>
