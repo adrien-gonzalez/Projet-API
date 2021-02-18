@@ -82,12 +82,13 @@ const UserServerPage = (props) => {
 
             if (props.serversRedux.info != null) {
                 props.serversRedux.info.map((s) => {
-                    if(serverId == s.id){
+                    if(idServer == s.id){
                         const action = { type: "UPDATE_SERVERS", value: {info: props.serversRedux.info, isUpdated: true} }
                         props.dispatch(action)
                     }
                 });
             }
+
         };
 
     function myServer(userServer){
