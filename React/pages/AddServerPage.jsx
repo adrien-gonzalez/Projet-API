@@ -13,7 +13,7 @@ import { Formik } from "formik";
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
 import { connect } from 'react-redux';
-
+import Loading from '../components/loading';
 import { useRef } from "react";
 
 
@@ -43,6 +43,8 @@ const AddServerPage = (props) => {
     const [nameError, setNameError] = useState([]);
     const [descriptionError, setDescriptionError] = useState([]);
     const [miniatureError, setMiniatureError] = useState([]);
+    const [load, setLoad] = useState(false);
+
 
     const [selectedImage, setSelectedImage] = React.useState(null);
     const handleOnSubmit = async (values, actions) => {
@@ -143,6 +145,7 @@ console.log(nameError)
     try {
         const data = await GamesAPI.findAllForCarousel();
         setGames(data);
+        setLoad(true)
     } catch (error) {
         console.log(error);
         console.log("nope");
@@ -173,247 +176,258 @@ console.log(nameError)
         )
     }
    
-    if (Platform.OS === "ios") {
-        return (
-          <KeyboardAvoidingView
-            style={{ width: "100%" }}
-            keyboardVerticalOffset={0}
-            behavior={"position"}
-          >
-            <View style={{
-                minHeight: '100%',
-                width: '100%',
-                backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
-            }}>
-                <View style={styles.headerContainer}>
-                    <FormsHero title="Ajouter un serveur" />
-                </View>
+    if(load == true){
+        if (Platform.OS === "ios") {
+            return (
+            <KeyboardAvoidingView
+                style={{ width: "100%" }}
+                keyboardVerticalOffset={0}
+                behavior={"position"}
+            >
+                <View style={{
+                    minHeight: '100%',
+                    width: '100%',
+                    backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+                }}>
+                    <View style={styles.headerContainer}>
+                        <FormsHero title="Ajouter un serveur" />
+                    </View>
 
-                <ScrollView ref={scrollRef} style={{height: '60%'}}>
-                <Text style={{
-                    textAlign: 'center',
-                    fontSize: Platform.OS === 'ios' ? 18: 15, 
-                    marginBottom: 10, 
-                    color: props.apparence.dark ? 'white' : '#545453',
-                    fontFamily: 'TwCent',
-                    textTransform: 'uppercase',
-                    letterSpacing: 2.5,
-                    opacity: props.apparence.dark ? 1 : 0.65,
-                }}>Type de serveur</Text>
-                <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
-                        <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
-                            <Carousel
-                            ref={_carousel}
-                            layout={"default"}
-                            activeSlideAlignment={"center"}
-                            data={games}
-                            sliderWidth={SLIDER_WIDTH}
-                            itemWidth={ITEM_WIDTH}
-                            renderItem={_renderItem}  
-                            inactiveSlideScale={0.45}
-                            inactiveSlideOpacity= {0.25}
-                            firstItem={Math.round(games.length / 2)}
-                        />
-                        </View>
-                    </SafeAreaView>
-                    <Formik
-                        initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
-                        onSubmit={handleOnSubmit}
-                        >
-                        {(formikprops) => (
-                        <View style={styles.formContainer}>
-                            <InputText 
-                                placeholder="Nom du serveur" 
-                                icon="pen" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("nameServer")}
-                                value={formikprops.values.nameServer} 
-                                error={nameError}  
+                    <ScrollView ref={scrollRef} style={{height: '60%'}}>
+                    <Text style={{
+                        textAlign: 'center',
+                        fontSize: Platform.OS === 'ios' ? 18: 15, 
+                        marginBottom: 10, 
+                        color: props.apparence.dark ? 'white' : '#545453',
+                        fontFamily: 'TwCent',
+                        textTransform: 'uppercase',
+                        letterSpacing: 2.5,
+                        opacity: props.apparence.dark ? 1 : 0.65,
+                    }}>Type de serveur</Text>
+                    <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
+                            <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
+                                <Carousel
+                                ref={_carousel}
+                                layout={"default"}
+                                activeSlideAlignment={"center"}
+                                data={games}
+                                sliderWidth={SLIDER_WIDTH}
+                                itemWidth={ITEM_WIDTH}
+                                renderItem={_renderItem}  
+                                inactiveSlideScale={0.45}
+                                inactiveSlideOpacity= {0.25}
+                                firstItem={Math.round(games.length / 2)}
                             />
-                            <InputText 
-                                placeholder="Adresse IP (optionnel)" 
-                                icon="server" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("ip")}
-                                value={formikprops.values.ip} 
+                            </View>
+                        </SafeAreaView>
+                        <Formik
+                            initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
+                            onSubmit={handleOnSubmit}
+                            >
+                            {(formikprops) => (
+                            <View style={styles.formContainer}>
+                                <InputText 
+                                    placeholder="Nom du serveur" 
+                                    icon="pen" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("nameServer")}
+                                    value={formikprops.values.nameServer} 
+                                    error={nameError}  
+                                />
+                                <InputText 
+                                    placeholder="Adresse IP (optionnel)" 
+                                    icon="server" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("ip")}
+                                    value={formikprops.values.ip} 
+                                />
+                                <InputText 
+                                    placeholder="Port (optionnel)" 
+                                    icon="plug" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("port")}
+                                    value={formikprops.values.port} 
+                                />
+                                <InputText 
+                                    placeholder="Description" 
+                                    icon="" 
+                                    color="#66A5F9"
+                                    height= {400}
+                                    textAlignVertical='top'
+                                    numberOfLines={40}
+                                    multiline={true} 
+                                    onChangeText={formikprops.handleChange("description")}
+                                    value={formikprops.values.description}    
+                                    error={descriptionError}  
+                                />
+                                <InputText 
+                                    placeholder="Site web (optionnel)" 
+                                    icon="chrome" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("webSite")}
+                                    value={formikprops.values.webSite}   
+                                />
+                                <InputText 
+                                    placeholder="Discord (optionnel)" 
+                                    icon="discord" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("discord")}
+                                    value={formikprops.values.discord} 
+                                />
+                                <TouchableOpacity onPress={openImagePickerAsync} style={{
+                                    borderRadius: 20,
+                                    height: 14*windowWidth/100,
+                                    // padding : 34,
+                                    paddingLeft: 18,
+                                    paddingRight: 18,
+                                    width: 80*windowWidth/100,
+                                    backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row',
+                                    // paddingBottom: 34,
+                                    marginBottom: 34
+                                }}>
+                                    <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
+                                    <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                                    {image(selectedImage)}
+                                </TouchableOpacity>
+                                <Text style={styles.error}>{miniatureError}</Text>
+                                <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
+                            </View>
+                        )}
+                        </Formik>
+                    </ScrollView>
+                </View>
+            </KeyboardAvoidingView>
+            );
+        } else {
+            return(
+                <View style={{
+                    minHeight: '100%',
+                    width: '100%',
+                    backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+                }}>
+                    <View style={styles.headerContainer}>
+                        <FormsHero title="Ajouter un serveur" needBar={false}/>
+                    </View>
+
+                    <ScrollView ref={scrollRef} style={{height: '60%'}}>
+                    <Text style={{
+                        textAlign: 'center',
+                        fontSize: Platform.OS === 'ios' ? 18: 15, 
+                        marginBottom: 10, 
+                        color: props.apparence.dark ? 'white' : '#545453',
+                        fontFamily: 'TwCent',
+                        textTransform: 'uppercase',
+                        letterSpacing: 2.5,
+                        opacity: props.apparence.dark ? 1 : 0.65,
+                    }}>Type de serveur</Text>
+                    <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
+                            <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
+                                <Carousel
+                                ref={_carousel}
+                                layout={"default"}
+                                activeSlideAlignment={"center"}
+                                data={games}
+                                sliderWidth={SLIDER_WIDTH}
+                                itemWidth={ITEM_WIDTH}
+                                renderItem={_renderItem}  
+                                inactiveSlideScale={0.45}
+                                inactiveSlideOpacity= {0.25}
+                                firstItem={Math.round(games.length / 2)}
                             />
-                            <InputText 
-                                placeholder="Port (optionnel)" 
-                                icon="plug" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("port")}
-                                value={formikprops.values.port} 
-                            />
-                            <InputText 
-                                placeholder="Description" 
-                                icon="" 
-                                color="#66A5F9"
-                                height= {400}
-                                textAlignVertical='top'
-                                numberOfLines={40}
-                                multiline={true} 
-                                onChangeText={formikprops.handleChange("description")}
-                                value={formikprops.values.description}    
-                                error={descriptionError}  
-                            />
-                            <InputText 
-                                placeholder="Site web (optionnel)" 
-                                icon="chrome" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("webSite")}
-                                value={formikprops.values.webSite}   
-                            />
-                            <InputText 
-                                placeholder="Discord (optionnel)" 
-                                icon="discord" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("discord")}
-                                value={formikprops.values.discord} 
-                            />
-                            <TouchableOpacity onPress={openImagePickerAsync} style={{
-                                borderRadius: 20,
-                                height: 14*windowWidth/100,
-                                // padding : 34,
-                                paddingLeft: 18,
-                                paddingRight: 18,
-                                width: 80*windowWidth/100,
-                                backgroundColor: props.apparence.dark ? '#242048' : 'white',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                                // paddingBottom: 34,
-                                marginBottom: 34
-                            }}>
-                                <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                                <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
-                                {image(selectedImage)}
-                            </TouchableOpacity>
-                            <Text style={styles.error}>{miniatureError}</Text>
-                            <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
-                        </View>
-                    )}
-                    </Formik>
-                </ScrollView>
-            </View>
-        </KeyboardAvoidingView>
-        );
+                            </View>
+                        </SafeAreaView>
+                        <Formik
+                            initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
+                            onSubmit={handleOnSubmit}
+                            >
+                            {(formikprops) => (
+                            <View style={styles.formContainer}>
+                                <InputText 
+                                    placeholder="Nom du serveur" 
+                                    icon="pen" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("nameServer")}
+                                    value={formikprops.values.nameServer} 
+                                    error={nameError}  
+                                />
+                                <InputText 
+                                    placeholder="Adresse IP (optionnel)" 
+                                    icon="server" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("ip")}
+                                    value={formikprops.values.ip} 
+                                />
+                                <InputText 
+                                    placeholder="Port (optionnel)" 
+                                    icon="plug" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("port")}
+                                    value={formikprops.values.port} 
+                                />
+                                <InputText 
+                                    placeholder="Description" 
+                                    icon="" 
+                                    color="#66A5F9"
+                                    height= {400}
+                                    textAlignVertical='top'
+                                    numberOfLines={40}
+                                    multiline={true} 
+                                    onChangeText={formikprops.handleChange("description")}
+                                    value={formikprops.values.description}    
+                                    error={descriptionError}  
+                                />
+                                <InputText 
+                                    placeholder="Site web (optionnel)" 
+                                    icon="chrome" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("webSite")}
+                                    value={formikprops.values.webSite}   
+                                />
+                                <InputText 
+                                    placeholder="Discord (optionnel)" 
+                                    icon="discord" 
+                                    color="#66A5F9" 
+                                    onChangeText={formikprops.handleChange("discord")}
+                                    value={formikprops.values.discord} 
+                                />
+                                <TouchableOpacity onPress={openImagePickerAsync} style={{
+                                    borderRadius: 20,
+                                    height: 14*windowWidth/100,
+                                    // padding : 34,
+                                    paddingLeft: 18,
+                                    paddingRight: 18,
+                                    width: 80*windowWidth/100,
+                                    backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row',
+                                    // paddingBottom: 34,
+                                    marginBottom: 34
+                                }}>
+                                    <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
+                                    <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
+                                    {image(selectedImage)}
+                                </TouchableOpacity>
+                                <Text style={styles.error}>{miniatureError}</Text>
+                                <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
+                            </View>
+                        )}
+                        </Formik>
+                    </ScrollView>
+                </View>
+            )
+        }
     } else {
         return(
-            <View style={{
-                minHeight: '100%',
-                width: '100%',
+            <ScrollView style={{
                 backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
             }}>
-                <View style={styles.headerContainer}>
-                    <FormsHero title="Ajouter un serveur" needBar={false}/>
-                </View>
-
-                <ScrollView ref={scrollRef} style={{height: '60%'}}>
-                <Text style={{
-                    textAlign: 'center',
-                    fontSize: Platform.OS === 'ios' ? 18: 15, 
-                    marginBottom: 10, 
-                    color: props.apparence.dark ? 'white' : '#545453',
-                    fontFamily: 'TwCent',
-                    textTransform: 'uppercase',
-                    letterSpacing: 2.5,
-                    opacity: props.apparence.dark ? 1 : 0.65,
-                }}>Type de serveur</Text>
-                <SafeAreaView style={{height: ITEM_HEIGHT*1.2}}>
-                        <View style={{ width: '100%',flex: 1, flexDirection:'row', justifyContent: 'center', alignItems:'center'}}>
-                            <Carousel
-                            ref={_carousel}
-                            layout={"default"}
-                            activeSlideAlignment={"center"}
-                            data={games}
-                            sliderWidth={SLIDER_WIDTH}
-                            itemWidth={ITEM_WIDTH}
-                            renderItem={_renderItem}  
-                            inactiveSlideScale={0.45}
-                            inactiveSlideOpacity= {0.25}
-                            firstItem={Math.round(games.length / 2)}
-                        />
-                        </View>
-                    </SafeAreaView>
-                    <Formik
-                        initialValues={{ description: "", nameServer: "", ip: "", port: "", webSite: "", discord: ""}}
-                        onSubmit={handleOnSubmit}
-                        >
-                        {(formikprops) => (
-                        <View style={styles.formContainer}>
-                            <InputText 
-                                placeholder="Nom du serveur" 
-                                icon="pen" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("nameServer")}
-                                value={formikprops.values.nameServer} 
-                                error={nameError}  
-                            />
-                            <InputText 
-                                placeholder="Adresse IP (optionnel)" 
-                                icon="server" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("ip")}
-                                value={formikprops.values.ip} 
-                            />
-                            <InputText 
-                                placeholder="Port (optionnel)" 
-                                icon="plug" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("port")}
-                                value={formikprops.values.port} 
-                            />
-                            <InputText 
-                                placeholder="Description" 
-                                icon="" 
-                                color="#66A5F9"
-                                height= {400}
-                                textAlignVertical='top'
-                                numberOfLines={40}
-                                multiline={true} 
-                                onChangeText={formikprops.handleChange("description")}
-                                value={formikprops.values.description}    
-                                error={descriptionError}  
-                            />
-                            <InputText 
-                                placeholder="Site web (optionnel)" 
-                                icon="chrome" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("webSite")}
-                                value={formikprops.values.webSite}   
-                            />
-                            <InputText 
-                                placeholder="Discord (optionnel)" 
-                                icon="discord" 
-                                color="#66A5F9" 
-                                onChangeText={formikprops.handleChange("discord")}
-                                value={formikprops.values.discord} 
-                            />
-                            <TouchableOpacity onPress={openImagePickerAsync} style={{
-                                borderRadius: 20,
-                                height: 14*windowWidth/100,
-                                // padding : 34,
-                                paddingLeft: 18,
-                                paddingRight: 18,
-                                width: 80*windowWidth/100,
-                                backgroundColor: props.apparence.dark ? '#242048' : 'white',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
-                                // paddingBottom: 34,
-                                marginBottom: 34
-                            }}>
-                                <FontAwesome name="upload" size={20} color = '#A1A1A1'/>
-                                <Text style={{fontSize: 16 ,color: props.apparence.dark ? 'white' : '#6A6A6A', fontWeight: 'bold'}}>Image serveur</Text>
-                                {image(selectedImage)}
-                            </TouchableOpacity>
-                            <Text style={styles.error}>{miniatureError}</Text>
-                            <Bouton onPress={formikprops.handleSubmit} title="Ajouter un serveur" />
-                        </View>
-                    )}
-                    </Formik>
-                </ScrollView>
-            </View>
+                <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mes serveurs" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
+                <Loading/>
+            </ScrollView>
         )
     }
 }
