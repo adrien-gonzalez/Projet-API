@@ -346,7 +346,7 @@ const ServerInfoPage = (props) => {
                         <View>
                             {commentUser(dataServer.comment)}
                         </View>
-                        {/* Si user connecté */}
+                        {props.auth.isLogged == true? 
                         <View style={styles.feedback}>
                             <Text style={{color: dataServer.color, fontWeight: 'bold', fontSize: 18, marginTop: 30}}>Je laisse mon commentaire</Text>
                             <View style={styles.feedbackStar}>
@@ -367,7 +367,6 @@ const ServerInfoPage = (props) => {
                             onSubmit={handleOnSubmit}
                             >
                                 {(formikprops) => (
-                                
                                 <View style={styles.form}>
                                     <TextInput 
                                         style={styles.feddbackComent}
@@ -390,7 +389,8 @@ const ServerInfoPage = (props) => {
                             )}
                             </Formik>
                         </View>
-                        {/* Si user connecté */}
+                        :
+                        <View style={{width: '100%', height:50, marginBottom: 20}}></View>}
                     </View>
                 </View>
             </ScrollView>
@@ -411,7 +411,8 @@ const ServerInfoPage = (props) => {
 
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedServer, selectedGame, apparence, stateServer, serversRedux, }) => ({
+const mapStateToProps = ({ auth, selectedServer, selectedGame, apparence, stateServer, serversRedux, }) => ({
+    auth,
     selectedServer,
     selectedGame,
     apparence,
@@ -551,9 +552,10 @@ const styles = StyleSheet.create({
         marginBottom: 50,
     },
     errors: {
-        color: "red",
+        color: "#DC8A74",
         textAlign: "center",
         fontSize: 12,
         marginBottom: 10,
+        fontWeight: 'bold'
     },
 })
