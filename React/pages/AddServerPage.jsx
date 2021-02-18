@@ -425,7 +425,6 @@ console.log(nameError)
             <ScrollView style={{
                 backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
             }}>
-                <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mes serveurs" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
                 <Loading/>
             </ScrollView>
         )
