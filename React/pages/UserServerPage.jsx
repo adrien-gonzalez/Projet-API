@@ -154,7 +154,7 @@ const UserServerPage = (props) => {
         } else {
             return (
                 <View style={styles.listMyserver}>
-                    <Text style={{textAlign: 'center', color: 'black', fontSize: 20}}>Vous n'avez aucun serveur</Text>
+                    <Text style={{textAlign: 'center', color: props.apparence.dark ? 'white' : 'black', fontSize: 20}}>Vous n'avez aucun serveur</Text>
                 </View>
             )
         }

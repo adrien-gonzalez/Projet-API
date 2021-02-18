@@ -6,10 +6,9 @@ import {
   Text,
   Modal,
   TouchableOpacity,
-  TextInput,
   Image,
 } from "react-native";
-import InputText from "../components/TextInput";
+import TextInput from "../components/TextInput";
 import { Dimensions } from "react-native";
 import Bouton from "../components/bouton";
 import { Formik } from "formik";
@@ -160,20 +159,51 @@ const UserInfosPage = (props) => {
   }
 
   return (
-    <View style={styles.connectPageContainer}>
+    <View style={{
+      minHeight: "100%",
+      width: "100%",
+      backgroundColor: props.apparence.dark ? '#141229' : "#F1F1F1",
+    }}>
       {/* Debut modal confirmation SuppUser */}
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Supprimer le compte</Text>
-            <Text style={styles.modalContent}>
-              {" "}
-              Etes-vous sûr(e) de vouloir supprimer votre compte ?{" "}
+          <View style={{
+            borderRadius: 20,
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+            width: windowWidth - 50,
+            backgroundColor: props.apparence.dark ? '#141229' : 'white',
+          }}>
+            <Text style={{
+              marginBottom: 15,
+              textAlign: "center",
+              fontSize: 22,
+              backgroundColor: props.apparence.dark ? '#242048' : '#F3F3F3',
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              width: "100%",
+              paddingTop: 10,
+              paddingBottom: 10,
+              color: props.apparence.dark ? 'white' : '#262626',
+            }}>Supprimer le compte</Text>
+            <Text style={{
+              textAlign: "center",
+              width: "90%",
+              fontSize: 16,
+              color: props.apparence.dark ? 'white' : 'black',
+            }}>
+              Etes-vous sûr(e) de vouloir supprimer votre compte ?
             </Text>
             <Text style={styles.modalInfos}>
-              {" "}
               Cette action vous déconnectera immédiatement de votre compte et
-              vous ne pourrez plus vous reconnecter.{" "}
+              vous ne pourrez plus vous reconnecter.
             </Text>
             <Formik
               enableReinitialize
@@ -187,31 +217,50 @@ const UserInfosPage = (props) => {
                   <TextInput
                     style={{
                       height: 40,
-                      borderColor: "white",
-                      borderBottomColor: "grey",
-                      borderWidth: 1,
-                      width: "80%",
+                      borderColor: props.apparence.dark ? '#242048' : 'white',
+                      borderWidth: 2,
+                      width: '80%',
                       fontSize: 18,
                       marginBottom: 15,
-                    }}
-                    secureTextEntry={true}
-                    placeholder="Mot de passe"
-                    onChangeText={formikprops.handleChange("password")}
-                    value={formikprops.values.password}
+                      }}
+                      secureTextEntry={true}
+                      placeholder="Mot de passe"
+                      onChangeText={formikprops.handleChange('password')}
+                      value={formikprops.values.password}
+                      icon='lock'
+                      type='password'
+                      error={responseSupp}
                   />
-                  <Text style={styles.errors}>{responseSupp}</Text>
                   <View style={styles.fixToText}>
-                    <TouchableOpacity
-                      style={styles.boutonRight}
+                    <TouchableOpacity activeOpacity={props.apparence.dark ? 0.8 : 0.2}
+                      style={{
+                        width: "50%",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                        borderBottomLeftRadius: 20,
+                      }}
                       onPress={() => {
                         setModalVisible(!modalVisible);
                         setResponseSupp();
                       }}
                     >
-                      <Text style={styles.buttonTextLeft}>Annuler</Text>
+                      <Text style={{
+                        textAlign: "center",
+                        color: props.apparence.dark ? 'white' : 'black',
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        paddingLeft: 20,
+                      }}>Annuler</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.boutonRight}
+                    <TouchableOpacity activeOpacity={props.apparence.dark ? 0.8 : 0.2}
+                      style={{
+                        width: "50%",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                        borderBottomRightRadius: 20,
+                      }}
                       onPress={formikprops.handleSubmit}
                     >
                       <Text style={styles.buttonTextRight}>Supprimer</Text>
@@ -225,7 +274,7 @@ const UserInfosPage = (props) => {
       </Modal>
       {/* Fin modal confirmation SuppUser */}
       <View style={styles.headerContainer}>
-        <Topbar color="#262626" title="Mon compte" isText={true} navigation={navigation} backgroundColor="transparent" />
+        <Topbar color={props.apparence.dark ? 'white' : '#262626'} title="Mon compte" isText={true} navigation={navigation} backgroundColor={props.apparence.dark ? '#080015' : 'white'} />
         {selectedImage !== null ?
             <TouchableOpacity onPress={openImagePickerAsync} style={{width: 120, height: 120, borderRadius: 200, borderColor:props.selectedGame.gamecolor, borderWidth:4, backgroundColor:"white", marginBottom: 20}}>
               <View >
@@ -268,7 +317,7 @@ const UserInfosPage = (props) => {
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
-              <InputText
+              <TextInput
                 placeholder="Nom d'utilisateur"
                 icon="user"
                 color="#66A5F9"
@@ -276,7 +325,7 @@ const UserInfosPage = (props) => {
                 onChangeText={formikprops.handleChange("login")}
                 error={loginError}
               />
-              <InputText
+              <TextInput
                 placeholder="Adresse email"
                 icon="envelope"
                 color="#66A5F9"
@@ -284,7 +333,7 @@ const UserInfosPage = (props) => {
                 onChangeText={formikprops.handleChange("email")}
                 error={emailError}
               />
-              <InputText
+              <TextInput
                 placeholder="Mot de passe actuel"
                 type="password"
                 icon="lock"
@@ -293,7 +342,7 @@ const UserInfosPage = (props) => {
                 onChangeText={formikprops.handleChange("old_password")}
                 error={oldPasswordError}
               />
-              <InputText
+              <TextInput
                 placeholder="Nouveau mot de passe"
                 type="password"
                 icon="lock"
@@ -449,10 +498,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   buttonTextRight: {
-    textAlign: "center",
-    color: "red",
+    textAlign: 'center',
+    color: 'coral',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     paddingRight: 20,
   },
   errors: {

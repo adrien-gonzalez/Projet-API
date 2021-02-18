@@ -78,9 +78,13 @@ const ConnectPage = (props) => {
         keyboardVerticalOffset={0}
         behavior={"position"}
       >
-        <View style={styles.connectPageContainer}>
+        <View style={{
+          minHeight: '100%',
+          width: '100%',
+          backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+        }}>
           <View style={styles.headerContainer}>
-            <FormsHero navigation={navigation} title="Connexion" />
+            <FormsHero navigation={navigation} title="Connexion" needBar={true} />
           </View>
           <ScrollView style={{ height: "60%" }}>
             <Formik
@@ -119,7 +123,7 @@ const ConnectPage = (props) => {
                     }}
                   >
                     <Text style={styles.register}>
-                      Pas encore de compte ? -- Je m'inscris !
+                      Pas encore de compte ? Je m'inscris !
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -142,9 +146,13 @@ const ConnectPage = (props) => {
     );
   } else {
     return (
-      <View style={styles.connectPageContainer}>
+      <View style={{
+        minHeight: '100%',
+        width: '100%',
+        backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+      }}>
         <View style={styles.headerContainer}>
-          <FormsHero navigation={navigation} title="Connexion" />
+          <FormsHero navigation={navigation} title="Connexion" needBar={true} />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik
@@ -183,7 +191,7 @@ const ConnectPage = (props) => {
                   }}
                 >
                   <Text style={styles.register}>
-                    Pas encore de compte ? -- Je m'inscris !
+                    Pas encore de compte ? Je m'inscris !
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -206,6 +214,11 @@ const ConnectPage = (props) => {
   }
 };
 
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ apparence }) => ({
+  apparence,
+});
+
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch: (action) => {
@@ -214,14 +227,11 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectPage);
+
 const styles = StyleSheet.create({
   headerContainer: {
     height: "40%",
-  },
-  connectPageContainer: {
-    minHeight: "100%",
-    width: "100%",
-    backgroundColor: "#F1F1F1",
   },
   formContainer: {
     paddingTop: "8%",
@@ -236,12 +246,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   forgotPassword: {
-    color: "red",
-    fontWeight: "bold",
+    color: 'coral',
+    fontWeight: 'bold',
     fontSize: 14,
     paddingTop: 10,
     marginBottom: 60,
   },
 });
 
-export default connect(mapDispatchToProps)(ConnectPage);

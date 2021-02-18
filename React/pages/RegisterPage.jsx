@@ -15,11 +15,14 @@ import InputText from "../components/TextInput";
 import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
+import { connect } from 'react-redux';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const RegisterPage = ({ navigation }) => {
+const RegisterPage = (props) => {
+  const navigation = props.navigation;
+
   const [loginError, setLoginError] = useState([]);
   const [emailError, setEmailError] = useState([]);
   const [PasswordError, setPasswordError] = useState([]);
@@ -93,9 +96,13 @@ const RegisterPage = ({ navigation }) => {
         keyboardVerticalOffset={0}
         behavior={"position"}
       >
-        <View style={styles.connectPageContainer}>
+        <View style={{
+          minHeight: '100%',
+          width: '100%',
+          backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+        }}>
           <View style={styles.headerContainer}>
-            <FormsHero navigation={navigation} title="Inscription" />
+            <FormsHero navigation={navigation} title="Inscription" needBar={true} />
           </View>
           <ScrollView style={{ height: "60%" }}>
             <Formik
@@ -159,9 +166,13 @@ const RegisterPage = ({ navigation }) => {
     );
   } else {
     return (
-      <View style={styles.connectPageContainer}>
+      <View style={{
+        minHeight: '100%',
+        width: '100%',
+        backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+      }}>
         <View style={styles.headerContainer}>
-          <FormsHero navigation={navigation} title="Inscription" />
+          <FormsHero navigation={navigation} title="Inscription" needBar={true} />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik
@@ -225,15 +236,16 @@ const RegisterPage = ({ navigation }) => {
   }
 };
 
+const mapStateToProps = ({ apparence }) => ({
+  apparence,
+});
+
+export default connect(mapStateToProps)(RegisterPage);
+
 const styles = StyleSheet.create({
   headerContainer: {
     height: "40%",
     // backgroundColor: 'red',
-  },
-  connectPageContainer: {
-    minHeight: "100%",
-    width: "100%",
-    backgroundColor: "#F1F1F1",
   },
   formContainer: {
     paddingTop: "2%",
@@ -244,4 +256,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterPage;
