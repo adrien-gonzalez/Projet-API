@@ -28,11 +28,9 @@ const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 const AddServerPage = (props) => {
 
     const navigation = props.navigation;
-
-    const scrollRef = useRef();
-    
+    const scrollRef = useRef();  
     const [idUser, setId] = useState([]);
-
+  
     SecureStore.getItemAsync("token").then(result => {
       const {id} = jwtDecode(result);
       setId(id);
@@ -45,11 +43,11 @@ const AddServerPage = (props) => {
     const [miniatureError, setMiniatureError] = useState([]);
     const [load, setLoad] = useState(false);
 
-
+    
     const [selectedImage, setSelectedImage] = React.useState(null);
     const handleOnSubmit = async (values, actions) => {
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
-
+    
         setNameError('')
         setDescriptionError('')
         setMiniatureError('')
@@ -103,7 +101,6 @@ const AddServerPage = (props) => {
                 setResponse(error);
           }
     }
-console.log(nameError)
 
     let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();    
