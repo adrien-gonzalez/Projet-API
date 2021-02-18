@@ -317,6 +317,7 @@ const UserInfosPage = (props) => {
         >
           {(formikprops) => (
             <View style={styles.formContainer}>
+              <Text style={styles.success}>{responsePut}</Text>
               <TextInput
                 placeholder="Nom d'utilisateur"
                 icon="user"
@@ -355,7 +356,6 @@ const UserInfosPage = (props) => {
                 onPress={formikprops.handleSubmit}
                 title="Modifier mon profil"
               />
-              <Text style={styles.success}>{responsePut}</Text>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(true);
@@ -511,8 +511,10 @@ const styles = StyleSheet.create({
   },
   success: {
     color: "green",
+    fontWeight: "bold",
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 14,
+    paddingBottom:20,
   },
   pictureProfil: {
     width: "100%",

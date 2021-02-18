@@ -16,6 +16,7 @@ import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
 import { connect } from 'react-redux';
+import { useRef } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -29,12 +30,16 @@ const RegisterPage = (props) => {
   const [cPasswordError, setcPasswordError] = useState([]);
   const [response, setResponse] = useState([]);
 
+  const scrollRef = useRef();
+
   const handleOnSubmit = async (values, actions) => {
     // On set les messages d'erreur à null
     setLoginError("");
     setEmailError("");
     setPasswordError("");
     setcPasswordError("");
+
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
 
     const donnees = new URLSearchParams();
     donnees.append("login", values.login);
@@ -104,7 +109,7 @@ const RegisterPage = (props) => {
           <View style={styles.headerContainer}>
             <FormsHero navigation={navigation} title="Inscription" needBar={true} />
           </View>
-          <ScrollView style={{ height: "60%" }}>
+          <ScrollView ref={scrollRef} style={{ height: "60%" }}>
             <Formik
               enableReinitialize
               initialValues={{
@@ -174,7 +179,7 @@ const RegisterPage = (props) => {
         <View style={styles.headerContainer}>
           <FormsHero navigation={navigation} title="Inscription" needBar={true} />
         </View>
-        <ScrollView style={{ height: "60%" }}>
+        <ScrollView ref={scrollRef} style={{ height: "60%" }}>
           <Formik
             enableReinitialize
             initialValues={{
