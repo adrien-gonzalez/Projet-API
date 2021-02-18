@@ -62,6 +62,7 @@ const UserInfosPage = (props) => {
     }
 
     setSelectedImage({ localUri: pickerResult.uri, type: pickerResult.type });
+
   };
 
   const fetchInfosUser = async () => {
@@ -154,10 +155,6 @@ const UserInfosPage = (props) => {
       setResponsePut(error);
     }
   };
-
-  function image(selectedImage) {
-    
-  }
 
   return (
     <View style={styles.connectPageContainer}>
