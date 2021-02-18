@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, ScrollView, Text, ImageBackground, Image, StyleSheet, Platform } from 'react-native';
 import Bouton from '../components/bouton';
 import GamesAPI from "../services/gamesAPI";

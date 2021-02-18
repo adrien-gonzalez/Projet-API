@@ -6,11 +6,13 @@ import InputText from "../components/TextInput.jsx";
 import FormsHero from '../components/FormsHero';
 import Bouton from "../components/bouton.jsx";
 import ResetPasswordAPI from "../services/resetPasswordAPI";
+import { connect } from 'react-redux';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-const ResetMail = ({navigation}) => {
+const ResetMail = (props) => {
+  const navigation = props.navigation;
   const [response, setResponse] = useState();
 
   // DEBUT AXIOS
@@ -40,9 +42,13 @@ const ResetMail = ({navigation}) => {
   // FIN AXIOS
 
   return (
-      <View style={styles.resetPageContainer}>
+      <View style={{
+        minHeight: '100%',
+        width: '100%',
+        backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+      }}>
         <View style={styles.headerContainer}>
-          <FormsHero title="Mot de passe oublié"/>
+          <FormsHero title="Mot de passe oublié" navigation={navigation} needBar={true} />
         </View>
         <ScrollView style={{ height: "60%" }}>
           <Formik initialValues={{ email: "" }} onSubmit={handleOnSubmit}>
@@ -53,7 +59,7 @@ const ResetMail = ({navigation}) => {
                 </View>
                 <Bouton type="submit"
                   onPress={formikprops.handleSubmit}
-                  title="Envoyer l'email de réinitialisation"
+                  title="Suivant"
                 />
               </View>
             )}
@@ -63,14 +69,15 @@ const ResetMail = ({navigation}) => {
   );
 };
 
+const mapStateToProps = ({ apparence }) => ({
+  apparence,
+});
+
+export default connect(mapStateToProps)(ResetMail);
+
 const styles = StyleSheet.create({
-  resetPageContainer: {
-    minHeight: '100%',
-    width: '100%',
-    backgroundColor: '#F1F1F1',
-},
-  headerContainer: {
-    height: '40%',
+headerContainer: {
+  height: '40%',
 },
 formContainer: {
   paddingTop: "2%",
@@ -85,5 +92,3 @@ formContainer: {
     width: "100%",
   },
 });
-
-export default ResetMail;

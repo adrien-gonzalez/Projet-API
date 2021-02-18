@@ -6,10 +6,13 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { Formik } from "formik";
 import ResetPasswordAPI from "../services/resetPasswordAPI";
 import FormsHero from "../components/FormsHero";
+import { connect } from 'react-redux';
 
 const windowWidth = Dimensions.get("window").width;
 
-const ResetPassword = ({ navigation }) => {
+const ResetPassword = (props) => {
+
+  const navigation = props.navigation;
 
   const [response, setResponse] = useState([]);
   const [errorToken, setErrorToken] = useState([]);
@@ -75,9 +78,13 @@ const ResetPassword = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.resetPageContainer}>
+    <View style={{
+      minHeight: '100%',
+      width: '100%',
+      backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
+    }}>
       <View style={styles.headerContainer}>
-        <FormsHero title="Mot de passe oublié" />
+        <FormsHero title="Mot de passe oublié" navigation={navigation} needBar={true} />
       </View>
       <ScrollView style={{ height: "60%" }}>
         <Formik
@@ -123,7 +130,7 @@ const ResetPassword = ({ navigation }) => {
                 type="submit"
                 onPress={formikprops.handleSubmit}
                 title="Modifier"
-              />
+                />
               <Text style={styles.errors}>{errorToken}</Text>
             </View>
           )}
@@ -133,14 +140,16 @@ const ResetPassword = ({ navigation }) => {
   );
 };
 
+// RECUP DU STORE REDUX
+const mapStateToProps = ({ apparence }) => ({
+  apparence,
+});
+
+export default connect(mapStateToProps)(ResetPassword);
+
 const styles = StyleSheet.create({
   headerContainer: {
     height: "40%",
-  },
-  resetPageContainer: {
-    minHeight: "100%",
-    width: "100%",
-    backgroundColor: "#F1F1F1",
   },
   formContainer: {
     paddingTop: "2%",
@@ -162,4 +171,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetPassword;

@@ -11,6 +11,7 @@ const windowWidth = Dimensions.get('window').width;
 
 function Tab(props) {
     
+    console.log(props);
     const isFocused = useIsFocused();
     const navigation = useNavigation();
 
@@ -38,13 +39,18 @@ function Tab(props) {
     else {
         var style = styles.btnIcon;
         var btnContainerStyle = styles.btnContainerHome;
-    }
-    
+    } 
 
     return (
         <TouchableOpacity style={btnContainerStyle} onPress={() => navigation.navigate(props.page)}>
             <View>
-                {props.accountTab && props.auth.isLogged ? 
+                {props.accountTab && props.auth.isLogged ?
+                    props.auth.pp === "default.png" ?
+                    <Image
+                    source={require("../assets/default.png")}
+                    style={{height: 40, width: 40, borderRadius: 50, borderColor: colorBorder, borderWidth: 2}}
+                    />
+                    :
                     <Image
                         source={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/" + props.auth.pp }}
                         style={{height: 40, width: 40, borderRadius: 50, borderColor: colorBorder, borderWidth: 2}}

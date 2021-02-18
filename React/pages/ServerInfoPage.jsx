@@ -47,7 +47,7 @@ const ServerInfoPage = (props) => {
 
     useEffect(() => {
         fetchServers();
-    }, [props.selectedServer.id]);
+    }, [props.selectedServer.id, props.serversRedux.isUpdated]);
 
     var comment = 0
     if(dataServer.comment == 0){
@@ -55,7 +55,6 @@ const ServerInfoPage = (props) => {
     } else {
         var comment = server.length
     }
-
 
     const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
     switch (appImages) {
@@ -109,6 +108,10 @@ const ServerInfoPage = (props) => {
           } catch (error) {
             setResponse(error);
           }
+
+            // Update state in redux
+            const action = { type: "UPDATE_STATE_SERVER", value: {id: dataServer.id, newState: true} }
+            props.dispatch(action)
     };
 
     // Tableau de notes
@@ -408,14 +411,22 @@ const ServerInfoPage = (props) => {
 
 
 // RECUP DU STORE REDUX
-const mapStateToProps = ({ selectedServer, selectedGame, apparence }) => ({
+const mapStateToProps = ({ selectedServer, selectedGame, apparence, stateServer, serversRedux, }) => ({
     selectedServer,
     selectedGame,
     apparence,
+    stateServer,
+    serversRedux
 });
 
+// STORE SELECTED SERVER TO REDUX
+const mapDispatchToProps = (dispatch) => {
+    return {
+      dispatch: (action) => { dispatch(action) }
+    }
+}
   
-export default connect(mapStateToProps)(ServerInfoPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ServerInfoPage);
   
 
 const styles = StyleSheet.create({
