@@ -15,6 +15,7 @@ import InputText from "../components/TextInput";
 import Bouton from "../components/bouton";
 import { Formik } from "formik";
 import userAPI from "../services/userAPI.js";
+import { useRef } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -26,12 +27,16 @@ const RegisterPage = ({ navigation }) => {
   const [cPasswordError, setcPasswordError] = useState([]);
   const [response, setResponse] = useState([]);
 
+  const scrollRef = useRef();
+
   const handleOnSubmit = async (values, actions) => {
     // On set les messages d'erreur à null
     setLoginError("");
     setEmailError("");
     setPasswordError("");
     setcPasswordError("");
+
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
 
     const donnees = new URLSearchParams();
     donnees.append("login", values.login);
@@ -97,7 +102,7 @@ const RegisterPage = ({ navigation }) => {
           <View style={styles.headerContainer}>
             <FormsHero navigation={navigation} title="Inscription" />
           </View>
-          <ScrollView style={{ height: "60%" }}>
+          <ScrollView ref={scrollRef} style={{ height: "60%" }}>
             <Formik
               enableReinitialize
               initialValues={{
@@ -163,7 +168,7 @@ const RegisterPage = ({ navigation }) => {
         <View style={styles.headerContainer}>
           <FormsHero needBar={true} navigation={navigation} title="Inscription" />
         </View>
-        <ScrollView style={{ height: "60%" }}>
+        <ScrollView ref={scrollRef} style={{ height: "60%" }}>
           <Formik
             enableReinitialize
             initialValues={{
