@@ -45,8 +45,8 @@ const AddServerPage = (props) => {
     const [miniatureError, setMiniatureError] = useState([]);
     const [load, setLoad] = useState(false);
 
-
     const [selectedImage, setSelectedImage] = React.useState(null);
+    
     const handleOnSubmit = async (values, actions) => {
         var gameId = parseInt(JSON.stringify(_carousel.current.currentIndex)) + 1
 
