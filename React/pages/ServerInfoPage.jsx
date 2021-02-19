@@ -38,7 +38,7 @@ const ServerInfoPage = (props) => {
                 miniature: d.miniature,
                 games_fk: d.games_fk
             })
-          });
+          })
             setLoad(true)
         } catch (error) {
         console.log(error);
@@ -331,7 +331,7 @@ const ServerInfoPage = (props) => {
                                 fontSize: 22,
                                 marginTop: 5,
                                 color: props.apparence.dark ? 'white' : 'black',
-                            }}>{dataServer.comment}</Text>
+                            }}>{comment}</Text>
                             <Text style={{ color: dataServer.color, fontSize: 22, fontWeight: 'bold' }}>Avis</Text>
                         </View>
                     </View>
