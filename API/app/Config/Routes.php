@@ -32,7 +32,6 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 
 // ROUTES GET
-
 $routes->add('/', 'Home::index');
 $routes->add('api/servers', 'ServerController::server');
 $routes->post('api/comment', 'CommentController::comment');
