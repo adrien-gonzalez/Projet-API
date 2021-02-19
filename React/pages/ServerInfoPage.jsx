@@ -132,6 +132,11 @@ const ServerInfoPage = (props) => {
             return (
                 server.map((server, key) => (
                     <View key={key} style={styles.infoUser}>
+                        <Image
+                            source={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/"+server.picture_profil }}
+                            style={styles.profil}
+                        />
+                        {/* <Text style={styles.profil}>{server.picture_profil}</Text> */}
                         <Text style={styles.login}>{server.login}</Text>
                         <Text style={styles.date}>{server.date}</Text>
                         <Text style={styles.score}>
@@ -390,7 +395,7 @@ const ServerInfoPage = (props) => {
                             </Formik>
                         </View>
                         :
-                        <View style={{width: '100%', height:50, marginBottom: 20}}></View>}
+                        <View style={{width: '100%', height:50, marginBottom: 40}}></View>}
                     </View>
                 </View>
             </ScrollView>
@@ -498,6 +503,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 22,
         fontWeight: 'bold',
+    },
+    profil:{
+        marginTop: 20,
+        width: 80,
+        height: 80,
+        borderRadius: 50
     },
     login: {
         marginTop: 20,
