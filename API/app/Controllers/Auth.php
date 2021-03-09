@@ -56,10 +56,10 @@ class Auth extends ResourceController
 			if ( password_verify($this->request->getRawInput()["password"], $recupUser["password"]) ) {
 				$key = Services::getSecretKey();
 
-				// Infos que le token va contenir
-				
+				// date création token
 				$issuedAtTime = time();
-
+				
+				// Infos que le token va contenir
 				$payload = [
 					'id' => intval($recupUser["id"]),
 					'login' => $recupUser["login"],
@@ -67,6 +67,7 @@ class Auth extends ResourceController
 					'exp' => $issuedAtTime + 1200,
 				];
 
+				// Infos que le token refresh va contenir
 				$payload2 = [
 					'id' => intval($recupUser["id"]),
 					'login' => $recupUser["login"],
