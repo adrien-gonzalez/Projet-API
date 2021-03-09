@@ -32,69 +32,77 @@ class ServerModel extends Model
                 $offset = ($limit*$page) - $limit;
             }
 
-            $builder = $this->db->table('servers');
+            $builder = $this->db->table('games');
             $builder->select('servers.id, servers.name, website, discord, port, ip,
             servers.description as descriptionServer, games.description as descriptiponGame,
-            miniature, vote, games.image, games.logo');
-            $builder->join('games', 'games.id = servers.games_fk');
-            $builder->where('servers.games_fk', $_GET['game']);
+            miniature, vote, click, games.image, games.logo, games.color, servers.miniature, games.name as nameGame, AVG(avis.score) as score, COUNT(avis.id) as avis_count');
+            $builder->join('servers', 'servers.games_fk = games.id');
+            $builder->join('avis', 'avis.servers_fk = servers.id', 'left');
+            $builder->where('games.id', $_GET['game']);
             $builder->orderBy("servers.vote", "DESC");
+            $builder->groupBy("servers.id");
             $builder->limit($limit, $offset);
             $query = $builder->get();
-            $servers = $query->getResult(); 
+            $servers = $query->getResult();
 
         // recup serveur et ses info (avis, description...) via son id
         } else if(isset($_GET['id']) && is_numeric($_GET['id'])) {
+            
+            $builder = $this->db->table('servers');
+            $builder->select('servers.id, servers.name, website, discord, port, ip,
+            servers.description as descriptionServer, miniature, vote, avis.comment, COUNT(avis.comment) as numberComment, avis.score,
+            avis.date, users.login, users.picture_profil, games.color, servers.games_fk');
+            $builder->join('games', 'games.id = servers.games_fk');
+            $builder->join('avis', 'avis.servers_fk = servers.id', 'LEFT');
+            $builder->join('users', 'avis.users_fk = users.id', 'LEFT');
+            $builder->where('servers.id', $_GET['id']);
+            $builder->orderBy("avis.date", "DESC");
+            $builder->groupBy("avis.id");
+            $query = $builder->get();
+            $servers = $query->getResult();
+
+        // recup serveur et ses info selon l'utilisateur
+        } else if(isset($_GET['user']) && is_numeric($_GET['user'])) {
 
             $builder = $this->db->table('servers');
             $builder->select('servers.id, servers.name, website, discord, port, ip,
-            servers.description as descriptionServer, miniature, vote, avis.comment, avis.score,
-            avis.date, users.login, users.picture_profil, games.color');
+            servers.description as descriptionServer, miniature, vote,
+            games.color, games.name as nameGame, COUNT(avis.comment) as avis');
             $builder->join('games', 'games.id = servers.games_fk');
-            $builder->join('avis', 'avis.servers_fk = servers.id');
-            $builder->join('users', 'avis.users_fk = users.id');
-            $builder->where('servers.id', $_GET['id']);
-            $builder->orderBy("avis.date", "DESC");
+            $builder->join('avis', 'avis.servers_fk = servers.id', 'LEFT');
+            $builder->where('servers.users_fk', $_GET['user']);
+            $builder->orderBy("servers.id", "DESC");
+            $builder->groupBy("servers.id");
             $query = $builder->get();
-            $servers = $query->getResult(); 
-        } 
+            $servers = $query->getResult();
+        }
         return $servers;
     }
 
-    public function postServers($user_fk, $param)
+    public function postServers($user_fk, $imageServer)
     {
-        // // Select games_fk
-        // $builder = $this->db->table('games');
-        // $builder->select('games.id');
-        // $builder->where("games.name", $param['name_game']);
-        // $query = $builder->get()->getResult();
-          
-        // if (sizeof($query) != 0){
-        //   $id_game = $query[0]->id;
-        // }
-
         $builder = $this->db->table('servers');
         $builder->select('servers.name');
-        $builder->where("servers.name", $param['name']);
+        $builder->where("servers.name", $_POST['name']);
         $query = $builder->get()->getResult();
 
         if (sizeof($query) == 0){
 
             $builder = $this->db->table('servers');
             $builder->insert([
-                'name' => $param['name'],
-                'website'   => $param['website'],
-                'discord' => $param['discord'],
-                'ip' => $param['ip'],
-                'port' => $param['port'],
-                'description' => $param['description'],
-                'miniature' => $param['miniature'],
-                'games_fk' => $param['gameId'],
+                'name' => $_POST['name'],
+                'website'   => $_POST['website'],
+                'discord' => $_POST['discord'],
+                'ip' => $_POST['ip'],
+                'port' => $_POST['port'],
+                'description' => $_POST['description'],
+                'miniature' => $imageServer,
+                'games_fk' => $_POST['gameId'],
                 'users_fk' => $user_fk
             ]);
 
             // Récup l'id du serveur créé précédemment et insert image_servers (si image(s) upload)
-            if (!empty($param['image_servers'])) {
+            if (!empty($_POST['image_servers'])) {
                 $builder = $this->db->table('servers');
                 $builder->select('servers.id');
                 $builder->orderBy("id", "desc");
@@ -106,7 +114,7 @@ class ServerModel extends Model
 
                 $builder = $this->db->table('image_servers');
                 $builder->insert([
-                    'name' => $param['image_servers'],
+                    'name' => $_POST['image_servers'],
                     'servers_fk' => $id_server,
                 ]);
             }
@@ -115,23 +123,36 @@ class ServerModel extends Model
         }
     }
 
-    public function putServers($param)
+    public function updateServer($imageServer)
     {
         $builder = $this->db->table('servers');
-        $builder->set('name', $param['name_server']);
-        $builder->set('website', $param['website']);
-        $builder->set('discord', $param['discord']);
-        $builder->set('ip', $param['ip']);
-        $builder->set('port', $param['port']);
-        $builder->set('description', $param['description']);
-        $builder->set('miniature', $param['miniature']);
+        $builder->select('servers.miniature');
+        $builder->where('servers.id', $_GET['id']);
+        $query = $builder->get()->getResult();
+
+        if($imageServer != null) {
+            unlink('../public_html/assets/miniature_server/'.$query[0]->miniature);
+        } else {
+            $imageServer = $query[0]->miniature;
+        }
+    
+        $builder = $this->db->table('servers');
+        $builder->set('name', $_POST['name']);
+        $builder->set('website', $_POST['website']);
+        $builder->set('discord', $_POST['discord']);
+        $builder->set('ip', $_POST['ip']);
+        $builder->set('port', $_POST['port']);
+        $builder->set('description', $_POST['description']);
+        $builder->set('games_fk', $_POST['gameId']);   
+        $builder->set('miniature', $imageServer);
         $builder->where('servers.id', $_GET['id']);
         $builder->update();
     }
 
     public function deleteServer() {
+
         $builder = $this->db->table('servers');
-        $queryDelete = $builder->where('id', $_GET["serverId"]);
+        $queryDelete = $builder->where('id', $_GET["id"]);
         $queryDelete->delete();
     }
 

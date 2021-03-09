@@ -27,9 +27,21 @@ class GameModel extends Model
             $builder->orderBy('serv_count', 'DESC');
             $query = $builder->get($_GET["popular"]);
             
-        }
-        else {
+        } else if(isset($_GET['carousel'])) {
             $builder = $this->db->table('games');
+            $builder->select('*');
+            // $builder->from('servers');
+            // $builder->join('games', 'games.id = games_fk');
+            // $builder->groupBy('games_fk');
+            $builder->orderBy('games.id', 'ASC');
+            $query = $builder->get();
+        } else {
+            $builder = $this->db->table('games');
+            $builder->select('games.*, COUNT(`games_fk`) AS `serv_count`');
+            // $builder->from('servers');
+            $builder->join('servers', 'games.id = games_fk', 'LEFT');
+            $builder->groupBy('games_fk');
+            $builder->orderBy('serv_count', 'DESC');
             $query = $builder->get();
         }
         

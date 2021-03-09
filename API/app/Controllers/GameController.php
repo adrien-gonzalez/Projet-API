@@ -2,13 +2,42 @@
 
 namespace App\Controllers;
 
+use Exception;
 use App\Models\GameModel;
+use Config\Services;
+use Firebase\JWT\JWT;
+use OpenApi\Annotations as OA;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
-class GameController extends BaseController
+
+class GameController extends ResourceController
 {
 
     public function game() {
+
         $method = $_SERVER["REQUEST_METHOD"];
+
+        // if ($method == "GET") {
+        //     $key        = Services::getSecretKey();
+        //     $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+        //     // var_dump($authHeader);
+        //     // die;
+        //     if (is_null($authHeader)) { //JWT is absent
+        //         return $this->respond(['message' => "Token introuvable"], 401);
+        //     } else {
+        //         $arr        = explode(' ', $authHeader);
+        //         $token      = $arr[1];
+        //     }
+
+        //     try {
+        //         $decodedToken = JWT::decode($token, $key, ['HS256']);
+        //     } catch (\Exception $e) {
+        //         return $this->respond(['message' => "Token invalide"], 401);
+
+        //     }
+        // }
+
         $actions = [
             "GET" => "getGames",
             "POST" => "postGames",

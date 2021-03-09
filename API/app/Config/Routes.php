@@ -32,14 +32,19 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 
 // ROUTES GET
-
 $routes->add('/', 'Home::index');
 $routes->add('api/servers', 'ServerController::server');
+$routes->add('api/tags', 'TagController::tag');
 $routes->post('api/comment', 'CommentController::comment');
 $routes->add('api/users', 'UserController::user');
 $routes->add('api/games', 'GameController::game');
 $routes->post('api/auth', 'Auth::create');
+$routes->post('api/refresh', 'Refresh::create');
 $routes->add('api/resetpassword', 'PasswordController::resetPassword');
+
+// ROUTES UPDATE
+$routes->post('api/users/update', 'UserController::updateUser');
+$routes->post('api/servers/update', 'ServerController::updateServer');
 
 // Route pour faire mes test (à supprimer)
 $routes->get('api/users/profil_picture', 'UserController::profil_picture');

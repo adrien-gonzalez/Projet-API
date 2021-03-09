@@ -54,14 +54,14 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPUser =''; // à renseigner pour que l'envoie de mail fonctionne
+	public $SMTPUser ='servetop.contact@gmail.com'; // à renseigner pour que l'envoie de mail fonctionne
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass =''; // à renseigner pour que l'envoie de mail fonctionne
+	public $SMTPPass ='A2&n26/m5'; // à renseigner pour que l'envoie de mail fonctionne
 
 	/**
 	 * SMTP Port
