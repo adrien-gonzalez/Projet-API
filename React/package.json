@@ -39,7 +39,7 @@
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16"
+    "@babel/core": "^7.12.17"
   },
   "private": true
 }

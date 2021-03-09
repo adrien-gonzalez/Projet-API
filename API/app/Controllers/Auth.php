@@ -64,19 +64,27 @@ class Auth extends ResourceController
 					'id' => intval($recupUser["id"]),
 					'login' => $recupUser["login"],
 					'iat' => $issuedAtTime,
-					'exp' => $issuedAtTime + 3600,
+					'exp' => $issuedAtTime + 1200,
+				];
+
+				$payload2 = [
+					'id' => intval($recupUser["id"]),
+					'login' => $recupUser["login"],
+					'iat' => $issuedAtTime,
 				];
 	
 				// Initialisation du token JWT et le return
 				$jwt = JWT::encode($payload, $key);
-				return $this->respond(['token' => $jwt], 200);
+				$jwtrefresh = JWT::encode($payload2, $key);
+				return $this->respond(['token' => $jwt, 'refresh' => $jwtrefresh], 200);
+				// return $this->respond(['token' => $jwt], 200);
 			}
 			else {
-				return $this->respond(['message' => 'Invalid login details'], 401);
+				return $this->respond(['passwordError' => 'Nom d\'utilisateur ou mot de passe incorrect'], 401);
 			}
 		}
 		else {
-			return $this->respond(['message' => 'Login inexistant'], 401);
+			return $this->respond(['loginError' => 'Ce nom d\'utilisateur n\'existe pas'], 401);
 		}
 		
 

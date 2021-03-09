@@ -6,53 +6,48 @@ use Exception;
 use Config\Services;
 use Firebase\JWT\JWT;
 use App\Models\ServerModel;
+use App\Models\UserModel;
 use OpenApi\Annotations as OA;
 use CodeIgniter\RESTful\ResourceController;
-// header('Access-Control-Allow-Origin: *');
 
 class ServerController extends ResourceController
 {
 
     public function server() {
-        
+
         $method = $_SERVER["REQUEST_METHOD"];
 
-        // if ( $method == "POST" || $method == "PUT" || $method == "DELETE" ) {
-        //     $key        = Services::getSecretKey();
-        //     $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
-        //     if (is_null($authHeader)) { //JWT is absent
-        //         throw new Exception('Missing JWT in request');
-        //     }
-        //     else {
-        //         $arr        = explode(' ', $authHeader);
-        //         $token      = $arr[1];
-        //     }
-    
-        //     try
-        //     {
-        //         $decodedToken = JWT::decode($token, $key, ['HS256']);
-        //     }
-        //     catch (\Exception $e)
-        //     {
-        //         throw new Exception("Invalid JWT");
-        //     }
-        // }
+        if ( $method == "POST" || $method == "DELETE" ) {
+            $key        = Services::getSecretKey();
+            $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+            if (is_null($authHeader)) { //JWT is absent
+                return $this->respond(['message' => "Token introuvable"], 401);
+            }
+            else {
+                $arr        = explode(' ', $authHeader);
+                $token      = $arr[1];
+            }
+            try
+            {
+                $decodedToken = JWT::decode($token, $key, ['HS256']);
+            }
+            catch (\Exception $e)
+            {
+                return $this->respond(['message' => "Token invalide"], 401);
+            }
+        }
 
         $actions = [
             "GET" => "getServers",
             "POST" => "postServer",
-            "PUT" => "putServer",
+            // "PUT" => "putServer",
             "DELETE" => "deleteServer"
         ];
 
         $call = $actions[$method];
         
         $response = $this->$call();
-
-       
-
         return $response;
-
     }
 
      /**
@@ -152,30 +147,36 @@ class ServerController extends ResourceController
     {
         $errors = ["errors" => []];
         $stop = false;
-
         // Décodage du token pour récupérer les infos
-        // $decodedToken = $this->decodeToken();
-        // récup id user connecté
-        $user_fk = 20;
-        $param = $this->request->getRawInput();
+        $decodedToken = $this->decodeToken();  
         $model = new ServerModel();
 
-        if ( !isset($param["name"]) || empty($param["name"]) ) {
+        if(isset($_FILES['file']['name']))
+        {
+            $idImage = uniqid();
+            $folderPath = "../public_html/assets/miniature_server/";   
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $file_ext = strtolower(end(explode('.',$_FILES['file']['name'])));
+            $file = $folderPath . $idImage . '.'.$file_ext;
+            $imageServer = $idImage.'.'.$file_ext;
+        }
+
+        if ( !isset($_POST["name"]) || empty($_POST["name"]) ) {
             array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
             $stop = true;
         }
         
-        if ( !isset($param["miniature"]) || empty($param["miniature"]) ) {
+        if ( !isset($imageServer)) {
             array_push($errors["errors"], ['miniatureEmpty' => "Veuillez renseigner une miniature pour votre serveur"]);
             $stop = true;
         }
         
-        if ( !isset($param["description"]) || empty($param["description"]) ) {
+        if ( !isset($_POST["description"]) || empty($_POST["description"]) ) {
             array_push($errors["errors"], ['descriptionEmpty' => "Veuillez renseigner une description"]);
             $stop = true;
         }
 
-        if ( !isset($param["gameId"]) || empty($param["gameId"]) ) {
+        if ( !isset($_POST["gameId"]) || empty($_POST["gameId"]) ) {
             array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
             $stop = true;
         }
@@ -184,11 +185,14 @@ class ServerController extends ResourceController
             return $this->respond($errors, 401);
         } else {
             try {
-                $model->postServers($user_fk, $param);
+                $model->postServers($decodedToken->id, $imageServer);
+                move_uploaded_file($file_tmp, $file);
                 return true;
 
             } catch (Exception $e) {
-                return $this->respond(['message' => $e->getMessage()], 500);
+                array_push($errors["errors"], ['nameAlreadyExist' => $e->getMessage()]);
+                return $this->respond($errors, 401);
+                // return $e->getMessage();
             }
         }
     }
@@ -233,49 +237,47 @@ class ServerController extends ResourceController
      *      )
      * )
      */
-    public function putServer()
+    public function updateServer()
     {
         if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
-
+            
             $errors = ["errors" => []];
             $stop = false;
             
             // Décodage du token pour récupérer les infos
             $decodedToken = $this->decodeToken();
-            $param = $this->request->getRawInput();
             $model = new ServerModel();
             $isMyServer = $model->isMyServer($_GET["id"], $decodedToken->id);
 
             if ($isMyServer) {
-
-                if ( !isset($param["name_server"]) || empty($param["name_server"]) ) {
+                if ( !isset($_POST["name"]) || empty($_POST["name"]) ) {
                     array_push($errors["errors"], ['nameServerEmpty' => "Veuillez renseigner un nom de serveur"]);
                     $stop = true;
                 }
-                
-                if ( !isset($param["miniature"]) || empty($param["miniature"]) ) {
-                    array_push($errors["errors"], ['miniatureEmpty' => "Veuillez renseigner une miniature pour votre serveur"]);
-                    $stop = true;
-                }
-                
-                if ( !isset($param["description"]) || empty($param["description"]) ) {
+                              
+                if ( !isset($_POST["description"]) || empty($_POST["description"]) ) {
                     array_push($errors["errors"], ['descriptionEmpty' => "Veuillez renseigner une description"]);
-                    $stop = true;
-                }
-        
-                if ( !isset($param["name_game"]) || empty($param["name_game"]) ) {
-                    array_push($errors["errors"], ['name_gameEmpty' => "Veuillez renseigner un jeu"]);
                     $stop = true;
                 }
         
                 if ( $stop === true ) {
                     return $this->respond($errors, 401);
                 } else {
-
                     try {
-                        $model->putServers($param);
+                        if(isset($_FILES['file']['name']))
+                        {
+                            $idImage = uniqid().$_GET['id'];
+                            $folderPath = "../public_html/assets/miniature_server/";   
+                            $file_tmp = $_FILES['file']['tmp_name'];
+                            $file_ext = strtolower(end(explode('.',$_FILES['file']['name'])));
+                            $file = $folderPath . $idImage . '.'.$file_ext;
+                            move_uploaded_file($file_tmp, $file);
+                            $imageServer = $idImage.'.'.$file_ext;
+                        } else {
+                            $imageServer = null;
+                        }
+                        $model->updateServer($imageServer);
                         return true;
-
                     } catch (Exception $e) {
                         return $this->respond(['message' => $e->getMessage()], 500);
                     } 
@@ -306,21 +308,38 @@ class ServerController extends ResourceController
      * )
      */
     public function deleteServer() {
-        if ( isset($_GET["serverId"]) && is_numeric($_GET["serverId"]) ) {
+       
+        if ( isset($_GET["id"]) && is_numeric($_GET["id"]) ) {
 
+           
             // Décodage du token pour récupérer les infos
             $decodedToken = $this->decodeToken();
+            $param = $this->request->getRawInput();
             $model = new ServerModel();
+            $modelUser = new UserModel();
+            $idUser = $decodedToken->id;
+            $getByID = $modelUser->getUserById($idUser);
+            $errors = ["errors" => []];
 
-            $isMyServer = $model->isMyServer($_GET["serverId"], $decodedToken->id);
+
+            
+
+            $isMyServer = $model->isMyServer($_GET["id"], $idUser);
+
             if ($isMyServer) {
-                try {
-                    $server = $model->deleteServer();
-                    return true;
+                if (password_verify($this->request->getRawInput()["password"], $getByID[0]->password)) {
+                    try {
+                        $server = $model->deleteServer();
+                        return true;
+                    }
+                    catch(Exception $e) {
+                        return $this->respond(['message' => "Une erreur est survenue"], 401);
+                    }
                 }
-                catch(Exception $e) {
-                    return $this->respond(['message' => "Une erreur est survenue"], 401);
-                }
+                else {
+                    array_push($errors["errors"], ['password_error' => "Le mot de passe actuel est incorrect."]);
+                    return $this->respond($errors, 401);
+                } 
             }
             else {
                 return $this->respond(['message' => "Le serveur ne vous appartient pas"], 401);

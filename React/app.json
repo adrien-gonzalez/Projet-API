@@ -23,9 +23,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-        
       },
-      "softwareKeyboardLayoutMode":"pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.adrien13.topserv"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -20,19 +20,19 @@ class UserModel extends Model
      * NON UTILISEE POUR L'INSTANT
      * 
      */
-    // public function getUsers()
-    // {
-    //     $builder = $this->db->table('users');
-    //     if( isset($_GET["id"]) ) {
-    //         $query = $builder->getWhere(['id' => $_GET["id"]]);
-    //     }
-    //     else {
-    //         $query = $builder->get();
-    //     }
-    //     $user = $query->getResult();
+    public function getUsers()
+    {
+        $builder = $this->db->table('users');
+        if( isset($_GET["id"]) ) {
+            $query = $builder->getWhere(['id' => $_GET["id"]]);
+        }
+        else {
+            $query = $builder->get();
+        }
+        $user = $query->getResult();
 
-    //     return $user;
-    // }
+        return $user;
+    }
 
     /**
      * Création d'un utilisateur

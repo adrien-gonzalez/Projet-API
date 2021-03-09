@@ -29,7 +29,9 @@ class CommentController extends ResourceController
 
     public function postComment()
     {
-        $user_fk = 20;
+        $errors = ["errors" => []];
+        $decodedToken = $this->decodeToken();
+        $user_fk = $decodedToken->id;
         $param = $this->request->getRawInput();
         $comment = new CommentModel();
 
@@ -38,7 +40,17 @@ class CommentController extends ResourceController
             return true;
 
         } catch (Exception $e) {
-            return $this->respond(['message' => $e->getMessage()], 500);
+            return $e->getMessage();
         }
+    }
+
+    public function decodeToken()
+    {
+        $key = Services::getSecretKey();
+        $authHeader = $this->request->getServer('HTTP_AUTHORIZATION');
+        $arr        = explode(' ', $authHeader);
+        $token      = $arr[1];
+        $decodedToken = JWT::decode($token, $key, ['HS256']);
+        return $decodedToken;
     }
 }
