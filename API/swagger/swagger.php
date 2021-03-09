@@ -5,7 +5,7 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Info(title="API Server", version="0.1")
  * @OA\Server(
- *   url="http://localhost:8080/api",
+ *   url="http://nicolas-camilloni.students-laplateforme.io/api",
  *   description="Mon API"
  * ),
  * @OA\Schemes(format="http")

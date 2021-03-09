@@ -33,13 +33,13 @@ class PasswordController extends ResourceController
      *      tags={"ResetPassword"},
      *      description=" Vérifie l'email renseigné et envoie le lien de modification du mdp",
      *      @OA\RequestBody(
- 	 *         	@OA\MediaType(
-	 *           mediaType="application/x-www-form-urlencoded",
-	 *           	@OA\Schema(
-	 *               	type="object",
-	 *               	@OA\Property(property="email", type="string"),
-	 *            	)
-	 *			)
+     *         	@OA\MediaType(
+     *           mediaType="application/x-www-form-urlencoded",
+     *           	@OA\Schema(
+     *               	type="object",
+     *               	@OA\Property(property="email", type="string"),
+     *            	)
+     *			)
      *      ),
      *       @OA\Response(
      *          response="200",
@@ -76,11 +76,12 @@ class PasswordController extends ResourceController
                 // Envoie du mail 
                 $email = Services::email();
                 $email->setTo($mail);
-                $email->setFrom('APIserve@APIserve.com', 'APIserve');
+                $email->setFrom('servetop.contact@gmail.com', 'Serve Top');
                 $email->setSubject('Modification du mot de passe');
-                $email->setMessage('<h1>Bonjour !</h1><br>
-                                    Une demande de nouveau mot de passe a été faite. <br><br>
-                                    Cliquez sur le lien suivant : <a href="' . base_url() . '/API/resetpassword?token=' . $token . '">Nouveau mot de passe</a>');
+                $email->setMessage('<h1>Bonjour !</h1>
+                                    <p>Une demande de nouveau mot de passe a été faite.</p>
+                                    <p>Voici le token de modification: </p>
+                                    <h4 style="color: #66A5F9">' . $token . '</h4>');
 
                 if ($email->send()) {
                     return true;
@@ -145,17 +146,17 @@ class PasswordController extends ResourceController
      *      description="modifie le mot de passe de l'utilisateur qui a fait la demande",
      *      tags={"ResetPassword"},
      *      @OA\RequestBody(
- 	 *         	@OA\MediaType(
-	 *           mediaType="application/x-www-form-urlencoded",
-	 *           	@OA\Schema(
-	 *               	type="object",
-	 *               	@OA\Property(property="password", type="string",required=true),
-	 *               	@OA\Property(property="conf_password", type="string",required=true),
-	 *               	@OA\Property(property="token", type="string",required=true),
-	 *               	@OA\Property(property="id", type="string",required=true),
-	 *            	)
-	 *			)
- 	 *      ),
+     *         	@OA\MediaType(
+     *           mediaType="application/x-www-form-urlencoded",
+     *           	@OA\Schema(
+     *               	type="object",
+     *               	@OA\Property(property="password", type="string",required=true),
+     *               	@OA\Property(property="conf_password", type="string",required=true),
+     *               	@OA\Property(property="token", type="string",required=true),
+     *               	@OA\Property(property="id", type="string",required=true),
+     *            	)
+     *			)
+     *      ),
      *      @OA\Response(
      *          response="200",
      *          description="Mot de passe réinitialisé",
@@ -185,29 +186,21 @@ class PasswordController extends ResourceController
         $params = $this->request->getRawInput();
         $password = $params['password'];
         $id = $params['id'];
-        $token = $params['token'];
         $model = new UserModel();
 
-        $verif_id_token = $model->getUsers_token($token);
-        if ($verif_id_token[0]->id == $id) {
-            if ($this->validate($rules)) {
-                if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $password)) {
-                    array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
-                    return $this->respond($errors, 401);
-                } else {
-                    $model->putUser($id, 'password', password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]));
-                    $model->resetToken($id);
-                    return true;
-                }
+        if ($this->validate($rules)) {
+            if (!preg_match("/^(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/", $password)) {
+                array_push($errors["errors"], ['password_error' => "Le mot de passe doit contenir une lettre majuscule, une lettre minuscule et un chiffre"]);
+                return $this->respond($errors, 401);
             } else {
-                array_push($errors["errors"], ['conf_password_error' => $this->validator->getError('conf_password')]);
-                array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
-                return $this->respond($errors, 401);
+                $model->putUser($id, 'password', password_hash($password, PASSWORD_BCRYPT, $options = ["cost" => 12]));
+                $model->resetToken($id);
+                return true;
             }
-        }
-        else{
-            array_push($errors["errors"], ['token_error' => "Le token ne vous appartient pas."]);
-                return $this->respond($errors, 401);
+        } else {
+            array_push($errors["errors"], ['conf_password_error' => $this->validator->getError('conf_password')]);
+            array_push($errors["errors"], ['password_error' => $this->validator->getError('password')]);
+            return $this->respond($errors, 401);
         }
     }
 
@@ -218,8 +211,6 @@ class PasswordController extends ResourceController
     {
         $uptime = strtotime($time);
         $current_time = time();
-        var_dump($current_time);
-
         $timediff = $current_time - $uptime;
         if ($timediff < 900) {
             return true;

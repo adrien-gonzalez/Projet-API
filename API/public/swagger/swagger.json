@@ -16,7 +16,7 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Permet de se connecter et crÃ©er un token",
+                "description": "Permet de se connecter et créer un token",
                 "operationId": "App\\Controllers\\Auth::create",
                 "requestBody": {
                     "content": {
@@ -166,7 +166,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mot de passe rÃ©initialisÃ©",
+                        "description": "Mot de passe réinitialisé",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -191,7 +191,7 @@
                 "tags": [
                     "ResetPassword"
                 ],
-                "description": " VÃ©rifie l'email renseignÃ© et envoie le lien de modification du mdp",
+                "description": " Vérifie l'email renseigné et envoie le lien de modification du mdp",
                 "operationId": "App\\Controllers\\PasswordController::SendMail",
                 "requestBody": {
                     "content": {
@@ -209,7 +209,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Serveur crÃ©Ã© !",
+                        "description": "Serveur créé !",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -236,7 +236,7 @@
                 "tags": [
                     "ResetPassword"
                 ],
-                "description": "VÃ©rifie si le token utilisÃ© est toujours valide",
+                "description": "Vérifie si le token utilisé est toujours valide",
                 "operationId": "App\\Controllers\\PasswordController::getToken",
                 "parameters": [
                     {
@@ -277,7 +277,7 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "DÃ©tail d'un serveur",
+                "description": "Détail d'un serveur",
                 "parameters": [
                     {
                         "name": "id",
@@ -290,7 +290,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "DÃ©tail du serveur",
+                        "description": "Détail du serveur",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -300,7 +300,7 @@
                         }
                     },
                     "404": {
-                        "description": "Page not found (serveur non trouvÃ©)",
+                        "description": "Page not found (serveur non trouvé)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -315,7 +315,7 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "Modifier les dÃ©tails d'un serveur",
+                "description": "Modifier les détails d'un serveur",
                 "operationId": "App\\Controllers\\ServerController::putServer",
                 "parameters": [
                     {
@@ -454,7 +454,7 @@
                         }
                     },
                     "404": {
-                        "description": "Page not found (jeu non trouvÃ©)",
+                        "description": "Page not found (jeu non trouvé)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -471,7 +471,7 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "CrÃ©er un serveur",
+                "description": "Créer un serveur",
                 "operationId": "App\\Controllers\\ServerController::postServer",
                 "requestBody": {
                     "content": {
@@ -537,15 +537,90 @@
                 ]
             }
         },
+        "/users?id={id}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Informations de l'utilisateur connect ",
+                "operationId": "App\\Controllers\\UserController::getUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Informations de l'utilisateur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non connect ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Supprime un utilisateur",
+                "operationId": "App\\Controllers\\UserController::deleteUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "True",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/users": {
             "put": {
                 "tags": [
                     "User"
                 ],
-                "description": "Modifie les dÃ©tails d'un utilisateur un champ Ã  la fois.",
+                "description": "Modifie les détails d'un utilisateur un champ à la fois.",
                 "operationId": "App\\Controllers\\UserController::putUser",
                 "requestBody": {
-                    "description": "Modifiez un champ Ã  la fois. Password et old_password vont de paire.",
+                    "description": "Modifiez un champ à la fois. Password et old_password vont de paire.",
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
@@ -604,7 +679,7 @@
                 "tags": [
                     "User"
                 ],
-                "description": "CrÃ©er un utilisateur (Inscription)",
+                "description": "Créer un utilisateur (Inscription)",
                 "operationId": "App\\Controllers\\UserController::postUser",
                 "requestBody": {
                     "content": {
@@ -652,42 +727,6 @@
                     }
                 }
             }
-        },
-        "/users?id={id}": {
-            "delete": {
-                "tags": [
-                    "User"
-                ],
-                "description": "Supprime un utilisateur",
-                "operationId": "App\\Controllers\\UserController::deleteUser",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "True",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -704,19 +743,19 @@
     "tags": [
         {
             "name": "Serveur",
-            "description": "RequÃªte concernant les serveurs"
+            "description": "Requête concernant les serveurs"
         },
         {
             "name": "ResetPassword",
-            "description": "RequÃªte concernant la rÃ©initialisation du mot de passe"
+            "description": "Requête concernant la réinitialisation du mot de passe"
         },
         {
             "name": "Game",
-            "description": "RequÃªte concernant les jeux"
+            "description": "Requête concernant les jeux"
         },
         {
             "name": "User",
-            "description": "RequÃªte concernant les utilisateurs"
+            "description": "Requête concernant les utilisateurs"
         }
     ]
 }
