@@ -100,8 +100,8 @@ class UserController extends ResourceController
      *               	type="object",
      *               	@OA\Property(property="login", type="string"),
      *               	@OA\Property(property="email", type="string"),
-     *               	@OA\Property(property="password", type="password"),
-     *               	@OA\Property(property="cpassword", type="password"),
+     *               	@OA\Property(property="password", type="string"),
+     *               	@OA\Property(property="cpassword", type="string"),
      *            	)
      *			)
      *      ),
@@ -219,10 +219,10 @@ class UserController extends ResourceController
      *           mediaType="application/x-www-form-urlencoded",
      *           	@OA\Schema(
      *               	type="object",
-     *               	@OA\Property(property="login",type="string",required=false),
-     *               	@OA\Property(property="email",type="string",required=false),
-     *               	@OA\Property(property="old_password",type="string",required=false),
-     *               	@OA\Property(property="password",type="string",required=false),
+     *               	@OA\Property(property="login",type="string"),
+     *               	@OA\Property(property="email",type="string"),
+     *               	@OA\Property(property="old_password",type="string"),
+     *               	@OA\Property(property="password",type="string"),
      *            	),
      *			),
      *      ),

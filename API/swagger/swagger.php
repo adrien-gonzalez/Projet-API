@@ -3,16 +3,14 @@
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Info(title="API Server", version="0.1")
+ * @OA\Info(title="ServTop", version="0.1")
  * @OA\Server(
- *   url="http://nicolas-camilloni.students-laplateforme.io/api",
- *   description="Mon API"
+ *   url="https://nicolas-camilloni.students-laplateforme.io/api",
+ *   description="Notre API serveur"
  * ),
  * @OA\Schemes(format="http")
  * @OA\SecurityScheme(
  *      securityScheme="bearerAuth",
- *      in="header",
- *      name="bearerAuth",
  *      type="http",
  *      scheme="bearer",
  *      bearerFormat="JWT",

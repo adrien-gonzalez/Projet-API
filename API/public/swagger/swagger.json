@@ -1,13 +1,13 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API Server",
+        "title": "ServTop",
         "version": "0.1"
     },
     "servers": [
         {
-            "url": "http://localhost:8080/api",
-            "description": "Mon API"
+            "url": "https://nicolas-camilloni.students-laplateforme.io/api",
+            "description": "Notre API serveur"
         }
     ],
     "paths": {
@@ -16,7 +16,7 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Permet de se connecter et créer un token",
+                "description": "Permet de se connecter et crÃ©er un token",
                 "operationId": "App\\Controllers\\Auth::create",
                 "requestBody": {
                     "content": {
@@ -143,19 +143,15 @@
                             "schema": {
                                 "properties": {
                                     "password": {
-                                        "required": true,
                                         "type": "string"
                                     },
                                     "conf_password": {
-                                        "required": true,
                                         "type": "string"
                                     },
                                     "token": {
-                                        "required": true,
                                         "type": "string"
                                     },
                                     "id": {
-                                        "required": true,
                                         "type": "string"
                                     }
                                 },
@@ -166,7 +162,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Mot de passe réinitialisé",
+                        "description": "Mot de passe rÃ©initialisÃ©",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -191,7 +187,7 @@
                 "tags": [
                     "ResetPassword"
                 ],
-                "description": " Vérifie l'email renseigné et envoie le lien de modification du mdp",
+                "description": " VÃ©rifie l'email renseignÃ© et envoie le lien de modification du mdp",
                 "operationId": "App\\Controllers\\PasswordController::SendMail",
                 "requestBody": {
                     "content": {
@@ -209,7 +205,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Serveur créé !",
+                        "description": "Serveur crÃ©Ã© !",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -236,7 +232,7 @@
                 "tags": [
                     "ResetPassword"
                 ],
-                "description": "Vérifie si le token utilisé est toujours valide",
+                "description": "VÃ©rifie si le token utilisÃ© est toujours valide",
                 "operationId": "App\\Controllers\\PasswordController::getToken",
                 "parameters": [
                     {
@@ -277,7 +273,7 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "Détail d'un serveur",
+                "description": "DÃ©tail d'un serveur",
                 "parameters": [
                     {
                         "name": "id",
@@ -290,7 +286,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Détail du serveur",
+                        "description": "DÃ©tail du serveur",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -300,7 +296,7 @@
                         }
                     },
                     "404": {
-                        "description": "Page not found (serveur non trouvé)",
+                        "description": "Page not found (serveur non trouvÃ©)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -315,8 +311,8 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "Modifier les détails d'un serveur",
-                "operationId": "App\\Controllers\\ServerController::putServer",
+                "description": "Modifier les dÃ©tails d'un serveur",
+                "operationId": "App\\Controllers\\ServerController::updateServer",
                 "parameters": [
                     {
                         "name": "id",
@@ -454,7 +450,7 @@
                         }
                     },
                     "404": {
-                        "description": "Page not found (jeu non trouvé)",
+                        "description": "Page not found (jeu non trouvÃ©)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -471,7 +467,7 @@
                 "tags": [
                     "Serveur"
                 ],
-                "description": "Créer un serveur",
+                "description": "CrÃ©er un serveur",
                 "operationId": "App\\Controllers\\ServerController::postServer",
                 "requestBody": {
                     "content": {
@@ -542,7 +538,7 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Informations de l'utilisateur connect ",
+                "description": "Informations de l'utilisateur connectï¿½",
                 "operationId": "App\\Controllers\\UserController::getUser",
                 "parameters": [
                     {
@@ -566,7 +562,7 @@
                         }
                     },
                     "404": {
-                        "description": "Utilisateur non connect ",
+                        "description": "Utilisateur non connectï¿½",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -617,28 +613,24 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Modifie les détails d'un utilisateur un champ à la fois.",
-                "operationId": "App\\Controllers\\UserController::putUser",
+                "description": "Modifie les dÃ©tails d'un utilisateur un champ Ã  la fois.",
+                "operationId": "App\\Controllers\\UserController::updateUser",
                 "requestBody": {
-                    "description": "Modifiez un champ à la fois. Password et old_password vont de paire.",
+                    "description": "Modifiez un champ Ã  la fois. Password et old_password vont de paire.",
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
                                     "login": {
-                                        "required": false,
                                         "type": "string"
                                     },
                                     "email": {
-                                        "required": false,
                                         "type": "string"
                                     },
                                     "old_password": {
-                                        "required": false,
                                         "type": "string"
                                     },
                                     "password": {
-                                        "required": false,
                                         "type": "string"
                                     }
                                 },
@@ -679,7 +671,7 @@
                 "tags": [
                     "User"
                 ],
-                "description": "Créer un utilisateur (Inscription)",
+                "description": "CrÃ©er un utilisateur (Inscription)",
                 "operationId": "App\\Controllers\\UserController::postUser",
                 "requestBody": {
                     "content": {
@@ -693,10 +685,10 @@
                                         "type": "string"
                                     },
                                     "password": {
-                                        "type": "password"
+                                        "type": "string"
                                     },
                                     "cpassword": {
-                                        "type": "password"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -733,8 +725,6 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
-                "name": "bearerAuth",
-                "in": "header",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             }
@@ -743,19 +733,19 @@
     "tags": [
         {
             "name": "Serveur",
-            "description": "Requête concernant les serveurs"
+            "description": "RequÃªte concernant les serveurs"
         },
         {
             "name": "ResetPassword",
-            "description": "Requête concernant la réinitialisation du mot de passe"
+            "description": "RequÃªte concernant la rÃ©initialisation du mot de passe"
         },
         {
             "name": "Game",
-            "description": "Requête concernant les jeux"
+            "description": "RequÃªte concernant les jeux"
         },
         {
             "name": "User",
-            "description": "Requête concernant les utilisateurs"
+            "description": "RequÃªte concernant les utilisateurs"
         }
     ]
 }

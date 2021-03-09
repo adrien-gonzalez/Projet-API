@@ -214,9 +214,9 @@ class ServerController extends ResourceController
 	 *           mediaType="application/x-www-form-urlencoded",
 	 *           	@OA\Schema(
 	 *               	type="object",
-	 *               	@OA\Property(property="name_server", type="string"),
+	 *               	@OA\Property(property="name_server", type="string" ),
 	 *               	@OA\Property(property="description", type="string"),
-	 *               	@OA\Property(property="miniature", type="string"),
+	 *               	@OA\Property(property="miniature", type="string" ),
 	 *               	@OA\Property(property="port", type="string"),
 	 *               	@OA\Property(property="website", type="string"),
 	 *               	@OA\Property(property="ip", type="string"),

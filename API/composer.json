@@ -22,12 +22,15 @@
 		"mikey179/vfsstream": "1.6.*",
 		"predis/predis": "^1.1",
 		"squizlabs/php_codesniffer": "^3.3",
-		"phpunit/phpunit": "^9.5"
+		"phpunit/phpunit": "^9"
 	},
 	"autoload": {
 		"psr-4": {
 			"CodeIgniter\\": "system/"
-		}
+		},
+		"classmap": [
+            "app/"
+        ]
 	},
 	"scripts": {
 		"post-update-cmd": [
