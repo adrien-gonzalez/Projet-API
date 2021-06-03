@@ -57,35 +57,6 @@ const ServersListPage = (props) => {
       fetchServers();
   }, [props.selectedGame.id, props.serversRedux.isUpdated]);
 
-  const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
-
-    switch (appImages) {
-      case "1":
-          var appLogo = require('../assets/logos/minecraft-logo.png');
-          var backgroundImage = require('../assets/background/minecraft-background.png');
-          break;
-      case "2":
-          var appLogo = require('../assets/logos/hytale-logo.png');
-          var backgroundImage = require('../assets/background/hytale-background.png');
-          break;
-      case "3":
-          var appLogo = require('../assets/logos/gtav-logo.png');
-          var backgroundImage = require('../assets/background/gtav-background.png');
-          break;
-      case "4":
-          var appLogo = require('../assets/logos/discord-logo.png');
-          var backgroundImage = require('../assets/background/discord-background.png');
-          break;
-      case "5":
-          var appLogo = require('../assets/logos/ark-logo.png');
-          var backgroundImage = require('../assets/background/ark-background.png');
-          break;
-      case "6":
-          var appLogo = require('../assets/logos/gmod-logo.png');
-          var backgroundImage = require('../assets/background/gmod-background.png');
-          break;
-  };
-  
   function detail(servers) {
     if(servers.ip != "") {
       return(
@@ -223,14 +194,15 @@ const ServersListPage = (props) => {
         backgroundColor: props.apparence.dark ? '#141229' : '#F1F1F1',
       }}>
           <View style={styles.svgHeader}>
-            <ImageBackground source={backgroundImage} style={styles.image}>
+            <ImageBackground source={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/background/application/"+props.selectedGame.slug+"-background.png" }} style={styles.image}>
                 <Svg xmlns="http://www.w3.org/2000/svg" width={40*windowWidth/100} height={40*windowWidth/100} viewBox="0 0 146 146">
                     <G fill="none">
                         <Path d="M73,0A73,73,0,1,1,0,73,73,73,0,0,1,73,0Z" stroke="none"/>
                         <Path fill={props.selectedGame.gamecolor} d="M 73 2 C 63.41417694091797 2 54.11615753173828 3.876937866210938 45.36421966552734 7.578720092773438 C 41.15760040283203 9.357955932617188 37.10015869140625 11.56028747558594 33.30461883544922 14.12449645996094 C 29.54461669921875 16.66470336914063 26.00881958007813 19.58202362060547 22.79541778564453 22.79541778564453 C 19.58202362060547 26.00881958007813 16.66470336914063 29.54461669921875 14.12449645996094 33.30461883544922 C 11.56028747558594 37.10015869140625 9.357955932617188 41.15760040283203 7.578720092773438 45.36421966552734 C 3.876937866210938 54.11615753173828 2 63.41417694091797 2 73 C 2 82.5858154296875 3.876937866210938 91.88383483886719 7.578720092773438 100.6357803344727 C 9.357955932617188 104.842399597168 11.56028747558594 108.8998413085938 14.12449645996094 112.6953811645508 C 16.66470336914063 116.4553833007813 19.58202362060547 119.9911804199219 22.79541778564453 123.2045822143555 C 26.00881958007813 126.4179840087891 29.54461669921875 129.3352966308594 33.30461883544922 131.8755035400391 C 37.10015869140625 134.4397277832031 41.15760040283203 136.6420440673828 45.36421966552734 138.4212799072266 C 54.11615753173828 142.1230621337891 63.41417694091797 144 73 144 C 82.5858154296875 144 91.88383483886719 142.1230621337891 100.6357803344727 138.4212799072266 C 104.842399597168 136.6420440673828 108.8998413085938 134.4397277832031 112.6953811645508 131.8755035400391 C 116.4553833007813 129.3352966308594 119.9911804199219 126.4179840087891 123.2045822143555 123.2045822143555 C 126.4179840087891 119.9911804199219 129.3352966308594 116.4553833007813 131.8755035400391 112.6953811645508 C 134.4397277832031 108.8998413085938 136.6420440673828 104.842399597168 138.4212799072266 100.6357803344727 C 142.1230621337891 91.88383483886719 144 82.5858154296875 144 73 C 144 63.41417694091797 142.1230621337891 54.11615753173828 138.4212799072266 45.36421966552734 C 136.6420440673828 41.15760040283203 134.4397277832031 37.10015869140625 131.8755035400391 33.30461883544922 C 129.3352966308594 29.54461669921875 126.4179840087891 26.00881958007813 123.2045822143555 22.79541778564453 C 119.9911804199219 19.58202362060547 116.4553833007813 16.66470336914063 112.6953811645508 14.12449645996094 C 108.8998413085938 11.56028747558594 104.842399597168 9.357955932617188 100.6357803344727 7.578720092773438 C 91.88383483886719 3.876937866210938 82.5858154296875 2 73 2 M 73 0 C 113.316780090332 0 146 32.68321990966797 146 73 C 146 113.316780090332 113.316780090332 146 73 146 C 32.68321990966797 146 0 113.316780090332 0 73 C 0 32.68321990966797 32.68321990966797 0 73 0 Z" stroke="none"/>
                     </G>
                     <Circle cx="50%" cy="50%" r="65" fill="#fff" opacity="0.50"/>
-                    <Img x="25" y="25"  width='94' height='94' href={appLogo}/>                        
+                    <Img x="20" y="20"  width='104' height='104' href={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/"+props.selectedGame.slug+"-logo.png" }}
+                    />                        
                 </Svg>
                 {numberServer(props.serversRedux.info)} 
             </ImageBackground>

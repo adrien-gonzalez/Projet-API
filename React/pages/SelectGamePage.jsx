@@ -16,14 +16,13 @@ const SelectGamePage = (props) => {
     const navigation = useNavigation();
     const [games, setGames] = useState([]);
 
-    const combinedFunctions = (id, gamecolor) => {
-        console.log('idgame', id)
-        _updateSelectedGame(id, gamecolor);
+    const combinedFunctions = (id, gamecolor, slug) => {
+        _updateSelectedGame(id, gamecolor, slug);
         navigation.navigate("ServersListPage");
     }
 
-    const _updateSelectedGame = (id, gamecolor) => {
-        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
+    const _updateSelectedGame = (id, gamecolor, slug) => {
+        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor, slug: slug} }
         props.dispatch(action)
     }
     
@@ -59,7 +58,7 @@ const SelectGamePage = (props) => {
                             return (
                                 <View style={styles.gameContainer} key={games.id}>
                                     <TouchableOpacity style={{height: '100%', width: '100%'}} onPress={
-                                        () => combinedFunctions(games.id, games.color)
+                                        () => combinedFunctions(games.id, games.color, games.slug)
                                         }
                                         >
                                         <Image style={styles.gameImage} source={{uri: 'https://nicolas-camilloni.students-laplateforme.io/assets/'+games.image}} />

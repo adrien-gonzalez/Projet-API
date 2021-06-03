@@ -56,38 +56,10 @@ const ServerInfoPage = (props) => {
         var comment = server.length
     }
 
-    const appImages = props.selectedGame.id ? props.selectedGame.id : 0;
-    switch (appImages) {
-      case "1":
-          var appLogo = require('../assets/logos/minecraft-logo.png');
-          var backgroundImage = require('../assets/background/minecraft-background.png');
-          break;
-      case "2":
-          var appLogo = require('../assets/logos/hytale-logo.png');
-          var backgroundImage = require('../assets/background/hytale-background.png');
-          break;
-      case "3":
-          var appLogo = require('../assets/logos/gtav-logo.png');
-          var backgroundImage = require('../assets/background/gtav-background.png');
-          break;
-      case "4":
-          var appLogo = require('../assets/logos/discord-logo.png');
-          var backgroundImage = require('../assets/background/discord-background.png');
-          break;
-      case "5":
-          var appLogo = require('../assets/logos/ark-logo.png');
-          var backgroundImage = require('../assets/background/ark-background.png');
-          break;
-      case "6":
-          var appLogo = require('../assets/logos/gmod-logo.png');
-          var backgroundImage = require('../assets/background/gmod-background.png');
-          break;
-    };
-    
     var getElement = (numberStarId) => e => { 
         setFeedBackUser(numberStarId+1)
     }
-
+    console.log(props.selectedGame)
     const handleOnSubmit = async (values, actions) => {
         const donnees = new URLSearchParams();
         donnees.append("comment",values.comment);
@@ -136,7 +108,6 @@ const ServerInfoPage = (props) => {
                             source={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/usersPictures/"+server.picture_profil }}
                             style={styles.profil}
                         />
-                        {/* <Text style={styles.profil}>{server.picture_profil}</Text> */}
                         <Text style={styles.login}>{server.login}</Text>
                         <Text style={styles.date}>{server.date}</Text>
                         <Text style={styles.score}>
@@ -151,7 +122,6 @@ const ServerInfoPage = (props) => {
         }
     }
 
-   
   for (const [index, value] of notes.entries()) {
     addition = addition + parseInt(value)
   }
@@ -200,7 +170,7 @@ const ServerInfoPage = (props) => {
             }}>
                 <View style={styles.server}>
                     <View style={styles.svgHeader}>
-                        <ImageBackground source={backgroundImage} style={styles.image}>
+                        <ImageBackground source={{ uri: "http://nicolas-camilloni.students-laplateforme.io/assets/background/application/"+props.selectedGame.slug+"-background.png" }} style={styles.image}>
                             <Image source={require('../assets/fond-noir.png')} style={{opacity: 0.43,width:"100%", height:"100%"}}/>
                             <View style={styles.header}>
                                 <Topbar navigation={navigation} color='white' isText={false} />
@@ -209,7 +179,6 @@ const ServerInfoPage = (props) => {
                                 <View style={styles.note}>
                                     {numberStar(note).map((numberStar, key) => (
                                         <Text key={key}>{numberStar.svg}</Text> 
-                                        
                                     ))} 
                                 </View> 
                             </View>
@@ -444,6 +413,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "space-evenly",
         alignItems: "center",
+        // resizeMode: "cover",
     },
     server: {
         height: 368,

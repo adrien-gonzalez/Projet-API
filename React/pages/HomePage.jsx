@@ -15,8 +15,8 @@ const HomePage = (props) => {
 
   const navigation = useNavigation();
 
-  const _updateIsLogged = (id, gamecolor) => {
-    const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
+  const _updateIsLogged = (id, gamecolor, slug) => {
+    const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor, slug: slug} }
     props.dispatch(action)
     // console.log(id)
   }

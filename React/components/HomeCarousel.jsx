@@ -19,13 +19,13 @@ class HomeCarousel extends React.Component {
         }
     }
 
-    combinedFunctions = (id, gamecolor) => {
-        this._updateSelectedGame(id, gamecolor);
+    combinedFunctions = (id, gamecolor, slug) => {
+        this._updateSelectedGame(id, gamecolor, slug);
         this.props.navigation.navigate("ServersListPage");
     }
 
-    _updateSelectedGame = (id, gamecolor) => {
-        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor} }
+    _updateSelectedGame = (id, gamecolor, slug) => {
+        const action = { type: "UPDATE_SELECTED_GAME", value: {id: id, gamecolor: gamecolor, slug: slug} }
         this.props.dispatch(action)
     }
 
@@ -43,7 +43,8 @@ class HomeCarousel extends React.Component {
                             title: data.name,
                             image: data.image,
                             color: data.color,
-                            servers: data.serv_count
+                            servers: data.serv_count,
+                            slug: data.slug
                         }
                     )
                 })
@@ -62,7 +63,7 @@ class HomeCarousel extends React.Component {
         return (
             <TouchableOpacity style={{height: '100%', width: '100%'}} onPress=
                 {
-                    () => this.combinedFunctions(item.id, item.color)
+                    () => this.combinedFunctions(item.id, item.color, item.slug)
                 }
             style={styles.carouselItemContainer}>
                 <Text style={{fontSize: 2.2*windowHeight/100, fontFamily: 'TwCent', textTransform: 'uppercase', letterSpacing: 4, color: item.color}}>{item.title}</Text>

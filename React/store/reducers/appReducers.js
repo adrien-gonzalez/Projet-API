@@ -1,4 +1,4 @@
-const initialState = { auth: {isLogged: false, pp: "", isUpdated: false}, selectedGame: {id: 0, gamecolor: "#00BCFF"}, apparence: {dark: false}, selectedServer: {id: 0}, serversRedux: {info: null, isUpdated: false}, stateServer: {id: 0, newState: false} }
+const initialState = { auth: {isLogged: false, pp: "", isUpdated: false}, selectedGame: {id: 0, gamecolor: "#00BCFF", slug: null}, apparence: {dark: false}, selectedServer: {id: 0}, serversRedux: {info: null, isUpdated: false}, stateServer: {id: 0, newState: false} }
 
 function appState(state = initialState, action) {
     let nextState;
