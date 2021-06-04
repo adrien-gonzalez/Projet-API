@@ -89,7 +89,7 @@ const UserServerPage = (props) => {
                 });
             }
 
-        };
+    };
 
     function myServer(userServer){
         if(userServer.length > 0) {

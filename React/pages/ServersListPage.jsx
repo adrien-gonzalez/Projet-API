@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, ImageBackground,Dimensions} from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, ImageBackground, Dimensions} from 'react-native';
 import serverAPI from '../services/serverAPI.js'
 import Svg, { Circle, Path, G, Image as Img} from 'react-native-svg';
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -34,7 +34,6 @@ const ServersListPage = (props) => {
   }
 
   const fetchServers = async () => {
-    console.log('propsJEUavant', props);
     try {
       const data = await serverAPI.findServerByGame(props.selectedGame.id);
       // setServer(data)
@@ -50,7 +49,6 @@ const ServersListPage = (props) => {
       console.log(error);
     }
   };
-  
 
 
   useEffect(() => {
@@ -149,8 +147,7 @@ const ServersListPage = (props) => {
                 </View>
                 <View style={styles.description}>
                   <Text style={styles.titleServer}>{servers.name}</Text>
-                  <Text style={styles.descriptionText}>{servers.descriptionServer}</Text>
-                  {/* Tags */}
+                  {servers.descriptionServer.length < 10? <Text  style={styles.descriptionText}>{servers.descriptionServer}</Text>: <Text  style={styles.descriptionText}>{servers.descriptionServer.substring(60, 0)}...</Text> }
                 </View>
                 <View style={styles.bottomBloc}>
                   {detail(servers)}

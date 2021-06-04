@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity, Dimensions} from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
@@ -10,6 +10,10 @@ import { useNavigation } from '@react-navigation/native';
 import Topbar from '../components/Topbar';
 import ServersListPage from './ServersListPage.jsx';
 import Bouton from "../components/bouton";
+import WrappedText from "react-native-wrapped-text";
+// import TOKEN
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
 
 const ServerInfoPage = (props) => {
@@ -20,6 +24,16 @@ const ServerInfoPage = (props) => {
     const [response, setResponse] = useState([]);
     const [load, setLoad] = useState(false);
     const [gameId, setGameId] = useState(props.selectedGame.id);
+    const windowWidth = Dimensions.get('window').width;
+
+    const [idUser, setId] = useState([]);
+
+    SecureStore.getItemAsync("token").then((result) => {
+        if (result !== null) {
+            const { id } = jwtDecode(result);
+            setId(id);
+        }
+    });
 
     const [server, setServer] = useState([]);
     const fetchServers = async () => {
@@ -59,7 +73,7 @@ const ServerInfoPage = (props) => {
     var getElement = (numberStarId) => e => { 
         setFeedBackUser(numberStarId+1)
     }
-    console.log(props.selectedGame)
+    
     const handleOnSubmit = async (values, actions) => {
         const donnees = new URLSearchParams();
         donnees.append("comment",values.comment);
@@ -86,6 +100,16 @@ const ServerInfoPage = (props) => {
             props.dispatch(action)
     };
 
+
+    const handleOnSubmitSupp = async (idServer) => {
+        try {
+          const data = await serverAPI.deleteComment(idServer);
+        } catch (error) {
+                setResponse(error);
+        }
+        fetchServers()
+    }
+
     // Tableau de notes
     const notes = [];
     var addition = 0;
@@ -110,11 +134,26 @@ const ServerInfoPage = (props) => {
                         />
                         <Text style={styles.login}>{server.login}</Text>
                         <Text style={styles.date}>{server.date}</Text>
-                        <Text style={styles.score}>
-                        {numberStar(server.score).map((numberStar, key) => (
-                            <Text key={key}>{numberStar.svg}</Text> 
-                        ))}   
-                        </Text> 
+                        <View style={{width: windowWidth, padding: 10, flex: 1, flexDirection: "row"}}>
+                            <Text style={styles.score} style={{marginLeft: windowWidth/3.67, alignItems:'center', flex: 1, justifyContent: 'center'}}>
+                            {numberStar(server.score).map((numberStar, key) => (
+                                <Text key={key}>{numberStar.svg}</Text> 
+                            ))}   
+                            </Text> 
+                            <View>
+                                {server.userId == idUser ? 
+                                    <TouchableOpacity  onPress={
+                                        () => handleOnSubmitSupp(server.avisId)
+                                    }>
+                                        <Svg style={{marginTop: 5}}xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                                            <Path fill={props.selectedGame.gamecolor} d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/>
+                                        </Svg>
+                                    </TouchableOpacity>
+                                    : 
+                                   null
+                                }
+                            </View>
+                        </View>
                         <Text style={styles.commentUser}>{server.comment}</Text>
                     </View>
                 ))
@@ -199,10 +238,17 @@ const ServerInfoPage = (props) => {
                         </Text>
                     </View>
                     <View style={styles.descriptionServer}>
-                        <Text style={{
-                            fontSize: 16,
-                            color: props.apparence.dark ? 'white' : 'black',
-                        }}>{dataServer.descriptionServer}</Text>
+                        <WrappedText  
+                            rowWrapperStyle={{ 
+                                marginTop: 10,
+                                justifyContent: "center",
+                            }}
+                            textStyle={{
+                                textAlign: 'center',
+                                fontSize: 16,
+                                color: props.apparence.dark ? 'white' : 'black',
+                            }}
+                        >{dataServer.descriptionServer}</WrappedText>
                     </View>
                 </View>
                 <View style={styles.statsServer}>
@@ -459,10 +505,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     descriptionServer: {
-        marginTop: 20,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginTop: 30,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: 20,
+        marginVertical: 50
     },
     stats: {
         marginTop: 20,

@@ -13,6 +13,7 @@ export default function App() {
     'TwCent': require('./assets/fonts/TCM.ttf'),
     'HomepageBaukasten': require ('./assets/fonts/HomepageBaukasten-Bold.otf')
   });
+  
   if (!fontsLoaded) {
       return <AppLoading />;
   }

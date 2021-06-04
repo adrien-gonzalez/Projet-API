@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import * as SecureStore from 'expo-secure-store';
+import {API_URL} from "@env"
 
 
 /**
@@ -19,7 +20,7 @@ function logout() {
 function authenticate(credentials) {
     return axios
         .post(
-            "https://nicolas-camilloni.students-laplateforme.io/api/auth", credentials)
+            API_URL+"auth", credentials)
         .then(function (response) {
             // handle success
             const token = response.data.token;
@@ -39,7 +40,7 @@ function refresh(refresh) {
     console.log("choppe", refresh);
     return axios
         .post(
-            "https://nicolas-camilloni.students-laplateforme.io/api/refresh", refresh)
+            API_URL+"refresh", refresh)
         .then(function (response) {
             // handle success
             const token = response.data.token;

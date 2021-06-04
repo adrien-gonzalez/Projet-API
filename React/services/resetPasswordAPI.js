@@ -1,10 +1,12 @@
 import axios from "axios";
+import {API_URL} from "@env"
+
 
 function checkToken(token) {
   return axios({
     method: "GET",
     url:
-      "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword?token="+token,
+      API_URL+"resetpassword?token="+token,
   })
     .then((response) => response.data)
     .catch((error) => error.response.data.errors);
@@ -13,7 +15,7 @@ function checkToken(token) {
 function sendMail(donnees) {
   return axios({
     method: "POST",
-    url: "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword",
+    url: API_URL+"resetpassword",
     data: donnees,
   })
     .then((response) => response.data)
@@ -23,7 +25,7 @@ function sendMail(donnees) {
 function resetPassword(donnees) {
   return axios({
     method: "PUT",
-    url: "https://nicolas-camilloni.students-laplateforme.io/api/resetpassword",
+    url: API_URL+"resetpassword",
     data: donnees,
   })
     .then((response) => response.data)
