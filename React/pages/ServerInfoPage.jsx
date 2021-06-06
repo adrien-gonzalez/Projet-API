@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity, Dimensions} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, ScrollView, TextInput, Button, TouchableOpacity, Dimensions, Modal} from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import serverAPI from '../services/serverAPI.js'
 import { Formik } from "formik";
@@ -25,6 +25,9 @@ const ServerInfoPage = (props) => {
     const [load, setLoad] = useState(false);
     const [gameId, setGameId] = useState(props.selectedGame.id);
     const windowWidth = Dimensions.get('window').width;
+    const [modalVisible, setModalVisible] = useState(false);
+    const [commentId, setCommentId] = useState(false);
+
 
     const [idUser, setId] = useState([]);
 
@@ -103,11 +106,12 @@ const ServerInfoPage = (props) => {
 
     const handleOnSubmitSupp = async (idServer) => {
         try {
-          const data = await serverAPI.deleteComment(idServer);
+            const data = await serverAPI.deleteComment(idServer);
+            fetchServers()
+            setModalVisible(!modalVisible)
         } catch (error) {
-                setResponse(error);
+            setResponse(error);
         }
-        fetchServers()
     }
 
     // Tableau de notes
@@ -142,9 +146,11 @@ const ServerInfoPage = (props) => {
                             </Text> 
                             <View>
                                 {server.userId == idUser ? 
-                                    <TouchableOpacity  onPress={
-                                        () => handleOnSubmitSupp(server.avisId)
-                                    }>
+                                    <TouchableOpacity 
+                                    onPress={() => {
+                                        setModalVisible(!modalVisible);
+                                        setCommentId(server.avisId)
+                                    }}>
                                         <Svg style={{marginTop: 5}}xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                                             <Path fill={props.selectedGame.gamecolor} d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/>
                                         </Svg>
@@ -412,6 +418,87 @@ const ServerInfoPage = (props) => {
                         :
                         <View style={{width: '100%', height:50, marginBottom: 40}}></View>}
                     </View>
+
+                    <Modal animationType="slide" transparent={true} visible={modalVisible} style={{
+                    borderRadius: 20,
+                }}>
+                    <View style={styles.centeredView}>
+                        <View style={{
+                            borderRadius: 20,
+                            alignItems: "center",
+                            shadowColor: "#000",
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+                            elevation: 5,
+                            width: windowWidth - 50,
+                            backgroundColor: props.apparence.dark ? '#141229' : 'white',
+                        }}>
+                            <Text style={{
+                                marginBottom: 15,
+                                textAlign: "center",
+                                fontSize: 22,
+                                backgroundColor: props.apparence.dark ? '#242048' : '#F3F3F3',
+                                borderTopLeftRadius: 20,
+                                borderTopRightRadius: 20,
+                                width: "100%",
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                color: props.apparence.dark ? 'white' : '#262626',
+                            }}>Supprimer le commentaire</Text>
+                            <Text style={{
+                                textAlign: "center",
+                                width: "90%",
+                                fontSize: 16,
+                                color: props.apparence.dark ? 'white' : 'black',
+                            }}>
+                            Etes-vous sûr(e) de vouloir supprimer votre commentaire ?
+                            </Text>
+                                <View style={{ width: "100%", alignItems: "center" }}>
+                                    <View style={styles.fixToText}>
+                                    <TouchableOpacity
+                                        style={{
+                                            width: "50%",
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                            borderBottomLeftRadius: 20,
+                                        }}
+                                        onPress={() => {
+                                            setModalVisible(!modalVisible);
+                                            setResponse();
+                                        }}
+                                        >
+                                        <Text style={{
+                                            textAlign: "center",
+                                            color: props.apparence.dark ? 'white' : 'black',
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            paddingLeft: 20,
+                                        }}>Annuler</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                        style={{
+                                            width: "50%",
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            backgroundColor: props.apparence.dark ? '#242048' : 'white',
+                                            borderBottomRightRadius: 20,
+                                        }}
+                                        onPress={() => {
+                                            handleOnSubmitSupp(commentId)
+                                        }}>
+                                        <Text style={styles.buttonTextRight}>Supprimer</Text>
+                                    </TouchableOpacity>
+                                    </View>
+                                </View>
+                        </View>
+                    </View>
+                </Modal>
+
                 </View>
             </ScrollView>
         )
@@ -586,5 +673,27 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginBottom: 10,
         fontWeight: 'bold'
+    },
+    centeredView: {
+        borderRadius: 20,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+    },
+    fixToText: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        backgroundColor: "#F3F3F3",
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        width: "100%",
+    },
+    buttonTextRight: {
+        textAlign: "center",
+        color: "coral",
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingRight: 20,
     },
 })
